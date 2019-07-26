@@ -3,15 +3,32 @@
     "version": "0.0.1",
     "main": "index.js",
     "license": "MIT",
+    "scripts": {
+        "build": "tsc",
+        "run-program": "node dist/accounting/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json"
+    },
     "dependencies": {
-        "glob": "^7.1.4",
+        "@ts-kit/di": "^2.0.2",
+        "@types/ajv": "^1.0.0",
+        "@types/collections": "^5.0.0",
+        "@types/table": "^4.0.5",
+        "ajv": "^6.10.2",
         "canvas": "^2.5.0",
+        "collections": "^5.1.9",
         "columnify": "^1.5.4",
+        "commander": "^2.20.0",
         "csvtojson": "^2.0.10",
         "fixed-width-string": "^1.0.0",
+        "glob": "^7.1.4",
         "jsdom": "^15.1.1",
         "lodash": "^4.17.11",
         "pdf2json": "^1.1.8",
-        "urldecode": "^1.0.1"
+        "table": "^5.4.1",
+        "urldecode": "^1.0.1",
+        "winston": "^3.2.1"
+    },
+    "devDependencies": {
+        "@types/csvtojson": "^1.1.5",
+        "@types/node": "^12.6.8"
     }
 }

@@ -1,0 +1,135 @@
+import { Mouvement } from '../accounting/mouvement';
+import { arrayToObjOfArrayById } from '../util/util';
+
+export interface EditionOption {
+
+}
+
+
+
+export class Edition {
+
+    statLogger: StatLogger;
+
+    constructor(private mouvements: Mouvement[]) {
+        this.statLogger = new StatLogger();
+    }
+
+
+
+
+
+    journalCentraliseur() {
+        const mouvementsByJournal = arrayToObjOfArrayById(this.mouvements, 'journal');
+        const sums = this.creditDebitSum(mouvementsByJournal);
+
+        this.statLogger.logTitle('COMPTE STATISTIQUES:', { color: highlightGreen, isBig: true });
+
+        for (const [ journal, sum ] of Object.entries(sums)) {
+            if (Math.abs(sum.credit - sum.debit) > 0.01)
+                console.warn(`Attention, le journal ${journal} n'est pas équilibré`);
+
+            const diff = this.creditDebitDiff(sum);
+            this.statLogger.logTable([ journal, sum.credit.toFixed(2), sum.debit.toFixed(2), this.coloryfyDiff(diff) ]);
+        }
+
+        this.statLogger.log('\n');
+        /* this.logStats(logs, Object.keys(logs[ 0 ]), {
+            dataTransform: (item, col, i) => col.name === 'journal' ? this.alignCenter(item, col.width) : item
+        }); */
+    }
+
+
+    produitsChargesStats() {
+        const produits = [];
+        const charges = [];
+
+        for (const mouvement of this.mouvements) {
+            if (/^6/.test(mouvement.compteInfo.compte.numero))
+                charges.push(mouvement);
+
+            if (/^7/.test(mouvement.compteInfo.compte.numero))
+                produits.push(mouvement);
+        }
+
+
+        const sums = this.creditDebitSum({ produits, charges });
+        const differences = {
+            produits: Math.abs(this.creditDebitDiff(sums.produits)),
+            charges: Math.abs(this.creditDebitDiff(sums.charges)),
+            diff: 0
+        };
+        differences.diff = this.creditDebitDiff({ credit: differences.produits, debit: differences.charges });
+
+        const diff = this.coloryfyDiff(differences.diff, { credit: 'Bénéfice', debit: 'Perte', zero: 'Nulle' });
+
+        this.statLogger.logTitle('RESULTAT:', { color: highlightGreen, isBig: true });
+        this.statLogger.logTable([ differences.produits.toFixed(2), differences.charges.toFixed(2), diff ]);
+
+
+        /* this.logStats([ log ], Object.keys(log), {
+            dataTransform: (item, col, i) => col.name !== 'diff' ? this.alignCenter(item, col.width) : this.align(item, { align: 'right', size: 15 })
+        }); */
+        this.statLogger.log('\n');
+    }
+
+    compteByClassStats() {
+        const mouvementsByCompteClass = arrayToObjOfArrayById(this.mouvements, 'compte', { key: e => e.compteInfo.compte.numero[ 0 ] });
+        // XOU: journal de réouverture
+        const mouvementsByCompteClassNoXOU = arrayToObjOfArrayById(
+            this.mouvements, 'compte', {
+                key: e => e.compteInfo.compte.numero[ 0 ],
+                filter: e => (e.journal + '').toLowerCase() !== 'xou',
+            });
+
+
+        this.statLogger.logTitle('COMPTES ABREGES PAR CLASSE:', { color: highlightGreen, isBig: true });
+
+
+        for (const { mouvementBy, title } of [
+            { mouvementBy: mouvementsByCompteClassNoXOU, title: 'Exercise' },
+            { mouvementBy: mouvementsByCompteClass, title: 'Global' } ]) {
+
+            const sums = this.creditDebitSum(mouvementBy);
+
+            this.statLogger.logTitle(title, { color: highlightMagenta, isBig: false });
+
+            for (const sum of Object.values(sums)) {
+                const diff = this.coloryfyDiff(this.creditDebitDiff(sum));
+                this.statLogger.logTable([ sum.credit.toFixed(2), sum.debit.toFixed(2), diff ]);
+            }
+
+            /* this.logStats(logs, Object.keys(logs[ 0 ]), {
+                headingTransform: (key, width) => key === 'compteClass' ? this.alignCenter('CLASS', width) : key.toUpperCase(),
+                dataTransform: (item, col, i) => col.name === 'compteClass' ? this.alignCenter(item, col.width) : item
+            }); */
+
+            this.statLogger.log('\n');
+        }
+
+        this.statLogger.log('\n');
+    }
+
+
+    compteStats(mouvements) {
+        this.compteDetailedStats(mouvements);
+        this.compteByClassStats(mouvements);
+        this.produitsChargesStats(mouvements);
+    }
+
+
+
+
+    stats(mouvements) {
+        if (this.logStatsEnabled.journal) {
+            this.journalStats(mouvements);
+            console.log('\n\n');
+        }
+
+        if (this.logStatsEnabled.compte) {
+            this.compteStats(mouvements);
+            console.log('\n\n');
+        }
+    }
+
+}

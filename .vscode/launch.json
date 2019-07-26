@@ -19,6 +19,21 @@
             "name": "Opened File",
             "program": "${file}",
             "runtimeExecutable": "/home/milottit/.nvm/versions/node/v11.10.0/bin/node"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Accounting",
+            "program": "${workspaceFolder}/dist/accounting/index.js",
+            "args": [
+                "--exercise-start",
+                "01022018",
+                "--ods",
+                "data/compta.ods",
+                "--metadata",
+                "./metadata.json",
+                "--edit"
+            ]
         }
     ]
 }

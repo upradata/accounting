@@ -1,0 +1,263 @@
+import { StyleTemplate } from '../../../linked-modules/@mt/node-util';
+// import * as columnify from '../columnify';
+import { table } from 'table';
+const createStableStream = require('./table-stream');
+import * as fixedWidthString from 'fixed-width-string';
+import { colors } from '../util/color';
+import { Writable as WritableStream, WritableOptions as WritableStreamOption, Readable as ReadableStream, ReadableOptions as ReadableStreamOptions, Transform as TransformStream } from 'stream';
+import { StringDecoder, NodeStringDecoder } from 'string_decoder';
+import { EventEmitter } from 'events';
+
+
+export interface AlignOption {
+    size?: number;
+    padding?: string;
+    align?: 'left' | 'right' | 'center';
+}
+
+
+
+export interface TitleOption {
+    color?: StyleTemplate;
+    isBig?: boolean;
+}
+
+
+// export type Logger = WritableStream; // (s: Stream) => Promise<void>;
+export type ComptaLoggerMode = 'stream' | 'string';
+
+
+export interface ComptaLoggerOption {
+    loggers: WritableStream[];
+    mode: ComptaLoggerMode;
+}
+
+export const consoleLogger: WritableStream = process.stdout;
+
+
+const tableBorder = {
+    topBody: `─`,
+    topJoin: `┬`,
+    topLeft: `┌`,
+    topRight: `┐`,
+
+    bottomBody: `─`,
+    bottomJoin: `┴`,
+    bottomLeft: `└`,
+    bottomRight: `┘`,
+
+    bodyLeft: `│`,
+    bodyRight: `│`,
+    bodyJoin: `│`,
+
+    joinBody: `─`,
+    joinLeft: `├`,
+    joinRight: `┤`,
+    joinJoin: `┼`
+};
+
+const tableColumns = {
+    0: {
+        alignment: 'left',
+        width: 10
+    },
+    1: {
+        alignment: 'center',
+        // width: 10
+    },
+    2: {
+        alignment: 'right',
+        width: 10,
+        truncate: 100
+    }
+}
+
+const tableConfig = {
+    border: tableBorder,
+    columns: tableColumns,
+    /*  drawHorizontalLine: (index: number, size: number) => {
+         return index === 0 || index === 1 || index === size - 1 || index === size;
+     }, */
+    singleLine: true
+};
+
+
+
+class LogStream extends WritableStream {
+    private data: string = '';
+    loggers: WritableStream[];
+    private decoder: NodeStringDecoder;
+
+    constructor(loggers: WritableStream[], options: WritableStreamOption = {}) {
+        super(Object.assign({ objectMode: false, defaultEncoding: 'utf8' }, options));
+        this.loggers = loggers || [ consoleLogger ];
+        this.decoder = new StringDecoder(options.defaultEncoding);
+    }
+
+    private log() {
+        for (const logger of this.loggers)
+            logger.write(this.data);
+    }
+
+    // tslint:disable: function-name
+    _write(data: string | Buffer | Uint8Array, encoding: string, callback: (err?: Error) => void) {
+        if (encoding === 'buffer' || data instanceof Buffer) {
+            this.data += this.decoder.write(data as Buffer);
+        } else if (typeof data === 'string') {
+            this.data += data;
+        } else {
+            callback(new Error('LogStream does not handle Uint8Array or other types'));
+        }
+
+        callback();
+    }
+
+    _final(callback: (err?: Error) => void) {
+        this.log();
+        this.data = '';
+        callback();
+    }
+}
+
+
+class Counter extends ReadableStream {
+    constructor(options?: ReadableStreamOptions) {
+        super(Object.assign({ objectMode: false, encoding: 'utf8' }, options));
+    }
+
+    _read() {
+        const i = this._index++;
+        if (i > this._max)
+            this.push(null);
+        else {
+            const str = String(i);
+            const buf = Buffer.from(str, 'ascii');
+            this.push(buf);
+        }
+    }
+
+
+}
+
+export class ComptaLogger {
+    private loggers: WritableStream[];
+    private tableStream: TransformStream;
+    private inputStream = new ReadableStream({ read: size => { } });
+    private loggersDone$ = new EventEmitter();
+    private mode: ComptaLoggerMode;
+
+    constructor(option?: ComptaLoggerOption) {
+        if (!option)
+            this.loggers = [ consoleLogger ];
+
+        this.mode = option.mode || 'string';
+
+        if (this.mode === 'stream')
+            this.initLoggersStream();
+
+    }
+
+    private initLoggersStream() {
+        this.tableStream = createStableStream(tableConfig);
+
+        let nbLoggersDone = 0;
+
+        for (const logger of this.loggers) {
+            this.inputStream.pipe(logger);
+            this.tableStream.pipe(logger);
+
+            logger.on('finish', () => {
+                ++nbLoggersDone;
+                if (nbLoggersDone === this.loggers.length)
+                    this.loggersDone$.emit('done');
+            });
+        }
+    }
+
+    private loggersDone(): Promise<void> {
+        return new Promise((res, rej) => {
+            this.loggersDone$.on('done', res);
+            this.loggersDone$.on('error', rej);
+        });
+    }
+
+    public waitLoggersDone(): Promise<void> {
+        this.inputStream.push(null);
+        this.tableStream.push(null);
+
+        return this.loggersDone();
+    }
+
+    public log(s: string) {
+        for (const logger of this.loggers) {
+            if (this.mode === 'string')
+                logger.write(s);
+            else
+                this.inputStream.push(s);
+        }
+    }
+
+    public logTitle(title: string, option: TitleOption) {
+        this.log(this.makeTitle(title, option));
+        this.log('\n');
+    }
+
+    public logTable(data: Array<string[]> | string[], header: string[] = []) {
+        let d = [];
+        if (Array.isArray(data[ 0 ]))
+            d = [ header, ...data ];
+        else
+            d = [ header, [ data ] ];
+
+        if (this.mode === 'string')
+            this.log(table(d, tableConfig));
+        else
+            this.tableStream.write(d);
+    }
+
+    private makeTitle(title: string, option: TitleOption): string {
+        const { color = colors.none.$, isBig = false } = option;
+        let s = '';
+
+        if (isBig)
+            s += color`${' '.repeat(process.stdout.columns)}`;
+
+        s += color`${this.alignCenter(title.toUpperCase(), process.stdout.columns)}`;
+
+        if (isBig)
+            s += color`${' '.repeat(process.stdout.columns)}`;
+
+        return s;
+    }
+
+    private alignCenter(s: string, size: number) {
+        if (size > s.length)
+            return s;
+
+        const trim = s.trim();
+        const trimLength = trim.length;
+        const rest = size - trimLength;
+
+        const beginL = Math.floor(rest / 2) - 1; // -1 je ne sais pas pk :)
+        const endL = rest - beginL;
+
+        return ' '.repeat(beginL) + trim + ' '.repeat(endL);
+    }
+
+    /* logStats(data, header, options) {
+        console.log(columnify(data, {
+            columns: header, minWidth: 15, columnSplitter: '|',
+            headingTransform: (key, width) => this.alignCenter(key, width).toUpperCase(),
+            ...options
+        }));
+    } */
+
+    /* private justifyString(s: string, options?: AlignOption) {
+    const { size = 10, padding = ' ', align = 'left' } = options;
+    
+    if (align === 'center')
+        return this.alignCenter(s, size);
+    
+    return fixedWidthString(s, size, { align, padding, ellipsis: '.' });
+    } */
+}

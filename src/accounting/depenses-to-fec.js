@@ -1,7 +1,7 @@
-const { csvToJson, readFirstLine, odsToCsv } = require('./csv-util');
+const { csvToJson, readFirstLine, odsToCsv } = require('./util/csv-util');
 const path = require('path');
 const fs = require('fs');
-const columnify = require('./columnify');
+const columnify = require('../columnify');
 const fixedWidthString = require('fixed-width-string');
 const { Colors } = require('@mt/node-util');
 

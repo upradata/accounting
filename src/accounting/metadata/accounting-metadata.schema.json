@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://upradata.com/schemas/accounting-metadata.json",
+    "definitions": {
+        "AccountingMetadata": {
+            "type": "object",
+            "properties": {
+                "exercisePeriod": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 18
+                },
+                "siren": {
+                    "type": "number"
+                },
+                "siret": {
+                    "type": "number"
+                },
+                "companyName": {
+                    "type": "string"
+                },
+                "activityId": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "exercisePeriod",
+                "siren",
+                "siret",
+                "companyName",
+                "activityId",
+                "address"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "$ref": "#/definitions/AccountingMetadata"
+}
