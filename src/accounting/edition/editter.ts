@@ -10,21 +10,11 @@ class EditterFormats {
 
 export type EditterLoggers = { [ K in keyof EditterFormats ]?: EditLogger[] };
 
-/*export class EditOption2 {
-     pdf: boolean | { filename: string; };
-    csv: boolean | { filename: string; separator: string; };
-    text: boolean | { filename: string; lineWidth: number; };
-    console: boolean | { color: boolean; };
-    json: boolean | { filename: string; }; 
-}*/
-
 export type EditterOption = { [ K in keyof EditterFormats ]?: string };
 
-// export type EditData = { [ K in keyof EditFormats ]?: string };
 
 export class EditterArgs {
     loggers: EditterLoggers;
-    // directory: string = path.join(__dirname, 'edit');
 }
 
 export class Editter {

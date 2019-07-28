@@ -16,26 +16,10 @@ export class MouvementCompte {
             keyFromMouvement: mouvement => mouvement.compteInfo.compte.numero,
             keyMutation: compteNumero => Compte.pad(compteNumero)
         });
-        /*  this.mouvementsByCompte = new SortedMap(undefined, undefined,
-             // numeric enables whether numeric collation should be used, such that "1" < "2" < "10".
-             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare
-             // compares
-             (l: CompteKey, r: CompteKey) => l.localeCompare(r, undefined, { numeric: true }),
-             // getDefault()
-             (k: CompteKey) => new SortedArray(
-                 undefined,
-                 (m1: Mouvement, m2: Mouvement) => m1.date === m2.date,
-                 (m1: Mouvement, m2: Mouvement) => m1.date.getTime() - m2.date.getTime()
-             ) // ordered by date 
-         ); */
     }
 
 
     add(...mouvements: Mouvement[]) {
-        /* for (const mouvement of mouvements) {
-            const mouvementsCompte = this.mouvementsByCompte.get(mouvement.compteInfo.compte.numero);
-            mouvementsCompte.push(mouvement);
-        } */
         this.mouvementsByCompte.add(mouvements);
     }
 

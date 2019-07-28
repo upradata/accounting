@@ -60,7 +60,7 @@ class Run {
         this.metadata = await this.loadMetadata();
 
         const grandLivre = new GrandLivre();
-        const services = {
+        /* const services = {
             grandLivre: { provide: GrandLivre, useValue: grandLivre },
             balanceDesComptes: {
                 provide: BalanceDesComptes, useFactory: (grandLivre: GrandLivre) => new BalanceDesComptes(grandLivre), deps: [ GrandLivre ]
@@ -68,8 +68,8 @@ class Run {
             journalCentraliseur: {
                 provide: JournalCentraliseur, useFactory: (grandLivre: GrandLivre) => new JournalCentraliseur(grandLivre), deps: [ GrandLivre ]
             }
-            /* { provide: JournalCentraliseur, useValue: new JournalCentraliseur(grandLivre) } */
-        };
+            // { provide: JournalCentraliseur, useValue: new JournalCentraliseur(grandLivre) }
+        }; */
 
 
         Injector.init({
@@ -83,7 +83,7 @@ class Run {
             bootstrap: [ GrandLivre, BalanceDesComptes, JournalCentraliseur, PlanComptable, Journaux, Pieces ]
         });
 
-        const { Accounting } = require('./accounting/accounting');
+        const { Accounting } = require('./accounting/accounting'); // if we import it before Injector.init, we have cyclic dependencies
         this.accounting = Injector.app.get(Accounting);
     }
 

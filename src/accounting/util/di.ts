@@ -1,4 +1,4 @@
-import { Injector as DiInjector, Provider, Inject, /* InjectorOptions, */ OverrideProvider as DiOverrideProvider } from '@ts-kit/di';
+import { Injector as DiInjector, Provider, Inject, OverrideProvider as DiOverrideProvider } from '@ts-kit/di';
 
 export * from '@ts-kit/di';
 

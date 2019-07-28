@@ -7,7 +7,7 @@ import { isIterable } from '../../util/util';
 
 
 
-export interface BalanceData/* <BalanceTotalT = BalanceTotal> */ {
+export interface BalanceData {
     mouvements: SortedArray<Mouvement>;
     total: BalanceTotal;
 }
@@ -15,7 +15,7 @@ export interface BalanceData/* <BalanceTotalT = BalanceTotal> */ {
 
 export interface BalanceMapIteratorResult<K> {
     key: K;
-    balanceData: BalanceData/* <BalanceTotalData> */;
+    balanceData: BalanceData;
 }
 
 
@@ -61,20 +61,7 @@ export class BalanceMap<Key> {
 
     constructor(balanceMapOption: BalanceMapOption<Key>) {
         this.options = Object.assign(new BalanceMapOption(), balanceMapOption);
-
-        this.balanceMap = new SortedMap(undefined, undefined,
-            // numeric enables whether numeric collation should be used, such that "1" < "2" < "10".
-            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare
-            // compares
-            this.options.keyCompare,
-            // (l: Key, r: Key) => l.localeCompare(r, undefined, { numeric: true }),
-            // getDefault()
-            /* (k: CompteKey) => new SortedArray(
-                undefined,
-                (m1: Mouvement, m2: Mouvement) => m1.date === m2.date,
-                (m1: Mouvement, m2: Mouvement) => m1.date.getTime() - m2.date.getTime()
-            ) // ordered by date  */
-        );
+        this.balanceMap = new SortedMap(undefined, undefined, this.options.keyCompare);
     }
 
     add(mouvements: Mouvement | Iterable<Mouvement>, key?: Key) {
@@ -85,12 +72,6 @@ export class BalanceMap<Key> {
 
             balanceCompte.mouvements.push(mouvement);
             balanceCompte.total.add(mouvement);
-            //  const balanceTotal = this.getBalanceOf(mouvement.compteInfo.compte.numero[ 0 ]);
-
-            /* for (const balance of [ balanceCompte, balanceTotal ]) {
-                balance.mouvements.push(mouvement);
-                balance.total.add(mouvement);
-            } */
         }
     }
 

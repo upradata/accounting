@@ -1,5 +1,12 @@
 import { yellow, green, red } from '../util/color';
-import { CreditDebit, formattedNumber } from '../util/compta-util';
+import { formattedNumber } from '../util/compta-util';
+
+
+export interface CreditDebit<T = number> {
+    credit: T;
+    debit: T;
+}
+
 
 export function coloryfyDiff(diff: number | string, symbols: Partial<CreditDebit<string> & { zero: string }> = {}) {
     const { credit = 'C', debit = 'D', zero = 'N' } = symbols;

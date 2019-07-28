@@ -61,13 +61,6 @@ export class LettrageProcessor {
 
                 const nonLettrables = mouvementsInCompte.filter(m => !m.lettrage);
                 mouvementsNonLettrable.push(...nonLettrables);
-                /* if (mouvementsByType.D.length > 0) {
-                    console.log('\n\n');
-                    this.logTitleStats(`Compte ${type} non lettrables:`, highlightYellow);
-     
-                    for (const m of mouvementsInCompte.filter(m => m.lettrage))
-                        console.log(yellow`${m}`);
-                } */
             }
         }
 

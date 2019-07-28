@@ -61,6 +61,7 @@ export class Accounting implements Partial<AccountingInterface> {
 
     processLettrage() {
         const mouvementsNonLettrable = new LettrageProcessor(this.grandLivre.mouvements.array).process();
+
         if (mouvementsNonLettrable) {
             let mouvementsLog = '';
             for (const m of mouvementsNonLettrable)
