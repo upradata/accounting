@@ -8,13 +8,12 @@ export interface CreditDebit<T = number> {
 }
 
 
-export function coloryfyDiff(diff: number | string, symbols: Partial<CreditDebit<string> & { zero: string }> = {}) {
+export function coloryfyDiff(diff: number, symbols: Partial<CreditDebit<string> & { zero: string }> = {}) {
     const { credit = 'C', debit = 'D', zero = 'N' } = symbols;
-    const diffN = parseFloat(diff + '');
 
-    if (Math.abs(diffN) < 0.01)
+    if (Math.abs(diff) < 0.01)
         return yellow`0.00 ${zero}`;
 
-    const d = formattedNumber((diffN > 0 ? diffN : -diffN)); // .toFixed(2);
+    const d = formattedNumber((diff > 0 ? diff : -diff)); // .toFixed(2);
     return diff > 0 ? green`${d} ${credit}` : red`${d} ${debit}`;
 }

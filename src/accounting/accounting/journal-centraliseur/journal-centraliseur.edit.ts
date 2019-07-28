@@ -6,6 +6,7 @@ import { formattedNumber } from '../../util/compta-util';
 import { TableColumns } from '../../edition/table';
 import { JournauxBalance } from './journaux-balance';
 import { ObjectOf } from '../../util/types';
+import { coloryfyDiff } from '../../edition/edit-util';
 
 
 interface AddToEditOption {
@@ -36,7 +37,7 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
         const length = this.header().length;
 
         const columns = {} as TableColumns;
-        const nbRight = this.isByJournal ? 2 : 4;
+        const nbRight = this.isByJournal || this.isShort ? 3 : 5;
 
         for (let i = length - nbRight; i < length; ++i)
             columns[ i ] = { alignment: 'right' };
@@ -57,9 +58,12 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
 
     private header(): string[] {
         if (this.isByJournal)
-            return [ 'Journal', 'Débit', 'Crédit' ];
+            return [ 'Journal', 'Débit', 'Crédit', 'Solde' ];
 
-        return [ 'Month', 'Journal', 'Débit', 'Crédit', 'Débit Exercise', 'Crédit Exercise' ];
+        if (this.isShort)
+            return [ 'Month', 'Journal', 'Débit Exercise', 'Crédit Exercise', 'Solde' ];
+
+        return [ 'Month', 'Journal', 'Débit', 'Crédit', 'Débit Exercise', 'Crédit Exercise', 'Solde' ];
     }
 
     private balanceByJournal(): JournauxBalance {
@@ -81,45 +85,51 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
     }
 
     private addToEdit({ journal, mouvement, total, monthI }: AddToEditOption) {
-        let debit: string = '';
-        let credit: string = '';
+        let debit: string | number = '';
+        let credit: string | number = '';
+
+        const format = (n: number | string) => typeof n === 'string' ? n : n === 0 ? '' : formattedNumber(n);
 
         if (mouvement !== undefined) {
             const { type, montant } = mouvement;
 
-            const m = formattedNumber(montant);
-
-            debit = type === 'debit' ? m : '';
-            credit = type === 'credit' ? m : '';
+            debit = type === 'debit' ? montant : '';
+            credit = type === 'credit' ? montant : '';
         }
 
-        const totalDebit = formattedNumber(total.debit);
-        const totalCredit = formattedNumber(total.credit);
+        const totalDebit = total.debit;
+        const totalCredit = total.credit;
+        const solde = coloryfyDiff(total.diff);
 
         let dataO: ObjectOf<string | number> = undefined;
 
         if (this.isByJournal)
-            dataO = { journal, totalDebit, totalCredit };
+            dataO = { journal, totalDebit, totalCredit, solde };
         else {
             const date = new Date();
-            date.setMonth(monthI);
+            date.setMonth(monthI + 1);
             const month = date.toLocaleString('fr-FR', { month: 'long' });
 
-
-            dataO = { month, journal, debit, credit, totalDebit, totalCredit };
+            if (this.isShort)
+                dataO = { month, journal, totalDebit, totalCredit, solde };
+            else
+                dataO = { month, journal, debit, credit, totalDebit, totalCredit, solde };
         }
 
 
-        const data = Object.values(dataO);
+        const dataRaw = Object.values(dataO);
+
+        const nbRight = this.isByJournal ? 1 : 2;
+        const dataFormatted = dataRaw.map((v, i) => i >= nbRight ? format(v) : v);
 
         this.json[ journal ] = dataO;
 
-        this.editorOption.csv += data.join(';');
+        this.editorOption.csv += dataRaw.join(';');
 
         this.editorOption.pdf += ''; // Not yet implemented
 
-        this.textTable.push(data);
-        this.consoleTable.push(data);
+        this.textTable.push(dataRaw);
+        this.consoleTable.push(dataFormatted);
     }
 
 

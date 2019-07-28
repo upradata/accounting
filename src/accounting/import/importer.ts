@@ -36,6 +36,7 @@ export class ImporterFiles<T = string> {
 export class ImporterOption<T = string> {
     files: ImporterFiles<T>;
     odsFilename?: string;
+
     directory: string;
     private requiredFiles = [ 'planComptable', 'journaux' ];
 
@@ -43,13 +44,13 @@ export class ImporterOption<T = string> {
         depenses: { sheetName: 'Depenses'/* , filename: 'depenses.csv' */ },
         depensePieces: { sheetName: 'DepensePieces'/* , filename: 'comptes.csv'  */ },
         saisiePieces: { sheetName: 'SaisiePieces'/* , filename: 'journaux.csv' */ },
-        planComptable: { sheetName: 'PlanComptable', filename: 'plan-comptable.csv' }, // mandatory
-        journaux: { sheetName: 'Journaux', filename: 'journaux.csv' }, // mandatory
+        planComptable: { sheetName: 'PlanComptable'/* , filename: 'plan-comptable.csv' */ }, // mandatory
+        journaux: { sheetName: 'Journaux'/* , filename: 'journaux.csv' */ }, // mandatory
         balanceReouverture: { sheetName: 'BalanceReouverture'/* , filename: 'reouverture.csv'  */ }
     };
 
     constructor(private option: PartialRecursive<ImporterOption<ImporterFile>>) {
-        this.directory = option.directory || __dirname;
+        this.directory = option.directory || path.join(__dirname, '../../../data/');
         this.odsFilename = option.odsFilename;
     }
 
@@ -59,14 +60,22 @@ export class ImporterOption<T = string> {
 
         const files = assignDefaultOption(ImporterOption.defaultFiles, this.option.files) as ImporterFiles<ImporterFile>;
 
-        const xlsxFilename = this.odsFilename ? await odsToXlsx(this.odsFilename, tmpDir) : undefined;
+        let __xlsxFilename: string = undefined;
+        const xlsxFilename = async () => {
+            if (__xlsxFilename) return __xlsxFilename;
+
+            __xlsxFilename = this.odsFilename ? await odsToXlsx({ filepath: this.dir(this.odsFilename), outputDir: tmpDir }) : undefined;
+            return __xlsxFilename;
+        };
 
         for (const [ key, file ] of Object.entries(files)) {
             const { sheetName, filename } = file as ImporterFile;
 
-            if (this.odsFilename && sheetName) { // sheetName => higher priority
+            if (this.odsFilename && sheetName && !filename) { // filename => higher priority
+                const xlsx = await xlsxFilename();
+
                 promises.push(
-                    xlsxToCsv({ sheetName, filepath: this.dir(xlsxFilename), outputDir: tmpDir })
+                    xlsxToCsv({ sheetName, filepath: this.dir(xlsx), outputDir: tmpDir })
                         .then(csvOutput => this.fileLoaded(key, csvOutput)));
 
             } else {
@@ -93,11 +102,11 @@ export class ImporterOption<T = string> {
         if (!this.files) this.files = {} as any;
 
         this.files[ name ] = filepath;
-        console.log(`file for ${name} has been loaded: ${filepath}`);
+        // console.log(`file for ${name} has been loaded: ${filepath}`);
     }
 
     private dir(p: string) {
-        if (p.startsWith('/'))
+        if (path.isAbsolute(p))
             return p;
 
         return path.join(this.directory, p);
@@ -129,17 +138,22 @@ export class Importer {
         if (!this.filenames)
             await this.init();
 
-        const planComptable = await this.planComptable();
+        const hasBeenLoaded = (name: keyof ImporterFiles, data: any) => {
+            console.log(`file for ${name} has been loaded: ${this.filenames[ name ]}`);
+            return data;
+        };
+
+        const planComptable = await this.planComptable().then(data => hasBeenLoaded('planComptable', data));
         Injector.app.get(PlanComptable).add(...planComptable);
 
-        const journaux = await this.journaux();
+        const journaux = await this.journaux().then(data => hasBeenLoaded('journaux', data));
         Injector.app.get(Journaux).add(...journaux);
 
         const [ depenses, depensePieces, saisies, balanceReouverture ] = await Promise.all([
-            this.depenses(),
-            this.depensePieces(),
-            this.saisies(),
-            this.balanceReouverture()
+            this.depenses().then(data => hasBeenLoaded('depenses', data)),
+            this.depensePieces().then(data => hasBeenLoaded('depensePieces', data)),
+            this.saisies().then(data => hasBeenLoaded('saisiePieces', data)),
+            this.balanceReouverture().then(data => hasBeenLoaded('balanceReouverture', data))
         ]);
 
         return { depenses, depensePieces, saisies, balanceReouverture };

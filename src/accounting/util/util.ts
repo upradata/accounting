@@ -1,4 +1,9 @@
 import { ObjectOf } from './types';
+import { promisify } from 'util';
+import * as  fs from 'fs';
+
+const existAsync = promisify(fs.exists);
+const mkdirAsync = promisify(fs.mkdir);
 
 export class ArrayToObjOfArrayByIdOption<T> {
     key?: (value: T) => string = undefined;
@@ -81,4 +86,14 @@ export function isIterable<T>(obj: any): obj is Iterable<T> {
         return false;
     }
     return typeof obj[ Symbol.iterator ] === 'function';
+}
+
+
+export async function createDirIfNotExist(outputDir: string) {
+
+    const exist = await existAsync(outputDir);
+
+    if (!exist)
+        // recursive property indicating whether parent folders should be created
+        return mkdirAsync(outputDir, { recursive: true });
 }

@@ -34,6 +34,43 @@
                 "./metadata.json",
                 "--edit"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch ods-to-csv",
+            "program": "${workspaceFolder}/bin/ods-to-csv.js",
+            "args": [
+                "-i",
+                "${workspaceFolder}/data/comptabilite.ods",
+                "-a",
+                "--output-dir",
+                "test"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch xlsx-to-csv",
+            "program": "${workspaceFolder}/bin/xlsx-to-csv.js",
+            "args": [
+                "-i",
+                "${workspaceFolder}/data/comptabilite.ods",
+                "-a",
+                "--output-dir",
+                "test"
+            ]
+        },
+        ,
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch ods-to-xlsx",
+            "program": "${workspaceFolder}/bin/ods-to-xlsx.js",
+            "args": [
+                "-i",
+                "${workspaceFolder}/data/comptabilite.ods"
+            ]
         }
     ]
 }

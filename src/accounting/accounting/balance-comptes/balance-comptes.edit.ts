@@ -109,8 +109,9 @@ export class BalanceDesComptesEdit extends Edit {
         this.json[ balanceDataTotal.compte ] = balanceDataTotal;
 
         let flatten = Object.values(flattenObject(balanceDataTotal)) as Array<number | string>;
-        flatten = [ flatten[ 0 ], ...flatten.slice(1).map(n => formattedNumber(n as number)) ];
-        flatten[ flatten.length - 1 ] = coloryfyDiff(flatten[ flatten.length - 1 ]);
+        const lastValue = flatten[ flatten.length - 1 ] as number;
+
+        flatten = [ flatten[ 0 ], ...flatten.slice(1, -1).map(n => n === 0 ? '' : formattedNumber(n as number)), coloryfyDiff(lastValue) ];
 
         this.editorOption.csv += flatten.join(';');
 

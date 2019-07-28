@@ -90,9 +90,15 @@ class Run {
     async run() {
         await this.init();
 
+        const inputDirectory = programArgs.inputDirectory || __dirname;
+
+        const ods = programArgs.ods;
+        const odsFilename = ods === 'string' ? ods : ods ? 'comptabilite.ods' : undefined;
+
         await this.accounting.importComptaData({
-            directory: __dirname,
-            odsFilename: programArgs.ods
+            directory: inputDirectory,
+            odsFilename,
+            files: programArgs.listCsv
         });
 
         this.accounting.processLettrage();
@@ -140,9 +146,12 @@ class Run {
 
         const option = { short: programArgs.editShort };
 
-        promises.push(this.accounting.grandLivre.mouvementsCompte.edit(editter('grand-livre'), option));
-        promises.push(this.accounting.balanceDesComptes.edit(editter('balance-comptes'), option));
-        promises.push(this.accounting.journalCentraliseur.edit(editter('journal-centraliseur'), option));
+        if (programArgs.editGrandLivre)
+            promises.push(this.accounting.grandLivre.mouvementsCompte.edit(editter('grand-livre'), option));
+        if (programArgs.editBalance)
+            promises.push(this.accounting.balanceDesComptes.edit(editter('balance-comptes'), option));
+        if (programArgs.editJournal)
+            promises.push(this.accounting.journalCentraliseur.edit(editter('journal-centraliseur'), option));
 
         return Promise.all(promises).then(() => console.log(messageConsole));
     }

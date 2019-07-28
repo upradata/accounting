@@ -4,13 +4,12 @@ import csv from 'csvtojson';
 import { CSVParseParam } from 'csvtojson/v2/Parameters';
 import * as  fs from 'fs';
 import * as  path from 'path';
-import { tmpdir } from 'os';
 import { promisify } from 'util';
-import { execSync, exec } from 'child_process';
+import { exec } from 'child_process';
+import { createDirIfNotExist } from './util';
 
-const tmpDir = tmpdir();
-const makeTmpDir = promisify(fs.mkdtemp);
 const execAsync = promisify(exec);
+const existAsync = promisify(fs.exists);
 
 export function readFirstLine(filename: string) {
     return new Promise((resolve, reject) => {
@@ -78,14 +77,6 @@ export function toCsv(json: ObjectOf<any>[]) {
 }
 
 
-
-export function odsToXlsx(filepath: string, outputDir: string = '.'): Promise<string> {
-    return execAsync(`libreoffice --headless --convert-to xlsx ${filepath} --outdir ${outputDir}`)
-        .then(({ stdout, stderr }) => path.join(outputDir, path.basename(filepath, '.ods') + '.xlsx'))
-        .catch(e => { throw new Error(`An error occured while converting ods file ${filepath} to xlsx: ${e}`); });
-}
-
-
 export interface SpreadSheetToCsvOption {
     filepath: string;
     sheetName: string;
@@ -93,14 +84,84 @@ export interface SpreadSheetToCsvOption {
     outputDir?: string;
 }
 
+export type XlsxToCsvOption = Omit<SpreadSheetToCsvOption, 'sheetName'>;
+
+
+class SpreadSheetConvertOptionBuilder<T extends SpreadSheetToCsvOption | XlsxToCsvOption> {
+    constructor(private option: T) {
+        if (!option.outputDir)
+            option.outputDir = '.';
+    }
+
+    async buildOption(defaultOutput: string): Promise<T> {
+        const { filepath, outputDir } = this.option;
+
+        await this.checkExist(filepath);
+
+        const outputFile = await this.getOutputFile(defaultOutput);
+
+        await createDirIfNotExist(outputDir);
+
+        return Object.assign(this.option, { filepath, outputFile });
+    }
+
+    private async checkExist(filepath: string) {
+        const exists = await existAsync(filepath);
+
+        if (!exists)
+            throw new Error(`${filepath} does not exist.`);
+    }
+
+    private async getOutputFile(defaultName: string): Promise<string> {
+        const outputFile = this.option.outputFile || defaultName;
+
+        await createDirIfNotExist(this.option.outputDir);
+
+        let output: string = undefined;
+
+        if (path.isAbsolute(outputFile))
+            output = outputFile;
+        else
+            output = path.join(this.option.outputDir, outputFile);
+
+        return output;
+    }
+}
+
+
+
+export async function odsToXlsx(option: XlsxToCsvOption): Promise<string> {
+    /* const { filepath, outputFile, outputDir = '.' } = option;
+
+    const exists = await existAsync(filepath);
+
+    if (!exists)
+        throw new Error(`odsToXlsx failed: ${filepath} does not exist.`);
+
+    await createDirIfNotExist(outputDir); */
+    const defaultOutputFilename = path.basename(option.filepath, '.ods') + '.xlsx';
+    const builder = new SpreadSheetConvertOptionBuilder<XlsxToCsvOption>(option);
+    const { filepath, outputDir, outputFile } = await builder.buildOption(defaultOutputFilename);
+
+    return execAsync(`libreoffice --headless --convert-to xlsx ${filepath} --outdir ${outputDir}`)
+        .then(({ stdout, stderr }) => path.join(outputDir, path.basename(filepath, '.ods') + '.xlsx'))
+        .catch(e => { throw new Error(`An error occured while converting ods file ${filepath} to xlsx: ${e}`); });
+}
+
 
 export async function xlsxToCsv(option: SpreadSheetToCsvOption, nbRerun: number = 0): Promise<string> {
-    const { filepath, sheetName, outputFile, outputDir = '.' } = option;
+    /* const { filepath, sheetName, outputFile, outputDir = '.' } = option;
 
-    if (!outputFile && !outputDir)
-        throw new Error('Non of outputFile and outputDir has been defined');
+    const outputCsv = outputFile || sheetName.toLocaleLowerCase() + '.csv';
 
-    const output = outputFile || path.join(outputDir, sheetName.toLocaleLowerCase() + '.csv');
+    await createDirIfNotExist(outputDir);
+
+    let output: string = undefined;
+
+    if (path.isAbsolute(outputCsv))
+        output = outputFile;
+    else
+        output = path.join(outputDir, outputCsv); */
 
     /* return new Promise((res, rej) => {
         // process.nextTick(() => {
@@ -111,11 +172,14 @@ export async function xlsxToCsv(option: SpreadSheetToCsvOption, nbRerun: number 
                 });
         }, 1000);
     }); */
+    const defaultOutputFilename = option.sheetName.toLocaleLowerCase() + '.csv';
+    const builder = new SpreadSheetConvertOptionBuilder<SpreadSheetToCsvOption>(option);
+    const { filepath, outputDir, outputFile, sheetName } = await builder.buildOption(defaultOutputFilename);
 
-    return execAsync(`xlsx2csv -n ${sheetName} -d ';' ${filepath} ${output}`).then(() => output)
+    return execAsync(`xlsx2csv -n ${sheetName} -d ';' ${filepath} ${outputFile}`).then(() => outputFile)
         .catch(e => {
             if (nbRerun < 10) // workaround: somehow we need to wait, but wait(ms) not working??
-                return xlsxToCsv(option);
+                return xlsxToCsv(option, nbRerun + 1);
             throw new Error(`An error occured while exporting sheet ${sheetName} of ${filepath} to csv: ${e}`);
         });
 
@@ -140,6 +204,6 @@ export async function xlsxToCsv(option: SpreadSheetToCsvOption, nbRerun: number 
 }
 
 export async function odsToCsv(option: SpreadSheetToCsvOption) {
-    const filepath = await odsToXlsx(option.filepath, option.outputDir);
+    const filepath = await odsToXlsx(option);
     return xlsxToCsv({ ...option, filepath });
 }

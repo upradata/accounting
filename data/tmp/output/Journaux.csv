@@ -1,0 +1,16 @@
+Code; Intitulé; Type journal; N° compte contrepartie; N° compte trésorerie;;;;;
+60; Achats; Achat;4710000;;;;;;
+70; Ventes; Vente;4710000;;;;;;
+90; Opérations Diverses; O.D.;4710000;;;;;;
+BQ; Banque; Trésorerie;4710000;5120000;;;;;
+CAIS; Caisse; Trésorerie;4710000;5300000;;;;;
+CCP; Compte Chèques Postaux; Trésorerie;4710000;5140000;;;;;
+EP; Effets à Payer; Effet à payer;4710000;;;;;;
+ER; Effets à Recevoir; Effet à recevoir;4710000;;;;;;
+ODDC; OD Différences de change; O.D.;4710000;;;;;;
+ODEE; OD Ecarts EURO; O.D.;4710000;;;;;;
+RP; Reports à nouveau;Report;4710000;;;;;;
+XCL; Journal de clôture; O.D.;4710000;;;;;;
+XOD; Journal expert opérations diverses; O.D.;4710000;;;;;;
+XOU; Journal de réouverture; Report;4710000;;;;;;
+XRA; Journal reports à nouveau analytiques; Analytique;9999990;;;;;;

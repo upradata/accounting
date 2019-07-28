@@ -5,7 +5,10 @@
     "license": "MIT",
     "scripts": {
         "build": "tsc",
-        "run-program": "node dist/accounting/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json"
+        "program": "node dist/accounting/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json",
+        "program-edit": " node dist/accounting/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --edit --edit-short",
+        "program-fec": " node dist/accounting/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --fec",
+        "tsc-watch": "npx tsc -w --listEmittedFiles --preserveWatchOutput"
     },
     "dependencies": {
         "@ts-kit/di": "^2.0.2",

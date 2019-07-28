@@ -7,6 +7,7 @@ import { BalanceTotalData } from '../balance/balance-total';
 import { formattedNumber } from '../../util/compta-util';
 import { coloryfyDiff } from '../../edition/edit-util';
 import { TableColumns } from '../../edition/table';
+import { ObjectOf } from '../../util/types';
 
 
 interface AddToEditOption {
@@ -22,6 +23,7 @@ interface AddToEditOption {
 
 export class MouvementsCompteEdit extends Edit {
     private pieces: Pieces;
+    private isShort = false;
 
     constructor(private compteBalance: CompteBalance) {
         super({ title: 'Grand Livre Des Ecritures' });
@@ -40,7 +42,9 @@ export class MouvementsCompteEdit extends Edit {
         return { columns };
     }
 
-    doInit() {
+    doInit(option: EditOption) {
+        this.isShort = option.short;
+
         const header = this.header();
 
         this.consoleTable = [ header ];
@@ -49,6 +53,9 @@ export class MouvementsCompteEdit extends Edit {
     }
 
     private header(): string[] {
+        if (this.isShort)
+            return [ 'Compte', 'Débit', 'Crédit', 'Solde' ];
+
         return [ 'Compte', 'Date', 'Pièce', 'Débit', 'Crédit', 'Solde' ];
     }
 
@@ -61,7 +68,7 @@ export class MouvementsCompteEdit extends Edit {
             pieceId = mouvement.pieceId;
             pieceId += ': ' + this.pieces.get(pieceId).libelle;
 
-            const m = formattedNumber(montant);
+            const m = montant === 0 ? '' : formattedNumber(montant);
 
             debit = type === 'debit' ? `${m}` : '';
             credit = type === 'credit' ? `${m}` : '';
@@ -69,10 +76,18 @@ export class MouvementsCompteEdit extends Edit {
         } else {
             credit = formattedNumber(balanceTotal.credit);
             debit = formattedNumber(balanceTotal.debit);
-            solde = coloryfyDiff(formattedNumber(balanceTotal.diff));
+            solde = coloryfyDiff(balanceTotal.diff);
         }
 
-        const data = [ compte, dateString, pieceId, debit, credit, solde ];
+        let dataO: ObjectOf<string | number> = undefined;
+
+        if (this.isShort)
+            dataO = { compte, debit, credit, solde };
+        else
+            dataO = { compte, dateString, pieceId, debit, credit, solde };
+
+
+        const data = Object.values(dataO);
 
         this.json[ compte ] = { dateString, pieceId, debit, credit, solde };
 

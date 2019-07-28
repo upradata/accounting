@@ -50,7 +50,7 @@ export class PieceFactory {
     }
 
     static banque(option: BanqueOption) {
-        const { libelle, date, montant, journal, type, compteInfo } = Object.assign(new AchatOption(), option);
+        const { libelle, date, montant, journal, type, compteInfo } = Object.assign(new BanqueOption(), option);
 
         const piece = new Piece({ journal, libelle, date });
 
