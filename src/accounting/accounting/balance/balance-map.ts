@@ -3,6 +3,7 @@ import { Mouvement } from '../mouvement';
 import { SortedMap } from '../../util/sorted-map';
 import { BalanceTotal, BalanceTotalData } from './balance-total';
 import { BalanceFilter } from '../balance-comptes/comptes-balance';
+import { isIterable } from '../../util/util';
 
 
 
@@ -76,9 +77,8 @@ export class BalanceMap<Key> {
         );
     }
 
-
-    add(mouvements: Mouvement | Mouvement[], key?: Key) {
-        const mouvementsList = Array.isArray(mouvements) ? mouvements : [ mouvements ];
+    add(mouvements: Mouvement | Iterable<Mouvement>, key?: Key) {
+        const mouvementsList = isIterable<Mouvement>(mouvements) ? mouvements : [ mouvements ];
 
         for (const mouvement of mouvementsList) {
             const balanceCompte = this.getBalanceDataOfKey(key || this.options.keyFromMouvement(mouvement));

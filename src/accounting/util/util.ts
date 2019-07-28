@@ -40,19 +40,6 @@ export const arrayToObjOfArrayById = function <T>(array: Iterable<T>, idKey: IdK
     }
 
     return objById;
-    /* return array.reduce((objById, value) => {
-        const kValue = value[ idKey ];
-        const k = key ? key(value) : kValue;
-
-        const arr = objById[ k ] || [];
-        if (filter(value))
-            arr.push(transform(value));
-
-        if (arr.length > 0)
-            objById[ k ] = arr;
-
-        return objById;
-    }, {} as { [ k: string ]: T[] }); */
 };
 
 
@@ -85,4 +72,13 @@ export function flattenObject(obj: ObjectOf<any>, option?: FlattenObjectOption, 
 
 
     return flatO;
+}
+
+
+export function isIterable<T>(obj: any): obj is Iterable<T> {
+    // checks for null and undefined
+    if (obj == null) {
+        return false;
+    }
+    return typeof obj[ Symbol.iterator ] === 'function';
 }

@@ -44,8 +44,9 @@ export class PieceFactory {
         } else
             piece.addMouvement({ montant: ttc, type: 'debit', compteInfo: debiteur });
 
-        piece.close();
-        return piece;
+
+        if (piece.tryClose())
+            return piece;
     }
 
     static banque(option: BanqueOption) {
@@ -57,8 +58,8 @@ export class PieceFactory {
         piece.addMouvement({ montant, type: type === 'achat' ? 'credit' : 'debit', compteInfo: new CompteInfo({ compte: 512 }) });
         piece.addMouvement({ montant, type: type === 'achat' ? 'debit' : 'credit', compteInfo });
 
-        piece.close();
-        return piece;
+        if (piece.tryClose())
+            return piece;
     }
 
 }

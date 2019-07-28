@@ -16,6 +16,7 @@
         "traceResolution": false,
         "outDir": "dist",
         "esModuleInterop": true,
+        "incremental": true
     },
     "include": [
         "src",

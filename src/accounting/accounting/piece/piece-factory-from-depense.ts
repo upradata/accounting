@@ -24,8 +24,11 @@ export class PiecesFromDepense {
                         ...getPiecesFromPieceRef({ comptaDepensePieces: this.depensePieces, pieceRef, pieceOption: { libelle, date } })
                     );
 
-                if (credit || debit)
-                    pieces.push(getPieceFromString(credit, debit, { libelle, date, journal }));
+                if (credit || debit) {
+                    const piece = getPieceFromString(credit, debit, { libelle, date, journal });
+                    if (piece)
+                        pieces.push(piece);
+                }
 
                 pieces.push(... new PieceFromLibelle(PREDIFINED_GENERATORS).generate({ libelle, ttc, ht, tva, date }));
             }

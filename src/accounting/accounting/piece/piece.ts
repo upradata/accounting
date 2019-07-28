@@ -92,6 +92,16 @@ export class Piece {
         this.isClosed = true;
     }
 
+    tryClose(): boolean {
+        try {
+            this.close();
+            return true;
+        } catch (e) {
+            console.error(e.message);
+            return false;
+        }
+    }
+
     // tslint:disable-next-line: function-name
     *[ Symbol.iterator ]() {
         yield* this.mouvements;

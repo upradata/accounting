@@ -26,8 +26,8 @@ export class PiecesfromSaisiePieces {
 
             }
 
-            piece.close();
-            pieces.push(piece);
+            if (piece.tryClose())
+                pieces.push(piece);
         }
 
         return pieces;

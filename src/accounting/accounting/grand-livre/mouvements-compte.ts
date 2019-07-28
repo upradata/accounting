@@ -4,6 +4,7 @@ import { MouvementsCompteEdit } from './mouvements-compte.edit';
 import { BalanceMap, BalanceData } from '../balance/balance-map';
 import { Compte } from '../compte';
 import { CompteBalance } from './compte-balance';
+import { EditOption } from '../../edition/edit';
 
 
 export class MouvementCompte {
@@ -43,8 +44,8 @@ export class MouvementCompte {
     }
 
 
-    edit(editter: Editter): Promise<void[]> {
-        return new MouvementsCompteEdit(this.mouvementsByCompte).edit(editter);
+    edit(editter: Editter, option?: EditOption): Promise<void[]> {
+        return new MouvementsCompteEdit(this.mouvementsByCompte).edit(editter, option);
     }
 
     // tslint:disable-next-line: function-name

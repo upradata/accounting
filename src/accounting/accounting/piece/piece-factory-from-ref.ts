@@ -37,8 +37,8 @@ export function getPiecesFromPieceRef({ comptaDepensePieces, pieceRef, pieceOpti
             });
         }
 
-        piece.close();
-        pieces.push(piece);
+        if (piece.tryClose())
+            pieces.push(piece);
     }
 
     return pieces;

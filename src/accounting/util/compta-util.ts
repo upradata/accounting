@@ -1,6 +1,5 @@
 import { ObjectOf } from './types';
 import { Mouvement } from '../accounting/mouvement';
-import { green, yellow, red } from './color';
 
 
 export function fecDateToDate(d: string) {
@@ -86,24 +85,28 @@ export function creditDebitSum(mouvementsById: ObjectOf<Mouvement[]>): ObjectOf<
 }
 
 
-export function creditDebitDiff({ credit, debit }: CreditDebit<number | string>): number {
+/* export function creditDebitDiff({ credit, debit }: CreditDebit<number | string>): number {
     const c = credit === '' ? 0 : parseFloat(credit + '');
     const d = debit === '' ? 0 : parseFloat(debit + '');
 
     return c - d;
-}
-
-export function coloryfyDiff(diff: number, symbols?: Partial<CreditDebit<string> & { zero: string }>) {
-    const { credit = 'C', debit = 'D', zero = 'N' } = symbols;
-
-    if (Math.abs(diff) < 0.01)
-        return yellow`0.00 ${zero}`;
-
-    const d = (diff > 0 ? diff : -diff).toFixed(2);
-    return diff > 0 ? green`${d} ${credit}` : red`${d} ${debit}`;
-}
+} */
 
 
 export function numberFixedDecimal(n: number, nbDecimal: number) {
     return parseFloat(n.toFixed(nbDecimal));
+}
+
+
+export function formattedNumber(num: number | string) {
+    const n = parseFloat(num + '');
+
+    if (n === 0)
+        return '0   '; // 0.xx
+
+    return new Intl.NumberFormat('fr', {
+        useGrouping: true,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(n);
 }

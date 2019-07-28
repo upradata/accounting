@@ -1,8 +1,6 @@
 import { colors } from '../util/color';
-import { tableConfig, TableConfig } from './table-config';
-import { table, ColumnConfig } from 'table';
 import { StyleTemplate } from '../../../linked-modules/@mt/node-util';
-import { PartialRecursive } from '../util/types';
+import { TableRows, TableRow, TableString, TableItem, TableStringOption } from './table';
 
 
 export interface TitleOption {
@@ -11,30 +9,27 @@ export interface TitleOption {
 }
 
 
-export class EditLoggerOption {
-    lineWidth: number = 80;
-    tableConfig: PartialRecursive<TableConfig> = tableConfig();
-}
-
-type TableItem = string | number;
-
 export interface TableOption {
-    data: TableItem[][] | TableItem[];
-    header?: TableItem[];
+    data: TableRows;
+    header?: TableRow;
 }
+
 
 export class EditTextFormatting {
+    private tableString: TableString;
 
-    private option: EditLoggerOption;
+    constructor(option?: TableStringOption) {
+        this.tableString = new TableString(option);
+    }
 
-
-    constructor(option?: Partial<EditLoggerOption>) {
-        this.option = Object.assign(new EditLoggerOption(), option);
+    get lineWidth() {
+        const { maxWidth } = this.tableString;
+        return maxWidth.cell || maxWidth.row.width;
     }
 
     title(title: string, option: TitleOption): string {
         const { color = colors.none.$, isBig = false } = option;
-        const { lineWidth } = this.option;
+        const lineWidth = this.lineWidth;
 
         let s = '';
 
@@ -49,21 +44,6 @@ export class EditTextFormatting {
         return s;
     }
 
-    private getColumns(row: TableItem[]): { [ index: number ]: Partial<ColumnConfig> } {
-        const columns = {};
-
-        for (let i = 0; i < row.length; ++i) {
-            const length = (row[ i ] + '').length;
-
-            columns[ i ] = {
-                alignment: 'left',
-                width: Math.max(Math.min(length, 100), 10)
-            };
-        }
-
-        return columns;
-    }
-
     public table({ data, header }: TableOption): string {
         const d: TableItem[][] = header ? [ header ] : [];
 
@@ -72,13 +52,13 @@ export class EditTextFormatting {
         else
             d.push([ data as any ]);
 
-        return table(d, Object.assign({ columns: this.getColumns(d[ Math.floor(d.length / 2) ]) }, this.option.tableConfig) as TableConfig);
+
+        return this.tableString.get(d);
     }
 
 
     private alignCenter(s: string, size: number): string {
-        /*  if (size > s.length)
-             return s; */
+
         const trim = s.trim();
         const whitespaceWidth = size - trim.length;
 

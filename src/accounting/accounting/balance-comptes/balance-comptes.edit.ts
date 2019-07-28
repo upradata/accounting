@@ -1,8 +1,11 @@
-import { Edit } from '../../edition/edit';
+import { Edit, EditOption } from '../../edition/edit';
 import { BalanceTotal, BalanceTotalData } from '../balance/balance-total';
 import { ComptesBalance } from './comptes-balance';
 import { flattenObject } from '../../util/util';
 import { Mouvement } from '../mouvement';
+import { formattedNumber } from '../../util/compta-util';
+import { coloryfyDiff } from '../../edition/edit-util';
+import { TableColumns } from '../../edition/table';
 
 export interface BalanceTotalDetail {
     compte: string;
@@ -23,11 +26,22 @@ export class BalanceDesComptesEdit extends Edit {
         super({ title: 'Balance Des Comptes' });
     }
 
-    private initEdit() {
+    protected tableConfig() {
+        const length = this.header()[ 1 ].length;
+
+        const columns = {} as TableColumns;
+
+        for (let i = 1; i < length; ++i)
+            columns[ i ] = { alignment: 'right' };
+
+        return { columns };
+    }
+
+    doInit() {
         const header = this.header();
 
-        this.consoleTable = header;
-        this.textTable = header;
+        this.consoleTable = [ ...header ];
+        this.textTable = [ ...header ];
         this.editorOption.csv = header[ 1 ].join(';');
     }
 
@@ -94,7 +108,10 @@ export class BalanceDesComptesEdit extends Edit {
     private addToEdit(balanceDataTotal: BalanceTotalDetail) {
         this.json[ balanceDataTotal.compte ] = balanceDataTotal;
 
-        const flatten = Object.values(flattenObject(balanceDataTotal)) as Array<number | string>;
+        let flatten = Object.values(flattenObject(balanceDataTotal)) as Array<number | string>;
+        flatten = [ flatten[ 0 ], ...flatten.slice(1).map(n => formattedNumber(n as number)) ];
+        flatten[ flatten.length - 1 ] = coloryfyDiff(flatten[ flatten.length - 1 ]);
+
         this.editorOption.csv += flatten.join(';');
 
         this.editorOption.pdf += ''; // Not yet implemented
@@ -104,14 +121,14 @@ export class BalanceDesComptesEdit extends Edit {
     }
 
 
-    doEdit() {
-        this.initEdit();
-
+    doEdit(option: EditOption) {
         for (let i = 1; i < 8; ++i) {
             const balancesTotalI = this.balancesRangeTotalI(i);
 
-            for (const data of balancesTotalI)
-                this.addToEdit(data);
+            if (!option.short) {
+                for (const data of balancesTotalI)
+                    this.addToEdit(data);
+            }
 
             this.addToEdit(this.balancesClassTotalI(i));
         }

@@ -106,7 +106,7 @@ class Run {
 
         const edit = programArgs.edit;
         if (edit)
-            promises.push(...this.edit(edit));
+            promises.push(this.edit(edit));
 
 
         return Promise.all(promises);
@@ -120,12 +120,14 @@ class Run {
         return this.accounting.generateFec({ separator: ';', outputFilename, outputDir });
     }
 
-    edit(outputDir: string | boolean): Promise<any>[] {
+    edit(outputDir: string | boolean): Promise<any> {
         const promises: Promise<any>[] = [];
         const dir = typeof outputDir === 'string' ? outputDir : '';
 
+        let messageConsole = '';
+
         const write = (filename: string, data: string) => writeFileAsync(filename, data, { encoding: 'utf8' })
-            .then(() => console.log(`${filename} generated`));
+            .then(() => messageConsole += `${filename} generated` + '\n');
 
 
         const editter = (filename: string) => new Editter({
@@ -136,11 +138,13 @@ class Run {
             }
         });
 
-        promises.push(this.accounting.grandLivre.mouvementsCompte.edit(editter('grand-livre')));
-        promises.push(this.accounting.balanceDesComptes.edit(editter('balance-comptes')));
-        promises.push(this.accounting.journalCentraliseur.edit(editter('journal-centraliseur')));
+        const option = { short: programArgs.editShort };
 
-        return promises;
+        promises.push(this.accounting.grandLivre.mouvementsCompte.edit(editter('grand-livre'), option));
+        promises.push(this.accounting.balanceDesComptes.edit(editter('balance-comptes'), option));
+        promises.push(this.accounting.journalCentraliseur.edit(editter('journal-centraliseur'), option));
+
+        return Promise.all(promises).then(() => console.log(messageConsole));
     }
 
 }

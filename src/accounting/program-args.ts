@@ -6,7 +6,8 @@ program
     .option('-I, --ods <path>', 'ODS file containing accounting data')
     .option('-M, --metadata <path>', 'Metadata of the accounting')
     .option('-F, --fec [path]', 'Generate fec')
-    .option('-E, --edit [path]', 'Edit accounting: Balance Des Comptes, Journal Centraliseur et Grand Livre');
+    .option('-E, --edit [path]', 'Edit accounting: Balance Des Comptes, Journal Centraliseur et Grand Livre')
+    .option('-ES, --edit-short', 'Edit accounting condensed mode.');
 
 
 export interface ProgramArguments {
@@ -15,6 +16,7 @@ export interface ProgramArguments {
     metadata?: string;
     fec?: string | boolean;
     edit?: string | boolean;
+    editShort?: boolean;
 }
 
 export const programArgs: ProgramArguments = program.parse(process.argv) as any;

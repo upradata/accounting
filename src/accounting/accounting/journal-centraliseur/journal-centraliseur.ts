@@ -5,6 +5,7 @@ import { Editter } from '../../edition/editter';
 import { JournalCentraliseurEdit } from './journal-centraliseur.edit';
 import { JournauxBalanceByMonth } from './types';
 import { JournauxBalance } from './journaux-balance';
+import { EditOption } from '../../edition/edit';
 
 
 export class JournalCentraliseur {
@@ -51,8 +52,11 @@ export class JournalCentraliseur {
 
     }
 
-    edit(editter: Editter): Promise<void[]> {
-        return new JournalCentraliseurEdit(this.mouvementsByJournal).edit(editter);
+    async edit(editter: Editter, option?: EditOption): Promise<void[]> {
+        const journalEdit = new JournalCentraliseurEdit(this.mouvementsByJournal);
+
+        await journalEdit.edit(editter, option);
+        return journalEdit.edit(editter, { ...option, isByJournal: true });
     }
 
     // tslint:disable-next-line: function-name

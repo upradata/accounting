@@ -1,0 +1,241 @@
+JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|pieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise|DateRglt|ModeRglt|NatOp|IdClient|IdOrigine
+60|Achats|ecriture-60-1|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-1|20180206|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C0|20180206|20190312|||||||IMPORT
+60|Achats|ecriture-60-1|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-1|20180206|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20180206|20190312|||||||IMPORT
+60|Achats|ecriture-60-1|20190312|6064000|Fournitures administratives|||piece-60-1|20180206|ABON DEMAT ET PAPIER: Frais Generaux|1|||20180206|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-1|20190312|5120000|Banques|||piece-BQ-1|20180206|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20180206|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-1|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-1|20180206|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C0|20180206|20190312|||||||IMPORT
+60|Achats|ecriture-60-2|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-2|20180306|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C1|20180306|20190312|||||||IMPORT
+60|Achats|ecriture-60-2|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-2|20180306|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20180306|20190312|||||||IMPORT
+60|Achats|ecriture-60-2|20190312|6064000|Fournitures administratives|||piece-60-2|20180306|ABON DEMAT ET PAPIER: Frais Generaux|1|||20180306|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-2|20190312|5120000|Banques|||piece-BQ-2|20180306|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20180306|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-2|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-2|20180306|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C1|20180306|20190312|||||||IMPORT
+60|Achats|ecriture-60-3|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-3|20180331|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C2|20180331|20190312|||||||IMPORT
+60|Achats|ecriture-60-3|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-3|20180331|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20180331|20190312|||||||IMPORT
+60|Achats|ecriture-60-3|20190312|6064000|Fournitures administratives|||piece-60-3|20180331|ABON DEMAT ET PAPIER: Frais Generaux|1|||20180331|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-3|20190312|5120000|Banques|||piece-BQ-3|20180331|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20180331|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-3|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-3|20180331|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C2|20180331|20190312|||||||IMPORT
+60|Achats|ecriture-60-4|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-4|20180504|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C3|20180504|20190312|||||||IMPORT
+60|Achats|ecriture-60-4|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-4|20180504|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20180504|20190312|||||||IMPORT
+60|Achats|ecriture-60-4|20190312|6064000|Fournitures administratives|||piece-60-4|20180504|ABON DEMAT ET PAPIER: Frais Generaux|1|||20180504|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-4|20190312|5120000|Banques|||piece-BQ-4|20180504|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20180504|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-4|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-4|20180504|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C3|20180504|20190312|||||||IMPORT
+60|Achats|ecriture-60-5|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-5|20180601|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C4|20180601|20190312|||||||IMPORT
+60|Achats|ecriture-60-5|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-5|20180601|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20180601|20190312|||||||IMPORT
+60|Achats|ecriture-60-5|20190312|6064000|Fournitures administratives|||piece-60-5|20180601|ABON DEMAT ET PAPIER: Frais Generaux|1|||20180601|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-5|20190312|5120000|Banques|||piece-BQ-5|20180601|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20180601|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-5|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-5|20180601|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C4|20180601|20190312|||||||IMPORT
+60|Achats|ecriture-60-6|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-6|20180630|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C5|20180630|20190312|||||||IMPORT
+60|Achats|ecriture-60-6|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-6|20180630|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20180630|20190312|||||||IMPORT
+60|Achats|ecriture-60-6|20190312|6064000|Fournitures administratives|||piece-60-6|20180630|ABON DEMAT ET PAPIER: Frais Generaux|1|||20180630|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-6|20190312|5120000|Banques|||piece-BQ-6|20180630|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20180630|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-6|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-6|20180630|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C5|20180630|20190312|||||||IMPORT
+60|Achats|ecriture-60-7|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-7|20180801|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C6|20180801|20190312|||||||IMPORT
+60|Achats|ecriture-60-7|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-7|20180801|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20180801|20190312|||||||IMPORT
+60|Achats|ecriture-60-7|20190312|6064000|Fournitures administratives|||piece-60-7|20180801|ABON DEMAT ET PAPIER: Frais Generaux|1|||20180801|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-7|20190312|5120000|Banques|||piece-BQ-7|20180801|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20180801|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-7|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-7|20180801|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C6|20180801|20190312|||||||IMPORT
+60|Achats|ecriture-60-8|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-8|20180901|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C7|20180901|20190312|||||||IMPORT
+60|Achats|ecriture-60-8|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-8|20180901|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20180901|20190312|||||||IMPORT
+60|Achats|ecriture-60-8|20190312|6064000|Fournitures administratives|||piece-60-8|20180901|ABON DEMAT ET PAPIER: Frais Generaux|1|||20180901|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-8|20190312|5120000|Banques|||piece-BQ-8|20180901|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20180901|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-8|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-8|20180901|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C7|20180901|20190312|||||||IMPORT
+60|Achats|ecriture-60-9|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-9|20181001|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C8|20181001|20190312|||||||IMPORT
+60|Achats|ecriture-60-9|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-9|20181001|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20181001|20190312|||||||IMPORT
+60|Achats|ecriture-60-9|20190312|6064000|Fournitures administratives|||piece-60-9|20181001|ABON DEMAT ET PAPIER: Frais Generaux|1|||20181001|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-9|20190312|5120000|Banques|||piece-BQ-9|20181001|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20181001|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-9|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-9|20181001|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C8|20181001|20190312|||||||IMPORT
+60|Achats|ecriture-60-10|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-10|20181101|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C9|20181101|20190312|||||||IMPORT
+60|Achats|ecriture-60-10|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-10|20181101|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20181101|20190312|||||||IMPORT
+60|Achats|ecriture-60-10|20190312|6064000|Fournitures administratives|||piece-60-10|20181101|ABON DEMAT ET PAPIER: Frais Generaux|1|||20181101|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-10|20190312|5120000|Banques|||piece-BQ-10|20181101|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20181101|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-10|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-10|20181101|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C9|20181101|20190312|||||||IMPORT
+60|Achats|ecriture-60-11|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-11|20181201|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C10|20181201|20190312|||||||IMPORT
+60|Achats|ecriture-60-11|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-11|20181201|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20181201|20190312|||||||IMPORT
+60|Achats|ecriture-60-11|20190312|6064000|Fournitures administratives|||piece-60-11|20181201|ABON DEMAT ET PAPIER: Frais Generaux|1|||20181201|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-11|20190312|5120000|Banques|||piece-BQ-11|20181201|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20181201|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-11|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-11|20181201|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C10|20181201|20190312|||||||IMPORT
+60|Achats|ecriture-60-12|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-12|20190101|ABON DEMAT ET PAPIER: Frais Generaux||1,2|C11|20190101|20190312|||||||IMPORT
+60|Achats|ecriture-60-12|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-12|20190101|ABON DEMAT ET PAPIER: Frais Generaux|0,2|||20190101|20190312|||||||IMPORT
+60|Achats|ecriture-60-12|20190312|6064000|Fournitures administratives|||piece-60-12|20190101|ABON DEMAT ET PAPIER: Frais Generaux|1|||20190101|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-12|20190312|5120000|Banques|||piece-BQ-12|20190101|ABON DEMAT ET PAPIER: Frais Generaux||1,2||20190101|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-12|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-12|20190101|ABON DEMAT ET PAPIER: Frais Generaux|1,2||C11|20190101|20190312|||||||IMPORT
+60|Achats|ecriture-60-13|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-13|20180203|ABONNEMENT CYBERPLUS: Frais Generaux||5|C12|20180203|20190312|||||||IMPORT
+60|Achats|ecriture-60-13|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-13|20180203|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20180203|20190312|||||||IMPORT
+60|Achats|ecriture-60-13|20190312|6064000|Fournitures administratives|||piece-60-13|20180203|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20180203|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-13|20190312|5120000|Banques|||piece-BQ-13|20180203|ABONNEMENT CYBERPLUS: Frais Generaux||5||20180203|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-13|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-13|20180203|ABONNEMENT CYBERPLUS: Frais Generaux|5||C12|20180203|20190312|||||||IMPORT
+60|Achats|ecriture-60-14|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-14|20180303|ABONNEMENT CYBERPLUS: Frais Generaux||5|C13|20180303|20190312|||||||IMPORT
+60|Achats|ecriture-60-14|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-14|20180303|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20180303|20190312|||||||IMPORT
+60|Achats|ecriture-60-14|20190312|6064000|Fournitures administratives|||piece-60-14|20180303|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20180303|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-14|20190312|5120000|Banques|||piece-BQ-14|20180303|ABONNEMENT CYBERPLUS: Frais Generaux||5||20180303|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-14|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-14|20180303|ABONNEMENT CYBERPLUS: Frais Generaux|5||C13|20180303|20190312|||||||IMPORT
+60|Achats|ecriture-60-15|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-15|20180403|ABONNEMENT CYBERPLUS: Frais Generaux||5|C14|20180403|20190312|||||||IMPORT
+60|Achats|ecriture-60-15|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-15|20180403|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20180403|20190312|||||||IMPORT
+60|Achats|ecriture-60-15|20190312|6064000|Fournitures administratives|||piece-60-15|20180403|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20180403|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-15|20190312|5120000|Banques|||piece-BQ-15|20180403|ABONNEMENT CYBERPLUS: Frais Generaux||5||20180403|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-15|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-15|20180403|ABONNEMENT CYBERPLUS: Frais Generaux|5||C14|20180403|20190312|||||||IMPORT
+60|Achats|ecriture-60-16|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-16|20180501|ABONNEMENT CYBERPLUS: Frais Generaux||5|C15|20180501|20190312|||||||IMPORT
+60|Achats|ecriture-60-16|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-16|20180501|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20180501|20190312|||||||IMPORT
+60|Achats|ecriture-60-16|20190312|6064000|Fournitures administratives|||piece-60-16|20180501|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20180501|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-16|20190312|5120000|Banques|||piece-BQ-16|20180501|ABONNEMENT CYBERPLUS: Frais Generaux||5||20180501|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-16|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-16|20180501|ABONNEMENT CYBERPLUS: Frais Generaux|5||C15|20180501|20190312|||||||IMPORT
+60|Achats|ecriture-60-17|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-17|20180605|ABONNEMENT CYBERPLUS: Frais Generaux||5|C16|20180605|20190312|||||||IMPORT
+60|Achats|ecriture-60-17|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-17|20180605|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20180605|20190312|||||||IMPORT
+60|Achats|ecriture-60-17|20190312|6064000|Fournitures administratives|||piece-60-17|20180605|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20180605|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-17|20190312|5120000|Banques|||piece-BQ-17|20180605|ABONNEMENT CYBERPLUS: Frais Generaux||5||20180605|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-17|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-17|20180605|ABONNEMENT CYBERPLUS: Frais Generaux|5||C16|20180605|20190312|||||||IMPORT
+60|Achats|ecriture-60-18|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-18|20180704|ABONNEMENT CYBERPLUS: Frais Generaux||5|C17|20180704|20190312|||||||IMPORT
+60|Achats|ecriture-60-18|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-18|20180704|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20180704|20190312|||||||IMPORT
+60|Achats|ecriture-60-18|20190312|6064000|Fournitures administratives|||piece-60-18|20180704|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20180704|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-18|20190312|5120000|Banques|||piece-BQ-18|20180704|ABONNEMENT CYBERPLUS: Frais Generaux||5||20180704|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-18|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-18|20180704|ABONNEMENT CYBERPLUS: Frais Generaux|5||C17|20180704|20190312|||||||IMPORT
+60|Achats|ecriture-60-19|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-19|20180804|ABONNEMENT CYBERPLUS: Frais Generaux||5|C18|20180804|20190312|||||||IMPORT
+60|Achats|ecriture-60-19|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-19|20180804|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20180804|20190312|||||||IMPORT
+60|Achats|ecriture-60-19|20190312|6064000|Fournitures administratives|||piece-60-19|20180804|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20180804|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-19|20190312|5120000|Banques|||piece-BQ-19|20180804|ABONNEMENT CYBERPLUS: Frais Generaux||5||20180804|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-19|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-19|20180804|ABONNEMENT CYBERPLUS: Frais Generaux|5||C18|20180804|20190312|||||||IMPORT
+60|Achats|ecriture-60-20|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-20|20180904|ABONNEMENT CYBERPLUS: Frais Generaux||5|C19|20180904|20190312|||||||IMPORT
+60|Achats|ecriture-60-20|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-20|20180904|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20180904|20190312|||||||IMPORT
+60|Achats|ecriture-60-20|20190312|6064000|Fournitures administratives|||piece-60-20|20180904|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20180904|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-20|20190312|5120000|Banques|||piece-BQ-20|20180904|ABONNEMENT CYBERPLUS: Frais Generaux||5||20180904|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-20|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-20|20180904|ABONNEMENT CYBERPLUS: Frais Generaux|5||C19|20180904|20190312|||||||IMPORT
+60|Achats|ecriture-60-21|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-21|20181003|ABONNEMENT CYBERPLUS: Frais Generaux||5|C20|20181003|20190312|||||||IMPORT
+60|Achats|ecriture-60-21|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-21|20181003|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20181003|20190312|||||||IMPORT
+60|Achats|ecriture-60-21|20190312|6064000|Fournitures administratives|||piece-60-21|20181003|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20181003|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-21|20190312|5120000|Banques|||piece-BQ-21|20181003|ABONNEMENT CYBERPLUS: Frais Generaux||5||20181003|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-21|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-21|20181003|ABONNEMENT CYBERPLUS: Frais Generaux|5||C20|20181003|20190312|||||||IMPORT
+60|Achats|ecriture-60-22|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-22|20181106|ABONNEMENT CYBERPLUS: Frais Generaux||5|C21|20181106|20190312|||||||IMPORT
+60|Achats|ecriture-60-22|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-22|20181106|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20181106|20190312|||||||IMPORT
+60|Achats|ecriture-60-22|20190312|6064000|Fournitures administratives|||piece-60-22|20181106|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20181106|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-22|20190312|5120000|Banques|||piece-BQ-22|20181106|ABONNEMENT CYBERPLUS: Frais Generaux||5||20181106|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-22|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-22|20181106|ABONNEMENT CYBERPLUS: Frais Generaux|5||C21|20181106|20190312|||||||IMPORT
+60|Achats|ecriture-60-23|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-23|20181204|ABONNEMENT CYBERPLUS: Frais Generaux||5|C22|20181204|20190312|||||||IMPORT
+60|Achats|ecriture-60-23|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-23|20181204|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20181204|20190312|||||||IMPORT
+60|Achats|ecriture-60-23|20190312|6064000|Fournitures administratives|||piece-60-23|20181204|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20181204|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-23|20190312|5120000|Banques|||piece-BQ-23|20181204|ABONNEMENT CYBERPLUS: Frais Generaux||5||20181204|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-23|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-23|20181204|ABONNEMENT CYBERPLUS: Frais Generaux|5||C22|20181204|20190312|||||||IMPORT
+60|Achats|ecriture-60-24|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-24|20190104|ABONNEMENT CYBERPLUS: Frais Generaux||5|C23|20190104|20190312|||||||IMPORT
+60|Achats|ecriture-60-24|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-24|20190104|ABONNEMENT CYBERPLUS: Frais Generaux|0,83|||20190104|20190312|||||||IMPORT
+60|Achats|ecriture-60-24|20190312|6064000|Fournitures administratives|||piece-60-24|20190104|ABONNEMENT CYBERPLUS: Frais Generaux|4,17|||20190104|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-24|20190312|5120000|Banques|||piece-BQ-24|20190104|ABONNEMENT CYBERPLUS: Frais Generaux||5||20190104|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-24|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-24|20190104|ABONNEMENT CYBERPLUS: Frais Generaux|5||C23|20190104|20190312|||||||IMPORT
+60|Achats|ecriture-60-25|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-25|20180331|AGIOS 1er : Frais Generaux||48|C24|20180331|20190312|||||||IMPORT
+60|Achats|ecriture-60-25|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-25|20180331|AGIOS 1er : Frais Generaux|8|||20180331|20190312|||||||IMPORT
+60|Achats|ecriture-60-25|20190312|6064000|Fournitures administratives|||piece-60-25|20180331|AGIOS 1er : Frais Generaux|40|||20180331|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-25|20190312|5120000|Banques|||piece-BQ-25|20180331|AGIOS 1er : Frais Generaux||48||20180331|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-25|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-25|20180331|AGIOS 1er : Frais Generaux|48||C24|20180331|20190312|||||||IMPORT
+60|Achats|ecriture-60-26|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-26|20181231|AGIOS 2eme : Frais Generaux||33,34|C25|20181231|20190312|||||||IMPORT
+60|Achats|ecriture-60-26|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-26|20181231|AGIOS 2eme : Frais Generaux|5,56|||20181231|20190312|||||||IMPORT
+60|Achats|ecriture-60-26|20190312|6064000|Fournitures administratives|||piece-60-26|20181231|AGIOS 2eme : Frais Generaux|27,78|||20181231|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-26|20190312|5120000|Banques|||piece-BQ-26|20181231|AGIOS 2eme : Frais Generaux||33,34||20181231|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-26|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-26|20181231|AGIOS 2eme : Frais Generaux|33,34||C25|20181231|20190312|||||||IMPORT
+60|Achats|ecriture-60-27|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-27|20180930|AGIOS 3eme : Frais Generaux||36,52|C26|20180930|20190312|||||||IMPORT
+60|Achats|ecriture-60-27|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-27|20180930|AGIOS 3eme : Frais Generaux|6,09|||20180930|20190312|||||||IMPORT
+60|Achats|ecriture-60-27|20190312|6064000|Fournitures administratives|||piece-60-27|20180930|AGIOS 3eme : Frais Generaux|30,43|||20180930|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-27|20190312|5120000|Banques|||piece-BQ-27|20180930|AGIOS 3eme : Frais Generaux||36,52||20180930|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-27|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-27|20180930|AGIOS 3eme : Frais Generaux|36,52||C26|20180930|20190312|||||||IMPORT
+60|Achats|ecriture-60-28|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-28|20181231|AGIOS 4eme : Frais Generaux||48|C27|20181231|20190312|||||||IMPORT
+60|Achats|ecriture-60-28|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-28|20181231|AGIOS 4eme : Frais Generaux|8|||20181231|20190312|||||||IMPORT
+60|Achats|ecriture-60-28|20190312|6064000|Fournitures administratives|||piece-60-28|20181231|AGIOS 4eme : Frais Generaux|40|||20181231|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-28|20190312|5120000|Banques|||piece-BQ-28|20181231|AGIOS 4eme : Frais Generaux||48||20181231|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-28|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-28|20181231|AGIOS 4eme : Frais Generaux|48||C27|20181231|20190312|||||||IMPORT
+60|Achats|ecriture-60-29|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-29|20180410|Frais forfaitaire 1er : Frais Generaux||33|C28|20180410|20190312|||||||IMPORT
+60|Achats|ecriture-60-29|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-29|20180410|Frais forfaitaire 1er : Frais Generaux|5,5|||20180410|20190312|||||||IMPORT
+60|Achats|ecriture-60-29|20190312|6064000|Fournitures administratives|||piece-60-29|20180410|Frais forfaitaire 1er : Frais Generaux|27,5|||20180410|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-29|20190312|5120000|Banques|||piece-BQ-29|20180410|Frais forfaitaire 1er : Frais Generaux||33||20180410|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-29|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-29|20180410|Frais forfaitaire 1er : Frais Generaux|33||C28|20180410|20190312|||||||IMPORT
+60|Achats|ecriture-60-30|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-30|20180710|Frais forfaitaire 4eme : Frais Generaux||33|C29|20180710|20190312|||||||IMPORT
+60|Achats|ecriture-60-30|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-30|20180710|Frais forfaitaire 4eme : Frais Generaux|5,5|||20180710|20190312|||||||IMPORT
+60|Achats|ecriture-60-30|20190312|6064000|Fournitures administratives|||piece-60-30|20180710|Frais forfaitaire 4eme : Frais Generaux|27,5|||20180710|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-30|20190312|5120000|Banques|||piece-BQ-30|20180710|Frais forfaitaire 4eme : Frais Generaux||33||20180710|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-30|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-30|20180710|Frais forfaitaire 4eme : Frais Generaux|33||C29|20180710|20190312|||||||IMPORT
+60|Achats|ecriture-60-31|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-31|20180410|Commission de compte 1er : Frais Generaux||0,22|C30|20180410|20190312|||||||IMPORT
+60|Achats|ecriture-60-31|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-31|20180410|Commission de compte 1er : Frais Generaux|0,04|||20180410|20190312|||||||IMPORT
+60|Achats|ecriture-60-31|20190312|6064000|Fournitures administratives|||piece-60-31|20180410|Commission de compte 1er : Frais Generaux|0,18|||20180410|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-31|20190312|5120000|Banques|||piece-BQ-31|20180410|Commission de compte 1er : Frais Generaux||0,22||20180410|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-31|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-31|20180410|Commission de compte 1er : Frais Generaux|0,22||C30|20180410|20190312|||||||IMPORT
+60|Achats|ecriture-60-32|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-32|20180710|Commission de compte 4eme : Frais Generaux||0,34|C31|20180710|20190312|||||||IMPORT
+60|Achats|ecriture-60-32|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-32|20180710|Commission de compte 4eme : Frais Generaux|0,06|||20180710|20190312|||||||IMPORT
+60|Achats|ecriture-60-32|20190312|6064000|Fournitures administratives|||piece-60-32|20180710|Commission de compte 4eme : Frais Generaux|0,28|||20180710|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-32|20190312|5120000|Banques|||piece-BQ-32|20180710|Commission de compte 4eme : Frais Generaux||0,34||20180710|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-32|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-32|20180710|Commission de compte 4eme : Frais Generaux|0,34||C31|20180710|20190312|||||||IMPORT
+60|Achats|ecriture-60-33|20190312|4010000|Fournisseurs (compte collectif)|4011000|Fournisseurs SDM|piece-60-33|20180311|Domiciliation SDM Loyer||214,13|C32|20180311|20190312|||||||IMPORT
+60|Achats|ecriture-60-33|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-33|20180311|Domiciliation SDM Loyer|35,69|||20180311|20190312|||||||IMPORT
+60|Achats|ecriture-60-33|20190312|6132000|Locations immobilières|||piece-60-33|20180311|Domiciliation SDM Loyer|178,44|||20180311|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-33|20190312|5120000|Banques|||piece-BQ-33|20180311|Domiciliation SDM Loyer||214,13||20180311|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-33|20190312|4010000|Fournisseurs (compte collectif)|4011000|Fournisseurs SDM|piece-BQ-33|20180311|Domiciliation SDM Loyer|214,13||C32|20180311|20190312|||||||IMPORT
+60|Achats|ecriture-60-34|20190312|4010000|Fournisseurs (compte collectif)|4011000|Fournisseurs SDM|piece-60-34|20181115|Domiciliation SDM Loyer||202,9|C33|20181115|20190312|||||||IMPORT
+60|Achats|ecriture-60-34|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-34|20181115|Domiciliation SDM Loyer|33,82|||20181115|20190312|||||||IMPORT
+60|Achats|ecriture-60-34|20190312|6132000|Locations immobilières|||piece-60-34|20181115|Domiciliation SDM Loyer|169,08|||20181115|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-34|20190312|5120000|Banques|||piece-BQ-34|20181115|Domiciliation SDM Loyer||202,9||20181115|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-34|20190312|4010000|Fournisseurs (compte collectif)|4011000|Fournisseurs SDM|piece-BQ-34|20181115|Domiciliation SDM Loyer|202,9||C33|20181115|20190312|||||||IMPORT
+60|Achats|ecriture-60-35|20190312|4010000|Fournisseurs (compte collectif)|4011000|Fournisseurs SDM|piece-60-35|20181211|Domiciliation SDM Loyer||238,99|C34|20181211|20190312|||||||IMPORT
+60|Achats|ecriture-60-35|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-35|20181211|Domiciliation SDM Loyer|39,83|||20181211|20190312|||||||IMPORT
+60|Achats|ecriture-60-35|20190312|6132000|Locations immobilières|||piece-60-35|20181211|Domiciliation SDM Loyer|199,16|||20181211|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-35|20190312|5120000|Banques|||piece-BQ-35|20181211|Domiciliation SDM Loyer||238,99||20181211|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-35|20190312|4010000|Fournisseurs (compte collectif)|4011000|Fournisseurs SDM|piece-BQ-35|20181211|Domiciliation SDM Loyer|238,99||C34|20181211|20190312|||||||IMPORT
+60|Achats|ecriture-60-36|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-36|20181025|Enregistrement aux impots reduction du capital : Frais Generaux||375|C35|20181025|20190312|||||||IMPORT
+60|Achats|ecriture-60-36|20190312|6064000|Fournitures administratives|||piece-60-36|20181025|Enregistrement aux impots reduction du capital : Frais Generaux|375|||20181025|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-36|20190312|5120000|Banques|||piece-BQ-36|20181025|Enregistrement aux impots reduction du capital : Frais Generaux||375||20181025|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-36|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-36|20181025|Enregistrement aux impots reduction du capital : Frais Generaux|375||C35|20181025|20190312|||||||IMPORT
+60|Achats|ecriture-60-37|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-60-37|20180916|Extrait Kbis||3,53|C36|20180916|20190312|||||||IMPORT
+60|Achats|ecriture-60-37|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-37|20180916|Extrait Kbis|0,59|||20180916|20190312|||||||IMPORT
+60|Achats|ecriture-60-37|20190312|6227000|Frais d'actes et de contentieux|||piece-60-37|20180916|Extrait Kbis|2,94|||20180916|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-37|20190312|5120000|Banques|||piece-BQ-37|20180916|Extrait Kbis||3,53||20180916|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-37|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-BQ-37|20180916|Extrait Kbis|3,53||C36|20180916|20190312|||||||IMPORT
+60|Achats|ecriture-60-38|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-38|20180614|Annonce legal journal : reduction de capital – parution Auvergat de Paris : Frais Generaux||105,6|C37|20180614|20190312|||||||IMPORT
+60|Achats|ecriture-60-38|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-38|20180614|Annonce legal journal : reduction de capital – parution Auvergat de Paris : Frais Generaux|17,6|||20180614|20190312|||||||IMPORT
+60|Achats|ecriture-60-38|20190312|6064000|Fournitures administratives|||piece-60-38|20180614|Annonce legal journal : reduction de capital – parution Auvergat de Paris : Frais Generaux|88|||20180614|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-38|20190312|5120000|Banques|||piece-BQ-38|20180614|Annonce legal journal : reduction de capital – parution Auvergat de Paris : Frais Generaux||105,6||20180614|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-38|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-38|20180614|Annonce legal journal : reduction de capital – parution Auvergat de Paris : Frais Generaux|105,6||C37|20180614|20190312|||||||IMPORT
+60|Achats|ecriture-60-39|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-60-39|20181028|Greffe tribunal de commerce Paris||11,77|C38|20181028|20190312|||||||IMPORT
+60|Achats|ecriture-60-39|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-39|20181028|Greffe tribunal de commerce Paris|1,96|||20181028|20190312|||||||IMPORT
+60|Achats|ecriture-60-39|20190312|6227000|Frais d'actes et de contentieux|||piece-60-39|20181028|Greffe tribunal de commerce Paris|9,81|||20181028|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-39|20190312|5120000|Banques|||piece-BQ-39|20181028|Greffe tribunal de commerce Paris||11,77||20181028|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-39|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-BQ-39|20181028|Greffe tribunal de commerce Paris|11,77||C38|20181028|20190312|||||||IMPORT
+60|Achats|ecriture-60-40|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-60-40|20181005|Depot actes modificatifs de societe : certificat de depot – Droits de Greffe||8,45|C39|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-40|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-40|20181005|Depot actes modificatifs de societe : certificat de depot – Droits de Greffe|1,41|||20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-40|20190312|6227000|Frais d'actes et de contentieux|||piece-60-40|20181005|Depot actes modificatifs de societe : certificat de depot – Droits de Greffe|7,04|||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-40|20190312|5120000|Banques|||piece-BQ-40|20181005|Depot actes modificatifs de societe : certificat de depot – Droits de Greffe||8,45||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-40|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-BQ-40|20181005|Depot actes modificatifs de societe : certificat de depot – Droits de Greffe|8,45||C39|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-41|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-60-41|20181005|Depot actes modificatifs de societe : certificat de depot – INPI||59,14|C40|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-41|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-41|20181005|Depot actes modificatifs de societe : certificat de depot – INPI|9,86|||20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-41|20190312|6227000|Frais d'actes et de contentieux|||piece-60-41|20181005|Depot actes modificatifs de societe : certificat de depot – INPI|49,28|||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-41|20190312|5120000|Banques|||piece-BQ-41|20181005|Depot actes modificatifs de societe : certificat de depot – INPI||59,14||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-41|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-BQ-41|20181005|Depot actes modificatifs de societe : certificat de depot – INPI|59,14||C40|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-42|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-60-42|20181005|Modification avis BODACC – BODACC||116|C41|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-42|20190312|6227000|Frais d'actes et de contentieux|||piece-60-42|20181005|Modification avis BODACC – BODACC|116|||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-42|20190312|5120000|Banques|||piece-BQ-42|20181005|Modification avis BODACC – BODACC||116||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-42|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-BQ-42|20181005|Modification avis BODACC – BODACC|116||C41|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-43|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-60-43|20181005|Modification avis BODACC – Droits de Greffe||5,9|C42|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-43|20190312|6227000|Frais d'actes et de contentieux|||piece-60-43|20181005|Modification avis BODACC – Droits de Greffe|5,9|||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-43|20190312|5120000|Banques|||piece-BQ-43|20181005|Modification avis BODACC – Droits de Greffe||5,9||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-43|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-BQ-43|20181005|Modification avis BODACC – Droits de Greffe|5,9||C42|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-44|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-60-44|20181005|Modification avis BODACC – INPI||5,9|C43|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-44|20190312|6227000|Frais d'actes et de contentieux|||piece-60-44|20181005|Modification avis BODACC – INPI|5,9|||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-44|20190312|5120000|Banques|||piece-BQ-44|20181005|Modification avis BODACC – INPI||5,9||20181005|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-44|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-BQ-44|20181005|Modification avis BODACC – INPI|5,9||C43|20181005|20190312|||||||IMPORT
+60|Achats|ecriture-60-45|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-60-45|20180828|Frais de notification de regularisation : acte de Greffe||2,51|C44|20180828|20190312|||||||IMPORT
+60|Achats|ecriture-60-45|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-45|20180828|Frais de notification de regularisation : acte de Greffe|0,42|||20180828|20190312|||||||IMPORT
+60|Achats|ecriture-60-45|20190312|6227000|Frais d'actes et de contentieux|||piece-60-45|20180828|Frais de notification de regularisation : acte de Greffe|2,09|||20180828|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-45|20190312|5120000|Banques|||piece-BQ-45|20180828|Frais de notification de regularisation : acte de Greffe||2,51||20180828|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-45|20190312|4010000|Fournisseurs (compte collectif)|4013000|Frais Greffe|piece-BQ-45|20180828|Frais de notification de regularisation : acte de Greffe|2,51||C44|20180828|20190312|||||||IMPORT
+60|Achats|ecriture-60-46|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-46|20180707|Teledeclaration en ligne - Societe Upra-Data – Liasse fiscale 2017-2018 (regime reel simplifie) : Frais Generaux||106,8|C45|20180707|20190312|||||||IMPORT
+60|Achats|ecriture-60-46|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-46|20180707|Teledeclaration en ligne - Societe Upra-Data – Liasse fiscale 2017-2018 (regime reel simplifie) : Frais Generaux|17,8|||20180707|20190312|||||||IMPORT
+60|Achats|ecriture-60-46|20190312|6064000|Fournitures administratives|||piece-60-46|20180707|Teledeclaration en ligne - Societe Upra-Data – Liasse fiscale 2017-2018 (regime reel simplifie) : Frais Generaux|89|||20180707|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-46|20190312|5120000|Banques|||piece-BQ-46|20180707|Teledeclaration en ligne - Societe Upra-Data – Liasse fiscale 2017-2018 (regime reel simplifie) : Frais Generaux||106,8||20180707|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-46|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-46|20180707|Teledeclaration en ligne - Societe Upra-Data – Liasse fiscale 2017-2018 (regime reel simplifie) : Frais Generaux|106,8||C45|20180707|20190312|||||||IMPORT
+60|Achats|ecriture-60-47|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-60-47|20180630|Module Exports Normes operationnels incluant l'archivage DGFIP: Frais Generaux||58,8|C46|20180630|20190312|||||||IMPORT
+60|Achats|ecriture-60-47|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-60-47|20180630|Module Exports Normes operationnels incluant l'archivage DGFIP: Frais Generaux|9,8|||20180630|20190312|||||||IMPORT
+60|Achats|ecriture-60-47|20190312|6064000|Fournitures administratives|||piece-60-47|20180630|Module Exports Normes operationnels incluant l'archivage DGFIP: Frais Generaux|49|||20180630|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-47|20190312|5120000|Banques|||piece-BQ-47|20180630|Module Exports Normes operationnels incluant l'archivage DGFIP: Frais Generaux||58,8||20180630|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-47|20190312|4010000|Fournisseurs (compte collectif)|4012000|Fournisseur Frais Généraux|piece-BQ-47|20180630|Module Exports Normes operationnels incluant l'archivage DGFIP: Frais Generaux|58,8||C46|20180630|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-48|20190312|5120000|Banques|||piece-BQ-48|20181215|Compte courante associe : Thomas Milotti|1000|||20181215|20190312|||||||IMPORT
+BQ|Banque|ecriture-BQ-48|20190312|4551000|Associés - Comptes courants : Principal|4551100|Compte courant associé Thomas Milotti|piece-BQ-48|20181215|Compte courante associe : Thomas Milotti||1000||20181215|20190312|||||||IMPORT
+90|Opérations Diverses|ecriture-90-1|20190312|4551000|Associés - Comptes courants : Principal|4551100|Compte courant associé Thomas Milotti|piece-90-1|20181215|Compte courante associe : Thomas Milotti|1000|||20181215|20190312|||||||IMPORT
+90|Opérations Diverses|ecriture-90-1|20190312|7788100|Produit exceptionel Abandon Compte Thomas Milottti|||piece-90-1|20181215|Compte courante associe : Thomas Milotti||1000||20181215|20190312|||||||IMPORT
+90|Opérations Diverses|ecriture-90-2|20190312|4456611|TVA déductible Achats Taux 1/Factures|||piece-90-2|20180201|Credit tva 2018/2019 Report||154,44||20180201|20190312|||||||IMPORT
+90|Opérations Diverses|ecriture-90-2|20190312|6580000|Charges diverses de gestion courante|||piece-90-2|20180201|Credit tva 2018/2019 Report||0||20180201|20190312|||||||IMPORT
+90|Opérations Diverses|ecriture-90-2|20190312|4456700|Crédit de TVA à reporter|||piece-90-2|20180201|Credit tva 2018/2019 Report||0||20180201|20190312|||||||IMPORT
+90|Opérations Diverses|ecriture-90-2|20190312|1290000|Résultat de l'exercice (perte)|||piece-90-2|20180201|Attribution Resultat 2017-2018 Perte||933,39||20180201|20190312|||||||IMPORT
+90|Opérations Diverses|ecriture-90-2|20190312|1190000|Report à nouveau (solde débiteur)|||piece-90-2|20180201|Attribution Resultat 2017-2018 Perte||0||20180201|20190312|||||||IMPORT

@@ -22,8 +22,8 @@ export function getPieceFromString(credit: string, debit: string, pieceOption: P
     }
 
 
-    piece.close();
-    return piece;
+    if (piece.tryClose())
+        return piece;
 }
 
 

@@ -1,8 +1,12 @@
-import { Edit } from '../../edition/edit';
+import { Edit, EditOption } from '../../edition/edit';
 import { CompteBalance } from './compte-balance';
 import { Mouvement } from '../mouvement';
 import { Pieces } from '../piece/pieces';
 import { Injector } from '../../util/di';
+import { BalanceTotalData } from '../balance/balance-total';
+import { formattedNumber } from '../../util/compta-util';
+import { coloryfyDiff } from '../../edition/edit-util';
+import { TableColumns } from '../../edition/table';
 
 
 interface AddToEditOption {
@@ -13,7 +17,7 @@ interface AddToEditOption {
         montant: Mouvement[ 'montant' ];
         date: Mouvement[ 'date' ];
     };
-    solde?: number;
+    balanceTotal?: BalanceTotalData;
 }
 
 export class MouvementsCompteEdit extends Edit {
@@ -25,7 +29,18 @@ export class MouvementsCompteEdit extends Edit {
     }
 
 
-    private initEdit() {
+    protected tableConfig() {
+        const length = this.header().length;
+
+        const columns = {} as TableColumns;
+
+        for (let i = length - 3; i < length; ++i)
+            columns[ i ] = { alignment: 'right' };
+
+        return { columns };
+    }
+
+    doInit() {
         const header = this.header();
 
         this.consoleTable = [ header ];
@@ -37,20 +52,29 @@ export class MouvementsCompteEdit extends Edit {
         return [ 'Compte', 'Date', 'Pièce', 'Débit', 'Crédit', 'Solde' ];
     }
 
-    private addToEdit({ compte, mouvement, solde }: AddToEditOption) {
+    private addToEdit({ compte, mouvement, balanceTotal }: AddToEditOption) {
         let { debit = '', credit = '', dateString = '', pieceId = '' } = {};
+        let solde: string = '';
 
-        if (solde === undefined) {
+        if (balanceTotal === undefined) {
             const { type, montant, date } = mouvement;
             pieceId = mouvement.pieceId;
             pieceId += ': ' + this.pieces.get(pieceId).libelle;
 
-            debit = type === 'debit' ? `${montant}` : '';
-            credit = type === 'credit' ? `${montant}` : '';
+            const m = formattedNumber(montant);
+
+            debit = type === 'debit' ? `${m}` : '';
+            credit = type === 'credit' ? `${m}` : '';
             dateString = date ? date.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '';
+        } else {
+            credit = formattedNumber(balanceTotal.credit);
+            debit = formattedNumber(balanceTotal.debit);
+            solde = coloryfyDiff(formattedNumber(balanceTotal.diff));
         }
 
         const data = [ compte, dateString, pieceId, debit, credit, solde ];
+
+        this.json[ compte ] = { dateString, pieceId, debit, credit, solde };
 
         this.editorOption.csv += data.join(';');
 
@@ -61,30 +85,20 @@ export class MouvementsCompteEdit extends Edit {
     }
 
 
-    doEdit() {
-        this.initEdit();
+    doEdit(option: EditOption) {
 
         for (const { key: compte, balanceData } of this.compteBalance) {
             const { mouvements, total } = balanceData;
 
-            /* const piecesBalance: BalanceMap<string> = new BalanceMap({
-                keyCompare: (l, r) => l.localeCompare(r),
-                keyFromMouvement: mouvement => mouvement.pieceId,
-            });
-
-            piecesBalance.add(mouvements.array); */
-
-            // const mouvementsByPiece = arrayToObjOfArrayById(mouvements, 'pieceId');
-
-            this.json[ compte ] = mouvements;
-
-            for (const mouvement of mouvements) {
-                this.addToEdit({ compte, mouvement });
+            if (!option.short) {
+                for (const mouvement of mouvements) {
+                    this.addToEdit({ compte, mouvement });
+                }
             }
 
             this.addToEdit({
                 compte,
-                solde: total.data.diff
+                balanceTotal: total.data
             });
         }
     }

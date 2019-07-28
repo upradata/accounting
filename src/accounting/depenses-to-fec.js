@@ -1,9 +1,9 @@
-const { csvToJson, readFirstLine, odsToCsv } = require('./util/csv-util');
+const { csvToJson, readFirstLine, odsToCsv } = require('./../../dist/accounting/util/csv-util');
 const path = require('path');
 const fs = require('fs');
 const columnify = require('../columnify');
 const fixedWidthString = require('fixed-width-string');
-const { Colors } = require('@mt/node-util');
+const { Colors } = require('../../linked-modules/@mt/node-util/color/node-colors');
 
 const c = new Colors();
 const yellow = c.yellow.$;
@@ -47,6 +47,7 @@ const helpers = {
     },
 
     numberToComma: n => (n + '').replace('.', ','),
+    commaToNumber: s => +s.replace(',', '.'),
 
     pad: (s, padding = '0') => s ? (s + '').padEnd(7, padding) : '',
 
@@ -671,13 +672,15 @@ Object.assign(FecBuilder, helpers);
 
 
 async function fecData() {
+    const dataDir = '../../data';
+
     const files = {
-        depenses: dir('./depenses.csv'),
-        comptes: dir('./comptes.csv'),
-        journaux: dir('./journaux.csv'),
-        pieces: dir('./pieces.csv'),
-        saisiePieces: dir('./saisie-pieces.csv'),
-    }
+        depenses: dir(path.join(dataDir, 'depenses.csv')),
+        comptes: dir(path.join(dataDir, 'comptes.csv')),
+        journaux: dir(path.join(dataDir, 'journaux.csv')),
+        pieces: dir(path.join(dataDir, 'pieces.csv')),
+        saisiePieces: dir(path.join(dataDir, 'saisie-pieces.csv'))
+    };
 
 
     /* const headerLine = await readFirstLine(files.depenses);
@@ -696,6 +699,24 @@ async function fecData() {
     const pieces = await csvToJson(files.pieces, { delimiter: ';' });
     const saisiePieces = await csvToJson(files.saisiePieces, { delimiter: ';' });
 
+
+    for (const d of depenses) {
+        d.ttc = helpers.commaToNumber(d.ttc);
+        d.ht = helpers.commaToNumber(d.ht);
+        d.tva = helpers.commaToNumber(d.tva);
+        d.credit = helpers.commaToNumber(d.credit);
+        d.debit = helpers.commaToNumber(d.debit);
+    }
+
+    for (const p of pieces) {
+        p.credit = helpers.commaToNumber(p.credit);
+        p.debit = helpers.commaToNumber(p.debit);
+    }
+
+    for (const p of saisiePieces) {
+        p.credit = helpers.commaToNumber(p.credit);
+        p.debit = helpers.commaToNumber(p.debit);
+    }
 
     return { depenses, pieces, saisiePieces, comptes, journaux };
 }

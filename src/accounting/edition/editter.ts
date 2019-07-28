@@ -1,6 +1,6 @@
-export type EditLogger = (content: string) => Promise<void>;
+export type EditLogger = (content: string) => Promise<any>;
 
-class EditFormats {
+class EditterFormats {
     pdf;
     csv;
     text;
@@ -8,7 +8,7 @@ class EditFormats {
     json;
 }
 
-export type EditLoggers = { [ K in keyof EditFormats ]?: EditLogger[] };
+export type EditterLoggers = { [ K in keyof EditterFormats ]?: EditLogger[] };
 
 /*export class EditOption2 {
      pdf: boolean | { filename: string; };
@@ -18,23 +18,23 @@ export type EditLoggers = { [ K in keyof EditFormats ]?: EditLogger[] };
     json: boolean | { filename: string; }; 
 }*/
 
-export type EditOption = { [ K in keyof EditFormats ]?: string };
+export type EditterOption = { [ K in keyof EditterFormats ]?: string };
 
 // export type EditData = { [ K in keyof EditFormats ]?: string };
 
-export class EditArgs {
-    loggers: EditLoggers;
+export class EditterArgs {
+    loggers: EditterLoggers;
     // directory: string = path.join(__dirname, 'edit');
 }
 
 export class Editter {
-    loggers: EditLoggers;
+    loggers: EditterLoggers;
 
-    constructor(args: EditArgs) {
+    constructor(args: EditterArgs) {
         this.loggers = args.loggers || { console: [ s => Promise.resolve(console.log(s)) ] };
     }
 
-    edit(option: EditOption): Promise<void[]> {
+    edit(option: EditterOption): Promise<void[]> {
         const promises: Promise<void>[] = [];
 
         for (const [ format, loggers ] of Object.entries(this.loggers)) {

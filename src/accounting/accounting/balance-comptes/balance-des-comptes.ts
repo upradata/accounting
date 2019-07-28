@@ -5,6 +5,7 @@ import { Mouvement } from '../mouvement';
 import { Editter } from '../../edition/editter';
 import { GrandLivre } from '../grand-livre/grand-livre';
 import { ComptesBalance } from './comptes-balance';
+import { EditOption } from '../../edition/edit';
 
 
 
@@ -20,13 +21,10 @@ export class BalanceDesComptes {
 
     add(...mouvements: Mouvement[]) {
         this.comptesBalance.add(mouvements);
-        /* for (const mouvement of mouvements) {
-            this.comptesBalance.add([ mouvement ]);
-        } */
     }
 
-    edit(editter: Editter): Promise<void[]> {
-        return new BalanceDesComptesEdit(this.comptesBalance).edit(editter);
+    edit(editter: Editter, option?: EditOption): Promise<void[]> {
+        return new BalanceDesComptesEdit(this.comptesBalance).edit(editter, option);
     }
 
     // tslint:disable-next-line: function-name
