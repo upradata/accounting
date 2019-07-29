@@ -2,7 +2,7 @@ import { InjectDep } from '../../util/di';
 import { GrandLivre } from '../grand-livre/grand-livre';
 import { Mouvement } from '../mouvement';
 import { Editter } from '../../edition/editter';
-import { JournalCentraliseurEdit } from './journal-centraliseur.edit';
+import { JournalCentraliseurEdit, ExtraOption } from './journal-centraliseur.edit';
 import { JournauxBalanceByMonth } from './journaux-balance-by-month';
 import { EditOption } from '../../edition/edit';
 
@@ -31,10 +31,7 @@ export class JournalCentraliseur {
         this.balanceByJournal.add(mouvements);
     }
 
-    async edit(editter: Editter, option?: EditOption): Promise<void[]> {
-        const journalEdit = new JournalCentraliseurEdit(this.balanceByJournal);
-
-        await journalEdit.edit(editter, option);
-        return journalEdit.edit(editter, { ...option, isByJournal: true });
+    async edit(editter: Editter, option?: EditOption & ExtraOption): Promise<void[]> {
+        return new JournalCentraliseurEdit(this.balanceByJournal).edit(editter, option);
     }
 }

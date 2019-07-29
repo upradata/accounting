@@ -7,6 +7,8 @@ import { TableColumns } from '../../edition/table';
 import { JournauxBalance } from './journaux-balance';
 import { ObjectOf } from '../../util/types';
 import { coloryfyDiff } from '../../edition/edit-util';
+import { Pieces } from '../piece/pieces';
+import { Injector } from '../../util/di';
 
 
 interface AddToEditOption {
@@ -22,17 +24,19 @@ interface AddToEditOption {
 }
 
 export interface ExtraOption {
-    isByJournal: boolean;
+    byJournal?: boolean;
 }
 
-export class JournalCentraliseurEdit extends Edit<ExtraOption> {
+export class JournalCentraliseurEdit extends Edit {
     private isShort = false;
     private isByJournal = false;
     private currentMonth: string = '';
+    private pieces: Pieces;
 
 
     constructor(private journauxBalanceByMonth: JournauxBalanceByMonth) {
         super({ title: 'Journal Centraliseur' });
+        this.pieces = Injector.app.get(Pieces);
     }
 
     protected tableConfig() {
@@ -53,13 +57,13 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
 
     doInit(option: EditOption & Partial<ExtraOption>) {
         this.isShort = option.short;
-        this.isByJournal = option.isByJournal;
+        this.isByJournal = option.byJournal;
 
         const header = this.header();
 
         this.consoleTable = [ header ];
         this.textTable = [ header ];
-        this.editorOption.csv = header.join(';');
+        this.editorOption.csv = header.join(';') + '\n';
     }
 
     private header(): string[] {
@@ -69,7 +73,7 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
         if (this.isShort)
             return [ 'Month', 'Journal', 'Débit Exercise', 'Crédit Exercise', 'Solde' ];
 
-        return [ 'Month', 'Journal', 'Débit', 'Crédit', 'Débit Exercise', 'Crédit Exercise', 'Solde' ];
+        return [ 'Month', 'Journal', 'Date', 'Débit', 'Crédit', 'Débit Exercise', 'Crédit Exercise', 'Solde' ];
     }
 
     private balanceByJournal(): JournauxBalance {
@@ -100,22 +104,36 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
         return month;
     }
 
-    private addToEdit({ journal, mouvement, total, monthYear }: AddToEditOption) {
-        let debit: string | number = '';
-        let credit: string | number = '';
 
+    private formatRow(row: Array<number | string>) {
         const format = (n: number | string) => typeof n === 'string' ? n : n === 0 ? '' : formattedNumber(n);
+        const nbRight = this.isByJournal ? 1 : this.isShort ? 2 : 3;
+
+        return row.map((v, i) => i >= nbRight && i < row.length - 1 ? format(v) : v);
+    }
+
+    private colorifyRow(row: Array<number | string>) {
+        const lastValue = row[ row.length - 1 ] as number;
+        return [ ...row.slice(0, -1), coloryfyDiff(lastValue) ];
+    }
+
+    private addToEdit({ journal, mouvement, total, monthYear }: AddToEditOption) {
+        let { debit = '', credit = '', date = '' } = {} as ObjectOf<string | number>;
+
 
         if (mouvement !== undefined) {
             const { type, montant } = mouvement;
 
             debit = type === 'debit' ? montant : '';
             credit = type === 'credit' ? montant : '';
+
+            const d = this.pieces.get(mouvement.pieceId).date;
+            date = d ? d.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '';
         }
 
         const totalDebit = total.debit;
         const totalCredit = total.credit;
-        const solde = coloryfyDiff(total.diff);
+        const solde = total.diff;
 
         let dataO: ObjectOf<string | number> = undefined;
 
@@ -127,23 +145,21 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
             if (this.isShort)
                 dataO = { month, journal, totalDebit, totalCredit, solde };
             else
-                dataO = { month, journal, debit, credit, totalDebit, totalCredit, solde };
+                dataO = { month, journal, date, debit, credit, totalDebit, totalCredit, solde };
         }
 
 
-        const dataRaw = Object.values(dataO);
+        const row = Object.values(dataO);
+        const rowFormatted = this.formatRow(row);
 
-        const nbRight = this.isByJournal ? 1 : 2;
-        const dataFormatted = dataRaw.map((v, i) => i >= nbRight ? format(v) : v);
+        this.setJson(journal, dataO);
 
-        this.json[ journal ] = dataO;
-
-        this.editorOption.csv += dataRaw.join(';');
+        this.editorOption.csv += row.join(';') + '\n';
 
         this.editorOption.pdf += ''; // Not yet implemented
 
-        this.textTable.push(dataRaw);
-        this.consoleTable.push(dataFormatted);
+        this.textTable.push(rowFormatted);
+        this.consoleTable.push(this.colorifyRow(rowFormatted));
     }
 
 

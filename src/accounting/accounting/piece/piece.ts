@@ -1,6 +1,6 @@
 import { CompteInfo } from '../compte';
 import { Mouvement, MouvementData, MouvementMetadata } from '../mouvement';
-import { InjectDep, Injector } from '../../util/di';
+import { Injector } from '../../util/di';
 import { GrandLivre } from '../grand-livre/grand-livre';
 
 

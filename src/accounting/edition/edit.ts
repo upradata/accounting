@@ -66,6 +66,13 @@ export abstract class Edit<ExtraOption = {}> {
 
     }
 
+    protected setJson(key: string, data: any) {
+        const d = this.json[ key ] || [];
+        d.push(data);
+
+        this.json[ key ] = d;
+    }
+
     abstract doInit(option: EditOption): void;
     abstract doEdit(option: EditOption): void;
 

@@ -3,7 +3,7 @@ import { InjectDep } from '../util/di';
 import { PlanComptable } from '../metadata/plan-comptable';
 import { Journaux } from '../metadata/journaux';
 import { Pieces } from './piece/pieces';
-import { Importer, ImporterOption, ImporterFile } from '../import/importer';
+import { Importer } from '../import/importer';
 import { PiecesFromDepense } from './piece/piece-factory-from-depense';
 import { PiecesfromSaisiePieces } from './piece/piece-factory-from-saisie';
 import { FecBuilderOption, FecBuilder } from './fec-builder';
@@ -16,6 +16,7 @@ import * as path from 'path';
 import { BalanceDesComptes } from './balance-comptes/balance-des-comptes';
 import { JournalCentraliseur } from './journal-centraliseur/journal-centraliseur';
 import { AccountingInterface } from './accounting.inteface';
+import { ImporterOption, ImporterFile } from '../import/importer-option';
 
 
 
@@ -50,8 +51,8 @@ export class Accounting implements Partial<AccountingInterface> {
         const { siren, exercisePeriod } = this.comptabiliteMetadata;
         const defaultFecFilename = siren + 'FEC' + dateToFecDate(exercisePeriod.end) + '.txt';
 
-        const { outputDir: outpurDir = '.', outputFilename = defaultFecFilename } = fecBuilderOption;
-        const output = path.join(outpurDir, outputFilename);
+        const { outputDir = '.', outputFilename = defaultFecFilename } = fecBuilderOption;
+        const output = path.join(outputDir, outputFilename);
 
         return fecBuilder.writeFile(output).catch((e: Error) => {
             loggerService.error(`Writting in ${output} error: ${e.message}`);

@@ -1,5 +1,4 @@
 import { Edit, EditOption } from '../../edition/edit';
-import { CompteBalance } from './compte-balance';
 import { Mouvement } from '../mouvement';
 import { Pieces } from '../piece/pieces';
 import { Injector } from '../../util/di';
@@ -8,6 +7,7 @@ import { formattedNumber } from '../../util/compta-util';
 import { coloryfyDiff } from '../../edition/edit-util';
 import { TableColumns } from '../../edition/table';
 import { ObjectOf } from '../../util/types';
+import { ComptesBalance } from '../balance-comptes/comptes-balance';
 
 
 interface AddToEditOption {
@@ -21,13 +21,23 @@ interface AddToEditOption {
     balanceTotal?: BalanceTotalData;
 }
 
-export class MouvementsCompteEdit extends Edit {
+export class GrandLivreEdit extends Edit {
     private pieces: Pieces;
     private isShort = false;
 
-    constructor(private compteBalance: CompteBalance) {
+    constructor(private compteBalance: ComptesBalance) {
         super({ title: 'Grand Livre Des Ecritures' });
         this.pieces = Injector.app.get(Pieces);
+    }
+
+    doInit(option: EditOption) {
+        this.isShort = option.short;
+
+        const header = this.header();
+
+        this.consoleTable = [ header ];
+        this.textTable = [ header ];
+        this.editorOption.csv = header.join(';') + '\n';
     }
 
 
@@ -42,41 +52,50 @@ export class MouvementsCompteEdit extends Edit {
         return { columns };
     }
 
-    doInit(option: EditOption) {
-        this.isShort = option.short;
-
-        const header = this.header();
-
-        this.consoleTable = [ header ];
-        this.textTable = [ header ];
-        this.editorOption.csv = header.join(';');
-    }
-
     private header(): string[] {
         if (this.isShort)
             return [ 'Compte', 'Débit', 'Crédit', 'Solde' ];
 
-        return [ 'Compte', 'Date', 'Pièce', 'Débit', 'Crédit', 'Solde' ];
+        return [ 'Compte', 'Date', 'Pièce', 'Période', 'Débit', 'Crédit', 'Solde' ];
     }
 
+    private formatRow(row: Array<number | string>) {
+        const middleIndex = this.isShort ? 1 : 4;
+
+        const start = row.slice(0, middleIndex);
+        const middle = row.slice(middleIndex, -1);
+        const end = row[ row.length - 1 ];
+
+        return [ ...start, ...middle.map(n => n === 0 || n === '' ? '' : formattedNumber(n)), end ];
+    }
+
+    private colorifyRow(row: Array<number | string>) {
+        const lastValue = row[ row.length - 1 ] as number;
+        return [ ...row.slice(0, -1), coloryfyDiff(lastValue) ];
+    }
+
+
     private addToEdit({ compte, mouvement, balanceTotal }: AddToEditOption) {
-        let { debit = '', credit = '', dateString = '', pieceId = '' } = {};
-        let solde: string = '';
+        let { debit = '', credit = '', date = '', pieceId = '', period = '' } = {} as ObjectOf<string | number>;
+        let solde: string | number = '';
 
         if (balanceTotal === undefined) {
-            const { type, montant, date } = mouvement;
-            pieceId = mouvement.pieceId;
-            pieceId += ': ' + this.pieces.get(pieceId).libelle;
+            const { type, montant, date: d } = mouvement;
 
-            const m = montant === 0 ? '' : formattedNumber(montant);
+            const piece = this.pieces.get(mouvement.pieceId);
+            pieceId += `${mouvement.pieceId}: ${piece.libelle}`;
+
+            const m = montant === 0 ? '' : montant; // formattedNumber(montant);
 
             debit = type === 'debit' ? `${m}` : '';
             credit = type === 'credit' ? `${m}` : '';
-            dateString = date ? date.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '';
+            date = d ? d.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '';
+
+            period = piece.journal.toLowerCase() === 'xou' ? 'A-Nouveau' : 'Exercise';
         } else {
-            credit = formattedNumber(balanceTotal.credit);
-            debit = formattedNumber(balanceTotal.debit);
-            solde = coloryfyDiff(balanceTotal.diff);
+            credit = balanceTotal.credit;
+            debit = balanceTotal.debit;
+            solde = balanceTotal.diff;
         }
 
         let dataO: ObjectOf<string | number> = undefined;
@@ -84,19 +103,20 @@ export class MouvementsCompteEdit extends Edit {
         if (this.isShort)
             dataO = { compte, debit, credit, solde };
         else
-            dataO = { compte, dateString, pieceId, debit, credit, solde };
+            dataO = { compte, date, pieceId, period, debit, credit, solde };
 
 
-        const data = Object.values(dataO);
+        const row = Object.values(dataO);
+        const rowFormatted = this.formatRow(row);
 
-        this.json[ compte ] = { dateString, pieceId, debit, credit, solde };
+        this.setJson(compte, dataO);
 
-        this.editorOption.csv += data.join(';');
+        this.editorOption.csv += row.join(';') + '\n';
 
         this.editorOption.pdf += ''; // Not yet implemented
 
-        this.textTable.push(data);
-        this.consoleTable.push(data);
+        this.textTable.push(rowFormatted);
+        this.consoleTable.push(this.colorifyRow(rowFormatted));
     }
 
 

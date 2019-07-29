@@ -100,30 +100,26 @@ class Run {
 
         const promises: Promise<any>[] = [];
 
-        const fec = programArgs.fec;
-        if (fec)
-            promises.push(this.generateFec(fec));
+        if (programArgs.fec !== undefined)
+            promises.push(this.generateFec());
 
 
         const edit = programArgs.edit;
         if (edit)
-            promises.push(this.edit(edit));
+            promises.push(this.edit());
 
 
         return Promise.all(promises);
     }
 
-    generateFec(outputFec: string | boolean): Promise<any> {
-        const output = typeof outputFec === 'string' ? outputFec : '';
-        const outputFilename = /\.\w+$/.test(output) ? output : undefined;
-        const outputDir = outputFilename ? '' : output;
-
-        return this.accounting.generateFec({ separator: ';', outputFilename, outputDir });
+    generateFec(): Promise<any> {
+        const { fec, outputDir } = programArgs;
+        return this.accounting.generateFec({ separator: ';', outputFilename: fec === 'default' ? undefined : fec, outputDir });
     }
 
-    edit(outputDir: string | boolean): Promise<any> {
+    edit(): Promise<any> {
         const promises: Promise<any>[] = [];
-        const dir = typeof outputDir === 'string' ? outputDir : '';
+        const { outputDir } = programArgs;
 
         let messageConsole = '';
 
@@ -134,19 +130,28 @@ class Run {
         const editter = (filename: string) => new Editter({
             loggers: {
                 console: [ s => Promise.resolve(console.log(s)) ],
-                csv: [ s => write(path.join(dir, `${filename}.csv`), s) ],
-                json: [ s => write(path.join(dir, `${filename}.json`), s) ],
+                csv: [ s => write(path.join(outputDir, `${filename}.csv`), s) ],
+                json: [ s => write(path.join(outputDir, `${filename}.json`), s) ],
             }
         });
 
         const option = { short: programArgs.editShort };
 
         if (programArgs.editGrandLivre)
-            promises.push(this.accounting.grandLivre.mouvementsCompte.edit(editter('grand-livre'), option));
+            promises.push(this.accounting.grandLivre.edit(editter('grand-livre'), option));
         if (programArgs.editBalance)
             promises.push(this.accounting.balanceDesComptes.edit(editter('balance-comptes'), option));
-        if (programArgs.editJournal)
+        if (programArgs.editJournal) {
             promises.push(this.accounting.journalCentraliseur.edit(editter('journal-centraliseur'), option));
+            promises.push(this.accounting.journalCentraliseur.edit(editter('journal-centraliseur-summary'), { ...option, byJournal: true }));
+        }
+        if (programArgs.editPieces) {
+            const pieceEditter = editter('pieces');
+            pieceEditter.loggers.console = undefined;
+
+            promises.push(this.accounting.pieces.edit(pieceEditter, option));
+        }
+
 
         return Promise.all(promises).then(() => console.log(messageConsole));
     }

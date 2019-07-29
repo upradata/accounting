@@ -38,7 +38,10 @@ export function numberFixedDecimal(n: number, nbDecimal: number) {
 
 
 export function formattedNumber(num: number | string) {
-    const n = parseFloat(num + '');
+    const n = +num;
+
+    if (isNaN(n))
+        return '';
 
     if (n === 0)
         return '0   '; // 0.xx

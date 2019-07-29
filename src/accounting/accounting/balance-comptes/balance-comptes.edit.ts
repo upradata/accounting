@@ -4,7 +4,9 @@ import { flattenObject } from '../../util/util';
 import { formattedNumber } from '../../util/compta-util';
 import { coloryfyDiff } from '../../edition/edit-util';
 import { TableColumns } from '../../edition/table';
-import { BalanceTotalDetail, BalanceComptesCalculator } from './balance-compte-calculator.edit';
+import { BalanceComptesCalculator, Split } from './balance-compte-calculator.edit';
+import { BalanceMapData } from '../balance/balance-map-data';
+import { BalanceTotalData } from '../balance/balance-total';
 
 
 export class BalanceDesComptesEdit extends Edit {
@@ -31,7 +33,7 @@ export class BalanceDesComptesEdit extends Edit {
 
         this.consoleTable = [ ...header ];
         this.textTable = [ ...header ];
-        this.editorOption.csv = header[ 1 ].join(';');
+        this.editorOption.csv = header[ 1 ].join(';') + '\n';
     }
 
     private header(): string[][] {
@@ -42,13 +44,13 @@ export class BalanceDesComptesEdit extends Edit {
         firstRow[ 5 ] = 'Exercise';
         firstRow[ 8 ] = 'Global'; */
 
-        const firstRow = [ 'compte' ];
+        const firstRow = [ '' ];
 
         firstRow.push(...Array(3).fill('A-nouveau'));
         firstRow.push(...Array(3).fill('Exercise'));
         firstRow.push(...Array(3).fill('Global'));
 
-        const secondRow = [ '' ];
+        const secondRow = [ 'Compte' ];
 
         const debitCreditDiff = [ 'Débit', 'Crédit', 'Solde' ];
         for (let i = 0; i < 3; ++i)
@@ -60,33 +62,46 @@ export class BalanceDesComptesEdit extends Edit {
         ];
     }
 
-    private addToEdit(balanceDataTotal: BalanceTotalDetail) {
-        this.json[ balanceDataTotal.compte ] = balanceDataTotal;
+    private formatRow(row: Array<number | string>) {
+        const start = row[ 0 ];
+        const middle = row.slice(1, -1);
+        const end = row[ row.length - 1 ];
 
-        let flatten = Object.values(flattenObject(balanceDataTotal)) as Array<number | string>;
-        const lastValue = flatten[ flatten.length - 1 ] as number;
+        return [ start, ...middle.map(n => n === 0 ? '' : formattedNumber(n as number)), end ];
+    }
 
-        flatten = [ flatten[ 0 ], ...flatten.slice(1, -1).map(n => n === 0 ? '' : formattedNumber(n as number)), coloryfyDiff(lastValue) ];
+    private colorifyRow(row: Array<number | string>) {
+        const lastValue = row[ row.length - 1 ] as number;
+        return [ ...row.slice(0, -1), coloryfyDiff(lastValue) ];
+    }
 
-        this.editorOption.csv += flatten.join(';');
+    private addToEdit(balanceSplit: Split<BalanceTotalData>) {
+
+        this.setJson(balanceSplit.compte, balanceSplit);
+
+        const row = Object.values(flattenObject(balanceSplit)) as Array<number | string>;
+        const rowFormatted = this.formatRow(row);
+
+        this.editorOption.csv += row.join(';') + '\n';
 
         this.editorOption.pdf += ''; // Not yet implemented
 
-        this.textTable.push(flatten);
-        this.consoleTable.push(flatten);
+        this.textTable.push(row);
+        this.consoleTable.push(this.colorifyRow(rowFormatted));
     }
 
-
     doEdit(option: EditOption) {
+        const transformF = (b: BalanceMapData) => b.toBalanceTotalData().total;
+
         for (let i = 1; i < 8; ++i) {
-            const balancesTotalI = this.balanceCompteCalculator.balancesRangeTotalI(i);
+            const balancesTotalI = this.balanceCompteCalculator.balanceClassSplit(i);
 
             if (!option.short) {
                 for (const data of balancesTotalI)
-                    this.addToEdit(data);
+                    this.addToEdit(data.transform(transformF));
             }
 
-            this.addToEdit(this.balanceCompteCalculator.balancesClassTotalI(i));
+            this.addToEdit(this.balanceCompteCalculator.balancesClassTotalSplit(i).transform(transformF));
         }
     }
 }

@@ -1,13 +1,47 @@
-import { ComptesBalance } from './comptes-balance';
-import { BalanceTotalData } from '../balance/balance-total';
+import { ComptesBalance, CompteRange } from './comptes-balance';
 import { Mouvement } from '../mouvement';
+import { BalanceMapData } from '../balance/balance-map-data';
 
-export interface BalanceTotalDetail {
+export class Split<T = BalanceMapData> {
     compte: string;
-    reouverture: BalanceTotalData;
-    exercise: BalanceTotalData;
-    global: BalanceTotalData;
+    reouverture: T;
+    exercise: T;
+    global: T;
 }
+
+
+export class BalanceComptesSplit extends Split {
+
+    constructor(args: Split) {
+        super();
+        Object.assign(this, args);
+    }
+
+    getBalances() {
+        const { reouverture, exercise, global } = this;
+        return { reouverture, exercise, global };
+    }
+    transform<T>(f: (split: BalanceMapData) => T): Split<T> {
+        const { compte } = this;
+
+        const totalDataBalances = Object.entries(this.getBalances())
+            .map(([ key, balanceData ]) => [ key, f(balanceData) ]);
+
+
+        return { compte, ...Object.fromEntries(totalDataBalances) };
+    }
+}
+
+/* export class SplitList {
+    constructor(private split: BalanceComptesSplit) { }
+
+
+    get(compte: string) {
+        Object.entries(this.split.getBalances())
+            .map(([ key, balanceData ]) => [ key, balanceData. ]);
+    }
+
+} */
 
 
 const filter = (test: (mouvement: Mouvement) => boolean) => (numero, mouvement) => test(mouvement);
@@ -17,12 +51,10 @@ const lower = (s: string) => s.toLocaleLowerCase();
 export class BalanceComptesCalculator {
     constructor(public balance: ComptesBalance) { }
 
-    balancesRangeTotalI(classNumero: number): BalanceTotalDetail[] {
-        const balances: BalanceTotalDetail[] = [];
+    balanceRangeSplit(compteRange?: CompteRange): BalanceComptesSplit[] {
+        const balances: BalanceComptesSplit[] = [];
 
-        const mille = Math.pow(10, 6);
-
-        const balanceGlobalI = this.balance.getBalanceRange({ from: classNumero * mille, to: (classNumero + 1) * mille - 1 });
+        const balanceGlobalI = compteRange ? this.balance : this.balance.getBalanceRange(compteRange);
         const balanceReouvertureI = balanceGlobalI.filter({ filter: filter(m => lower(m.journal) === 'xou') });
         const balanceExerciseI = balanceGlobalI.filter({ filter: filter(m => lower(m.journal) !== 'xou') });
 
@@ -30,12 +62,12 @@ export class BalanceComptesCalculator {
 
             // the reason I do total.data is because total.diff is a getter property and it is not enumarable.
             // Then Object.entries/keys/... will not work. So I transform the instance of BalanceTotal in a plain object of type BalanceTotalData
-            const balancesCompte = {
+            const balancesCompte = new BalanceComptesSplit({
                 compte: numero,
-                reouverture: balanceReouvertureI.getBalanceDataOfKey(numero).total.data,
-                exercise: balanceExerciseI.getBalanceDataOfKey(numero).total.data,
-                global: balanceData.total.data
-            };
+                reouverture: balanceReouvertureI.getBalanceDataOfKey(numero),
+                exercise: balanceExerciseI.getBalanceDataOfKey(numero),
+                global: balanceData
+            });
 
             balances.push(balancesCompte);
         }
@@ -43,14 +75,18 @@ export class BalanceComptesCalculator {
         return balances;
     }
 
-    balancesClassTotalI(classNumero: number): BalanceTotalDetail {
+    balanceClassSplit(classNumero: number): BalanceComptesSplit[] {
+        const mille = Math.pow(10, 6);
+        return this.balanceRangeSplit({ from: classNumero * mille, to: (classNumero + 1) * mille - 1 });
+    }
 
-        return {
+    balancesClassTotalSplit(classNumero: number): BalanceComptesSplit {
+
+        return new BalanceComptesSplit({
             compte: classNumero + '',
-            reouverture: this.balance.getBalanceDataOfClass(classNumero, { filter: filter(m => lower(m.journal) === 'xou'), newKey }).total.data,
-            exercise: this.balance.getBalanceDataOfClass(classNumero, { filter: filter(m => lower(m.journal) !== 'xou'), newKey }).total.data,
-            global: this.balance.getBalanceDataOfClass(classNumero, { newKey }).total.data
-        };
-
+            reouverture: this.balance.getBalanceDataOfClass(classNumero, { filter: filter(m => lower(m.journal) === 'xou'), newKey }),
+            exercise: this.balance.getBalanceDataOfClass(classNumero, { filter: filter(m => lower(m.journal) !== 'xou'), newKey }),
+            global: this.balance.getBalanceDataOfClass(classNumero, { newKey })
+        });
     }
 }

@@ -29,7 +29,6 @@ export class ImporterFiles<T = string> {
 export class ImporterOption<T = string> {
     files: ImporterFiles<T>;
     odsFilename?: string;
-
     directory: string;
     private requiredFiles = [ 'planComptable', 'journaux' ];
 
@@ -43,7 +42,7 @@ export class ImporterOption<T = string> {
     };
 
     constructor(private option: PartialRecursive<ImporterOption<ImporterFile>>) {
-        const filenames = [ ...Object.values(option.files).map(f => f.filename), option.odsFilename ];
+        const filenames = [ ...Object.values(option.files || []).map(f => f.filename), option.odsFilename ];
         const hasOneFileRelative = this.isOneFileRelativePath(filenames);
 
         // is not hasOneFileRelative => option.files[key].filename are names if present

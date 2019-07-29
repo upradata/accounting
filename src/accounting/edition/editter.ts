@@ -30,6 +30,8 @@ export class Editter {
         for (const [ format, loggers ] of Object.entries(this.loggers)) {
             const content = option[ format ] as string;
 
+            if (!loggers) continue;
+
             if (content) {
                 for (const logger of loggers)
                     promises.push(logger(content));

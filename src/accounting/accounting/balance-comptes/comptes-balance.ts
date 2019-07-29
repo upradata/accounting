@@ -1,12 +1,20 @@
 import { Compte } from '../compte';
-import { BalanceMap, BalanceData, BalanceMapFilterOption } from '../balance/balance-map';
+import { BalanceMap, BalanceMapFilterOption } from '../balance/balance-map';
 import { Mouvement } from '../mouvement';
+import { BalanceMapData } from '../balance/balance-map-data';
 
-export type BalanceFilter = (numero: string | number, mouvement: Mouvement) => boolean;
+export type Numero = string | number;
+
+export type BalanceFilter = (numero: Numero, mouvement: Mouvement) => boolean;
 
 export interface BalanceFilterOption {
     filter?: BalanceFilter;
     newKey?: BalanceMapFilterOption<CompteKey>[ 'newKey' ];
+}
+
+export interface CompteRange {
+    from: Numero;
+    to: Numero;
 }
 
 export type CompteKey = string; // compte numero
@@ -28,7 +36,11 @@ export class ComptesBalance extends BalanceMap<CompteKey> {
         return balance;
     }
 
-    getBalanceDataOfClass(classNumero: string | number, filterOption: BalanceFilterOption = {}): BalanceData {
+    get(compteNumero: Numero): BalanceMapData {
+        return this.getBalanceDataOfKey(compteNumero + '');
+    }
+
+    getBalanceDataOfClass(classNumero: Numero, filterOption: BalanceFilterOption = {}): BalanceMapData {
         const { filter = (numero, mouvement) => true, newKey = (numero, mouvement) => numero } = filterOption;
 
         const classNumeroFull = Compte.pad(classNumero);
@@ -50,7 +62,7 @@ export class ComptesBalance extends BalanceMap<CompteKey> {
     }
 
 
-    getBalanceRange(compteRange: { from: string | number, to: string | number }): ComptesBalance {
+    getBalanceRange(compteRange: CompteRange): ComptesBalance {
         const from = parseFloat(Compte.pad(compteRange.from));
         const to = parseFloat(Compte.pad(compteRange.to));
 
@@ -72,5 +84,4 @@ export class ComptesBalance extends BalanceMap<CompteKey> {
 
         return ComptesBalance.createFromBalanceMap(balanceMap);
     }
-
 }

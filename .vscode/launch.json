@@ -38,6 +38,38 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Accounting List",
+            "program": "${workspaceFolder}/dist/accounting/index.js",
+            "args": [
+                "--exercise-start",
+                "01022018",
+                "--metadata",
+                "./metadata.json",
+                "--list-csv",
+                "depenses: data/depenses.csv, depensesPieces:  data/depenses-pieces.csv, saisiePieces: data/saisie-pieces.csv, balanceReouverture: data/balance-reouverture.csv, planComptable: data/plan-comptable.csv:, journaux: data/journaux.csv",
+                "--edit"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Accounting List Name",
+            "program": "${workspaceFolder}/dist/accounting/index.js",
+            "args": [
+                "--exercise-start",
+                "01022018",
+                "--metadata",
+                "./metadata.json",
+                "--list-csv",
+                "depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv:, journaux: journaux.csv",
+                "--fec",
+                "--output",
+                "Output"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch ods-to-csv",
             "program": "${workspaceFolder}/bin/ods-to-csv.js",
             "args": [
@@ -61,7 +93,6 @@
                 "test"
             ]
         },
-        ,
         {
             "type": "node",
             "request": "launch",

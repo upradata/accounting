@@ -1,13 +1,15 @@
 import { EventEmitter } from 'events';
 import { SortedArray } from '../../util/sorted-array';
 import { Mouvement } from '../mouvement';
-import { MouvementCompte } from './mouvements-compte';
+import { Editter } from '../../edition/editter';
+import { EditOption } from '../../edition/edit';
+import { ComptesBalance } from '../balance-comptes/comptes-balance';
+import { GrandLivreEdit } from './grand-livre.edit';
 
 
 export class GrandLivre {
     public mouvements: SortedArray<Mouvement>; // ordered on date
-    public mouvementsCompte = new MouvementCompte();
-
+    public comptesBalance = new ComptesBalance();
     private newMouvement$ = new EventEmitter();
 
     constructor() {
@@ -24,13 +26,17 @@ export class GrandLivre {
 
     add(...mouvements: Mouvement[]) {
         this.mouvements.push(...mouvements);
-        this.mouvementsCompte.add(...mouvements);
+        this.comptesBalance.add(mouvements);
         this.newMouvement$.emit('newMouvement', mouvements);
     }
 
     mouvementsOfCompte(compteNumero: string | number) {
-        return this.mouvementsCompte.get(compteNumero);
+        return this.comptesBalance.get(compteNumero);
         // arrayToObjOfArrayById(this.mouvements.array, 'compte.numero');
+    }
+
+    edit(editter: Editter, option?: EditOption): Promise<void[]> {
+        return new GrandLivreEdit(this.comptesBalance).edit(editter, option);
     }
 
     /* byClass() {

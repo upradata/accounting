@@ -1,21 +1,15 @@
 import { SortedArray } from '../../util/sorted-array';
 import { Mouvement } from '../mouvement';
 import { SortedMap } from '../../util/sorted-map';
-import { BalanceTotal, BalanceTotalData } from './balance-total';
-import { BalanceFilter } from '../balance-comptes/comptes-balance';
+import { BalanceTotal } from './balance-total';
 import { isIterable } from '../../util/util';
+import { BalanceMapData } from './balance-map-data';
 
-
-
-export interface BalanceData {
-    mouvements: SortedArray<Mouvement>;
-    total: BalanceTotal;
-}
 
 
 export interface BalanceMapIteratorResult<K> {
     key: K;
-    balanceData: BalanceData;
+    balanceData: BalanceMapData;
 }
 
 
@@ -56,7 +50,7 @@ export class BalanceMapOption<K> {
 
 
 export class BalanceMap<Key> {
-    balanceMap: SortedMap<Key, BalanceData>;
+    balanceMap: SortedMap<Key, BalanceMapData>;
     private options: BalanceMapOption<Key>;
 
     constructor(balanceMapOption: BalanceMapOption<Key>) {
@@ -77,19 +71,19 @@ export class BalanceMap<Key> {
         return this;
     }
 
-    getBalanceDataOfKey(key: Key): BalanceData {
+    getBalanceDataOfKey(key: Key): BalanceMapData {
         const keyMuted = this.options.keyMutation(key);
         let data = this.balanceMap.get(keyMuted);
 
         if (!data) {
-            data = {
+            data = new BalanceMapData({
                 mouvements: new SortedArray(
                     undefined,
                     (m1: Mouvement, m2: Mouvement) => m1.date === m2.date,
                     (m1: Mouvement, m2: Mouvement) => m1.date.getTime() - m2.date.getTime()
                 ), // ordered by date
                 total: new BalanceTotal()
-            };
+            });
             this.balanceMap.set(keyMuted, data);
         }
 
