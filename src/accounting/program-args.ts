@@ -1,6 +1,5 @@
 import program from 'commander';
-import * as path from 'path';
-import { ImporterFiles } from './import/importer';
+import { ImporterFiles } from './import/importer-option';
 
 program
     .version('1.0.0')
@@ -12,7 +11,7 @@ program
     .option('-eg, --edit-grandlivre', 'Edit Grand Livre.')
     .option('-eb, --edit-balance', 'Edit Balance Des Comptes.')
     .option('-ej, --edit-journal', 'Edit Journal Centraliseur.')
-    .option('-i, --input <path>', 'Directory for input data.')
+    .option('-d, --data-directory <path>', 'Directory for input data.')
     .option('-o, --ods [path]', 'ODS file containing accounting data')
     .option('-l, --list-csv <input-csv-path>', 'comma separated list', commaSeparatedList);
 
@@ -20,43 +19,50 @@ program
 function commaSeparatedList(value: string, dummyPrevious: string) {
     return value.split(',').reduce((o, v) => {
         const [ key, filename ] = v.split(':');
-        o[ key ] = { filename };
+        o[ key.trim() ] = { filename: filename.trim() };
 
         return o;
     }, {});
 }
 
-export interface ProgramArguments {
+export interface ProgramArguments<StringOrBoolArg = string | boolean> {
     exerciseStart: string;
     metadata?: string;
-    fec?: string | boolean;
-    edit?: string | boolean;
+    fec?: StringOrBoolArg;
+    edit?: StringOrBoolArg;
     editShort?: boolean;
     editGrandLivre?: boolean;
     editBalance?: boolean;
     editJournal?: boolean;
-    inputDirectory?: string;
-    ods?: string | boolean;
+    dataDirectory?: string;
+
+    ods?: StringOrBoolArg;
     listCsv?: ImporterFiles<{ filename: string }>;
 }
 
-export const programArgs: ProgramArguments = program.parse(process.argv) as any;
+const args: ProgramArguments = program.parse(process.argv) as any;
 
-programArgs.inputDirectory = programArgs.inputDirectory || path.join(__dirname, '../../data');
+// programArgs.dataDirectory = programArgs.dataDirectory || path.join(__dirname, '../../data');
 
-const ods = programArgs.ods;
-programArgs.ods = typeof ods === 'string' ? ods : ods ? 'comptabilite.ods' : undefined;
+const ods = args.ods;
+args.ods = typeof ods === 'string' ? ods : ods ? 'comptabilite.ods' : undefined;
 
 
 const editKeys = [ 'editGrandLivre', 'editBalance', 'editJournal' ];
 
-if (programArgs.edit) {
+if (args.edit) {
 
     for (const k of editKeys) {
-        if (programArgs[ k ] === undefined)
-            programArgs[ k ] = true;
+        if (args[ k ] === undefined)
+            args[ k ] = true;
     }
 }
 
-if (editKeys.find(k => programArgs[ k ] === true))
-    programArgs.edit = true;
+if (editKeys.find(k => args[ k ] === true))
+    args.edit = true;
+
+
+export const programArgs: ProgramArguments<string> = args as any;
+
+/* console.log(programArgs);
+process.exit(1); */

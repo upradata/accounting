@@ -64,7 +64,7 @@ export class BalanceMap<Key> {
         this.balanceMap = new SortedMap(undefined, undefined, this.options.keyCompare);
     }
 
-    add(mouvements: Mouvement | Iterable<Mouvement>, key?: Key) {
+    add(mouvements: Mouvement | Iterable<Mouvement>, key?: Key): BalanceMap<Key> {
         const mouvementsList = isIterable<Mouvement>(mouvements) ? mouvements : [ mouvements ];
 
         for (const mouvement of mouvementsList) {
@@ -73,6 +73,8 @@ export class BalanceMap<Key> {
             balanceCompte.mouvements.push(mouvement);
             balanceCompte.total.add(mouvement);
         }
+
+        return this;
     }
 
     getBalanceDataOfKey(key: Key): BalanceData {

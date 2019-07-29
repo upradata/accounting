@@ -90,14 +90,9 @@ class Run {
     async run() {
         await this.init();
 
-        const inputDirectory = programArgs.inputDirectory || __dirname;
-
-        const ods = programArgs.ods;
-        const odsFilename = ods === 'string' ? ods : ods ? 'comptabilite.ods' : undefined;
-
         await this.accounting.importComptaData({
-            directory: inputDirectory,
-            odsFilename,
+            directory: programArgs.dataDirectory,
+            odsFilename: programArgs.ods,
             files: programArgs.listCsv
         });
 

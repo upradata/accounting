@@ -1,0 +1,29 @@
+id;libelle;journal;date;compte;compte libelle (auto);compteAux;debit;credit
+reouv-ex-18-19-REPORT#1;Solde anouveau au 01/02/2018: Report;XOU;20180201;1010000;Capital;;;10000
+reouv-ex-18-19-REPORT#1;Solde anouveau au 01/02/2018: Report;XOU;20180201;1190000;Report à nouveau (solde débiteur);;713.26;
+reouv-ex-18-19-REPORT#1;Solde anouveau au 01/02/2018: Report;XOU;20180201;1290000;Résultat de l'exercice (perte);;933.39;
+reouv-ex-18-19-REPORT#1;Solde anouveau au 01/02/2018: Report;XOU;20180201;2755000;Cautionnements;;154;
+reouv-ex-18-19-REPORT#1;IMMO: Report;XOU;20180201;4040000;Fournisseurs d'immobilisations;;;154
+reouv-ex-18-19-REPORT#1;IMMO: Report;XOU;20180201;4040000;Fournisseurs d'immobilisations;;154;
+reouv-ex-18-19-REPORT#1;Solde anouveau au 01/02/2018: Report;XOU;20180201;4456611;TVA déductible Achats Taux 1/Factures;;154.44;
+reouv-ex-18-19-REPORT#1;Solde anouveau au 01/02/2018: Report;XOU;20180201;4456700;Crédit de TVA à reporter;;418;
+reouv-ex-18-19-REPORT#1;Frais bancaire: Report;XOU;20180201;5120000;Banques;;;33.46
+reouv-ex-18-19-REPORT#1;Frais bancaire: Report;XOU;20180201;5120000;Banques;;;22.5
+reouv-ex-18-19-REPORT#1;Compte courant associe Thomas Milotti: Report;XOU;20180201;5120000;Banques;;4206.77;
+reouv-ex-18-19-REPORT#1;Encaissement Compte Thomas Milotti: Report;XOU;20180201;5120000;Banques;;134.7;
+reouv-ex-18-19-REPORT#1;Paiement  Achat: Report;XOU;20180201;5120000;Banques;;;2964.53
+reouv-ex-18-19-REPORT#1;Paiement Achat Declaration TVA: Report;XOU;20180201;5120000;Banques;;;2508.24
+reouv-ex-18-19-REPORT#1;IMMO: Report;XOU;20180201;5120000;Banques;;;154
+reouv-ex-18-19-REPORT#1;Virement Capital Libere: Report;XOU;20180201;5120000;Banques;;2000;
+reouv-ex-18-19-REPORT#1;Decouvert: Report;XOU;20180201;5120000;Banques;;;0.25
+reouv-ex-18-19-REPORT#1;Loyer 3eme trimestre: Report;XOU;20180201;5120000;Banques;;;191.41
+reouv-ex-18-19-REPORT#1;Frais bancaire: Report;XOU;20180201;5120000;Banques;;;34.71
+reouv-ex-18-19-REPORT#1;Virement Capital Verse: Report;XOU;20180201;5120000;Banques;;8000;
+reouv-ex-18-19-REPORT#1;Frais bancaire: Report;XOU;20180201;5120000;Banques;;;34.71
+reouv-ex-18-19-REPORT#1;Loyer 4eme trimestre: Report;XOU;20180201;5120000;Banques;;;193.02
+reouv-ex-18-19-REPORT#1;Marchandises : Report;XOU;20180201;5120000;Banques;;;38.15
+reouv-ex-18-19-REPORT#1;Liberation Capital Statuts: Report;XOU;20180201;5120000;Banques;;;15.79
+reouv-ex-18-19-REPORT#1;Depense Depot Compte;XOU;20180201;5120000;Banques;;;45.42
+reouv-ex-18-19-REPORT#1;Marchandises: Report;XOU;20180201;5120000;Banques;;;92.89
+reouv-ex-18-19-REPORT#1;Loyer 2nd trimestre: Report;XOU;20180201;5120000;Banques;;;184.6
+reouv-ex-18-19-REPORT#1;Loyer 1er trimestre: Report;XOU;20180201;5120000;Banques;;;200.88

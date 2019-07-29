@@ -61,7 +61,7 @@ export class ComptesBalance extends BalanceMap<CompteKey> {
                 if (numero < from)
                     return { pass: false };
 
-                if (numero >= from && from <= to)
+                if (numero >= from && numero <= to)
                     return { pass: true };
 
                 // if (numero > to)
@@ -72,6 +72,5 @@ export class ComptesBalance extends BalanceMap<CompteKey> {
 
         return ComptesBalance.createFromBalanceMap(balanceMap);
     }
-
 
 }

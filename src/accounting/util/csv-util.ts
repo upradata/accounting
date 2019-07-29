@@ -1,6 +1,7 @@
 import { ObjectOf } from './types';
 
 import csv from 'csvtojson';
+import { Converter } from 'csvtojson/src/Converter';
 import { CSVParseParam } from 'csvtojson/v2/Parameters';
 import * as  fs from 'fs';
 import * as  path from 'path';
@@ -33,19 +34,25 @@ export function readFirstLine(filename: string) {
     });
 }
 
-export async function csvToJson(filename: string, options: Partial<CSVParseParam> & { onlyHeaderColumn?: boolean } = {}) {
+export type CsvToJsonOption = Partial<CSVParseParam> & { onlyHeaderColumn?: boolean };
+export async function csvToJson(filename: string, options: CsvToJsonOption = {}) {
     if (options.onlyHeaderColumn)
         options.includeColumns = new RegExp(options.headers.join('|'));
 
     return csv(options)
         /* .subscribe((row: ObjectOf<string>) => Object.entries(row).forEach(([ k, v ]) => {
             const isNumber = /^\d+(,|\.)?\d*$/.test(v); // !isNaN(parseFloat(v));
-
+ 
             if (isNumber) {
                 row[ k ] = parseFloat(v.replace(',', '.'));
             }
         })) */
-        .fromFile(filename);
+        .fromFile(filename)
+        .on('error', e => {
+            throw new Error(`An error occured while converting csv file ${filename}: ${e}`);
+        });
+
+    // Converter.then is defined => we can use it like a promise :)
 }
 
 export function toCsv(json: ObjectOf<any>[]) {

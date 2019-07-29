@@ -8,6 +8,7 @@ export interface SortedMap<K, V> {
     iterate(): Iterator<{ key: K, value: V }>;
     [ Symbol.iterator ](): IterableIterator<{ key: K, value: V }>;
     toArray(): V[];
+
     toObject(): ObjectOf<{ key: K, value: V }>;
 }
 

@@ -1,4 +1,4 @@
-import { JournauxBalanceByMonth } from './types';
+import { JournauxBalanceByMonth, MonthYear } from './journaux-balance-by-month';
 import { Edit, EditOption } from '../../edition/edit';
 import { Mouvement } from '../mouvement';
 import { BalanceTotalData } from '../balance/balance-total';
@@ -18,7 +18,7 @@ interface AddToEditOption {
         date: Mouvement[ 'date' ];
     };
     total: BalanceTotalData;
-    monthI?: number;
+    monthYear?: MonthYear;
 }
 
 export interface ExtraOption {
@@ -28,6 +28,8 @@ export interface ExtraOption {
 export class JournalCentraliseurEdit extends Edit<ExtraOption> {
     private isShort = false;
     private isByJournal = false;
+    private currentMonth: string = '';
+
 
     constructor(private journauxBalanceByMonth: JournauxBalanceByMonth) {
         super({ title: 'Journal Centraliseur' });
@@ -41,6 +43,10 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
 
         for (let i = length - nbRight; i < length; ++i)
             columns[ i ] = { alignment: 'right' };
+
+        if (this.isByJournal)
+            columns[ 0 ] = { alignment: 'center' };
+        columns[ 1 ] = { alignment: 'center' };
 
         return { columns };
     }
@@ -67,14 +73,14 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
     }
 
     private balanceByJournal(): JournauxBalance {
-        const balance = new JournauxBalance();
+        const journalBalance = new JournauxBalance();
 
-        for (const b of this.journauxBalanceByMonth) {
-            for (const { balanceData } of b)
-                balance.add(balanceData.mouvements);
+        for (const { balance } of this.journauxBalanceByMonth) {
+            for (const { balanceData } of balance)
+                journalBalance.add(balanceData.mouvements);
         }
 
-        return balance;
+        return journalBalance;
     }
 
     private editByJournal() {
@@ -84,7 +90,17 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
             this.addToEdit({ journal, total: balanceData.total.data });
     }
 
-    private addToEdit({ journal, mouvement, total, monthI }: AddToEditOption) {
+    private getMonth(dateMonth: number) {
+        const date = new Date(2019, dateMonth); // year is not important
+        const m = date.toLocaleString('fr-FR', { month: 'long' });
+
+        const month = this.currentMonth === m ? '' : m;
+        this.currentMonth = m;
+
+        return month;
+    }
+
+    private addToEdit({ journal, mouvement, total, monthYear }: AddToEditOption) {
         let debit: string | number = '';
         let credit: string | number = '';
 
@@ -106,9 +122,7 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
         if (this.isByJournal)
             dataO = { journal, totalDebit, totalCredit, solde };
         else {
-            const date = new Date();
-            date.setMonth(monthI + 1);
-            const month = date.toLocaleString('fr-FR', { month: 'long' });
+            const month = this.getMonth(monthYear.month);
 
             if (this.isShort)
                 dataO = { month, journal, totalDebit, totalCredit, solde };
@@ -139,16 +153,16 @@ export class JournalCentraliseurEdit extends Edit<ExtraOption> {
             return this.editByJournal();
 
 
-        for (const [ monthI, journauxBalance ] of this.journauxBalanceByMonth.entries()) {
-            for (const { key: journal, balanceData } of journauxBalance) {
+        for (const { monthYear, balance } of this.journauxBalanceByMonth) {
+            for (const { key: journal, balanceData } of balance) {
 
                 if (!this.isShort) {
                     for (const mouvement of balanceData.mouvements) {
-                        this.addToEdit({ journal, mouvement, total: balanceData.total.data, monthI });
+                        this.addToEdit({ journal, mouvement, total: balanceData.total.data, monthYear });
                     }
                 }
 
-                this.addToEdit({ journal, total: balanceData.total.data, monthI });
+                this.addToEdit({ journal, total: balanceData.total.data, monthYear });
             }
         }
     }

@@ -30,7 +30,7 @@ function oneOf(args, oneOfArgs) {
     return `One of ${oneOfArgs.join(', ')} has to be specified`;
 }
 
-module.exports.abortProgram = message => {
+const abortProgram = message => {
     if (message) {
         console.error(message);
         console.log('Program Aborted.')
@@ -38,6 +38,8 @@ module.exports.abortProgram = message => {
 
     process.exit(1);
 }
+
+module.exports.abortProgram = abortProgram;
 
 
 module.exports.xlsxToCsvAll = ({ filepath, outputDir }, nbRerun = 0) => {

@@ -1,0 +1,19 @@
+ORDRE;INFORMATION;OBLIGATOIRE;NOM DU CHAMP;FORMAT
+1;Code journal de l’écriture comptable;Oui;JournalCode;Alphanumérique
+2;Libellé journal de l’écriture comptable;Oui;JournalLib;Alphanumérique
+3;Numéro sur une séquence continue de l’écriture comptable;Oui;EcritureNum;Alphanumérique
+4;Date de comptabilisation de l’écriture comptable;Oui;EcritureDate;Date
+5;Numéro de compte (3 premiers caractères devant correspondre au PCG);Oui;CompteNum;Alphanumérique
+6;Libellé de compte (conformément à la nomenclature du PCG);Oui;CompteLib;Alphanumérique
+7;Numéro de compte auxiliaire;Non;CompAuxNum;Alphanumérique
+8;Libellé du compte auxiliaire;Non;CompAuxLib;Alphanumérique
+9;Référence de la pièce justificative;Oui;PieceRef;Alphanumérique
+10;Date de la pièce justificative;Oui;PieceDate;Date
+11;Libellé de l’écriture comptable;Oui;EcritureLib;Alphanumérique
+12;Montant au débit;Oui;Debit;Numérique
+13;Montant au crédit;Oui;Credit;Numérique
+14;Lettrage de l’écriture comptable;Non;EcritureLet;Alphanumérique
+15;Date de lettrage;Non;DateLet;Date
+16;Date de validation de l’écriture comptable;Oui;ValidDate;Date
+17;Montant en devise;Non;Montantdevise;Numérique
+18;Identifiant de la devise;Non;Idevise;Alphanumérique

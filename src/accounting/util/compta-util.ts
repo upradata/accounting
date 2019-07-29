@@ -1,6 +1,6 @@
 export function fecDateToDate(d: string) {
     const year = parseFloat(d.slice(0, 4));
-    const month = parseFloat(d.slice(4, 6)) - 2; // // strange behavior in Node. should be -1
+    const month = parseFloat(d.slice(4, 6)) - 1;
     const day = parseFloat(d.slice(6, 8));  // strange behavior in Node.
 
     return new Date(year, month, day);
