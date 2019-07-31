@@ -39,7 +39,8 @@ const generators = {} as { [ k: string ]: PieceFromLibelleGenerator };
 generators.loyerGenerator = (depense: Depense): Piece[] => {
     if (/(SDM|Loyer)/i.test(depense.libelle)) {
         // 60 Opérations Diverses
-        // 6132: Locations immobilieres
+        // 6132: Locations immobilieres (compte de charges)
+        // 4011: Fournisseurs SDM (compte fournisseur)
         const crediteur = new CompteInfo({ compte: 401, compteAux: 4011 });
 
         return [
@@ -54,7 +55,8 @@ generators.loyerGenerator = (depense: Depense): Piece[] => {
 generators.fraisGenerauxGenerator = (depense: Depense): Piece[] => {
     if (/frais generaux/i.test(depense.libelle)) {
         // 60 Opérations Diverses
-        // 6132: Fournitures administratives
+        // 6064: Fournitures administratives (compte de charges)
+        // 4012: Fournisseur Frais Généraux (compte fournisseur)
         const crediteur = new CompteInfo({ compte: 401, compteAux: 4012 });
 
         return [
@@ -68,7 +70,8 @@ generators.fraisGenerauxGenerator = (depense: Depense): Piece[] => {
 generators.greffeGenerator = (depense: Depense): Piece[] => {
     if (/greffe|inpi|bodacc|kbis/i.test(depense.libelle)) {
         // 60 Opérations Diverses
-        // 6132: Fournitures administratives & 4013: Frais Greffe
+        // 6227: Frais d'actes et de contentieux (compte de charges)
+        // 4013: Frais Greffe (compte fournisseur)
         const crediteur = new CompteInfo({ compte: 401, compteAux: 4013 });
 
         return [
@@ -93,6 +96,22 @@ generators.compteCourantGenerator = (depense: Depense): Piece[] => {
         ];
     }
 };
+
+
+generators.venteWebsite = (depense: Depense): Piece[] => {
+    if (/vente/i.test(depense.libelle) && /website/i.test(depense.libelle)) {
+        // 60 Opérations Diverses
+        // 707: Vente de marchandise TVA1 (compte de produits) (70701 exonéré de TVA)
+        // 4111: Compte Client Website (compte client)
+        const debiteur = new CompteInfo({ compte: 4111 });
+
+        return [
+            PieceFactory.achat({ crediteur: new CompteInfo({ compte: 707 }), debiteur, ...depense }),
+            PieceFactory.banque({ montant: depense.ttc, compteInfo: debiteur, type: 'vente', ...depense })
+        ];
+    }
+};
+
 
 
 export const PREDIFINED_GENERATORS: PieceFromLibelleGenerator[] = Object.values(generators);

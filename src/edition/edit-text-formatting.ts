@@ -1,5 +1,5 @@
 import { colors } from '../util/color';
-import { StyleTemplate } from '../../../linked-modules/@mt/node-util';
+import { StyleTemplate } from '../../linked-modules/@mt/node-util';
 import { TableRows, TableRow, TableString, TableItem, TableStringOption } from './table';
 
 

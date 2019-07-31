@@ -8,7 +8,8 @@ import { Journaux } from '../metadata/journaux';
 import { PartialRecursive } from '../util/types';
 import { Injector } from '../util/di';
 import { PlanComptable } from '../metadata/plan-comptable';
-import { ImporterFiles, ImporterOption, ImporterFile } from './importer-option';
+import { ImporterOption } from './importer-option';
+import { ImporterFiles, ImporterFile } from './importer-input';
 
 
 

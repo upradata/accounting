@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
-        "allowJs": true,
+        "allowJs": false,
         "resolveJsonModule": true,
         "declaration": false,
         "emitDecoratorMetadata": true,

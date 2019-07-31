@@ -4,13 +4,12 @@ const { odsToXlsx, xlsxToCsv } = require('../dist/accounting/util/csv-util');
 const { checkRequiredArgs, abortProgram, xlsxToCsvAll } = require('./common');
 
 const { tmpdir } = require('os');
-const { mkdtemp, readdir } = require('fs');
+const { mkdtemp } = require('fs');
 const { promisify } = require('util');
 const path = require('path');
 
 const tmpDir = tmpdir();
 const makeTmpDir = promisify(mkdtemp);
-const readdirAsync = promisify(readdir);
 
 const program = require('commander');
 

@@ -1,6 +1,7 @@
 import program from 'commander';
 import { ImporterFiles } from './import/importer-option';
 import { createDirIfNotExist } from './util/util';
+import { INPUT_DATA_DEFAULTS } from './import/importer-input';
 
 program
     .version('1.0.0')
@@ -52,7 +53,7 @@ createDirIfNotExist(args.outputDir);
 args.fec = typeof args.fec === 'string' ? args.fec : 'default';
 
 const ods = args.ods;
-args.ods = typeof ods === 'string' ? ods : ods ? 'comptabilite.ods' : undefined;
+args.ods = typeof ods === 'string' ? ods : ods ? INPUT_DATA_DEFAULTS.odsFilename : undefined;
 
 
 const editKeys = [ 'editGrandLivre', 'editBalance', 'editJournal', 'editPieces' ];

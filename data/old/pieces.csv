@@ -1,6 +1,0 @@
-id;journal;compte;compte libelle (auto);compteAux;debit;credit;;
-piece-reductuion-capital#1;90;101;Capital;;4000;;;
-piece-reductuion-capital#1;90;1041;Primes d'émission;;101101;800;;
-piece-reductuion-capital#1;90;277;Actions propres ou parts propres;;;3200;;
-piece-reductuion-capital#2;BQ;277;Actions propres ou parts propres;;3200;;;
-piece-reductuion-capital#2;BQ;512;Banques;;;3200;;

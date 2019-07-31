@@ -24,7 +24,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting",
-            "program": "${workspaceFolder}/dist/accounting/index.js",
+            "program": "${workspaceFolder}/dist/index.js",
             "args": [
                 "--exercise-start",
                 "01022018",
@@ -32,38 +32,96 @@
                 "data/compta.ods",
                 "--metadata",
                 "./metadata.json",
-                "--edit"
+                "--edit",
+                "--output-dir",
+                "Output"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Accounting Input Data",
+            "program": "${workspaceFolder}/dist/index.js",
+            "args": [
+                "--exercise-start",
+                "01022018",
+                "--data-directory",
+                "${workspaceFolder}/data",
+                "--metadata",
+                "./metadata.json",
+                "--edit",
+                "--output-dir",
+                "Output"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Accounting Input Data + Files",
+            "program": "${workspaceFolder}/dist/index.js",
+            "args": [
+                "--exercise-start",
+                "01022018",
+                "--data-directory",
+                "data",
+                "--list-csv",
+                "planComptable: data/plan-comptable.csv, journaux: data/journaux.csv",
+                "--metadata",
+                "./metadata.json",
+                "--edit",
+                "--output-dir",
+                "Output"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Accounting Input Data + Ods",
+            "program": "${workspaceFolder}/dist/index.js",
+            "args": [
+                "--exercise-start",
+                "01022018",
+                "--data-directory",
+                "data",
+                "--ods",
+                "--metadata",
+                "./metadata.json",
+                "--edit",
+                "--output-dir",
+                "Output"
             ]
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting List",
-            "program": "${workspaceFolder}/dist/accounting/index.js",
+            "program": "${workspaceFolder}/dist/index.js",
             "args": [
                 "--exercise-start",
                 "01022018",
                 "--metadata",
                 "./metadata.json",
                 "--list-csv",
-                "depenses: data/depenses.csv, depensesPieces:  data/depenses-pieces.csv, saisiePieces: data/saisie-pieces.csv, balanceReouverture: data/balance-reouverture.csv, planComptable: data/plan-comptable.csv:, journaux: data/journaux.csv",
-                "--edit"
+                "depenses: data/depenses.csv, depensesPieces:  data/depenses-pieces.csv, saisiePieces: data/saisie-pieces.csv, balanceReouverture: data/balance-reouverture.csv, planComptable: data/plan-comptable.csv, journaux: data/journaux.csv",
+                "--edit",
+                "--output-dir",
+                "Output"
             ]
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting List Name",
-            "program": "${workspaceFolder}/dist/accounting/index.js",
+            "program": "${workspaceFolder}/dist/index.js",
             "args": [
                 "--exercise-start",
                 "01022018",
                 "--metadata",
                 "./metadata.json",
                 "--list-csv",
-                "depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv:, journaux: journaux.csv",
+                "depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv, journaux: journaux.csv",
                 "--fec",
-                "--output",
+                "--output-dir",
                 "Output"
             ]
         },

@@ -13,6 +13,8 @@ export class AchatOption {
     debiteur: CompteInfo;
 }
 
+export type VenteOption = AchatOption;
+
 export class BanqueOption {
     montant: number;
     libelle: string;
@@ -26,23 +28,41 @@ export class PieceFactory {
 
     constructor() { }
 
-    static fromDepense(depense: ComptaDepense) {
-
-    }
-
-    static vente() { }
-
     static achat(option: AchatOption) {
         const { ttc, ht, tva, libelle, date, journal, crediteur, debiteur } = Object.assign(new AchatOption(), option);
 
         const piece = new Piece({ journal, libelle, date });
 
+        // compte fournisseur
         piece.addMouvement({ montant: ttc, type: 'credit', compteInfo: crediteur });
         if (tva) {
+            // 4456611: TVA déductible Achats Taux 1/Factures
             piece.addMouvement({ montant: tva, type: 'debit', compteInfo: new CompteInfo({ compte: 4456611 }) });
+            // compte de charges
             piece.addMouvement({ montant: ht, type: 'debit', compteInfo: debiteur });
         } else
             piece.addMouvement({ montant: ttc, type: 'debit', compteInfo: debiteur });
+
+
+        if (piece.tryClose())
+            return piece;
+    }
+
+
+    static vente(option: VenteOption) {
+        const { ttc, ht, tva, libelle, date, journal, crediteur, debiteur } = Object.assign(new AchatOption(), option);
+
+        const piece = new Piece({ journal, libelle, date });
+
+        // compte client
+        piece.addMouvement({ montant: ttc, type: 'debit', compteInfo: debiteur });
+        if (tva) {
+            // 445711: TVA collectée Ventes Taux 1/Factures
+            piece.addMouvement({ montant: tva, type: 'credit', compteInfo: new CompteInfo({ compte: 445711 }) });
+            // compte de produit
+            piece.addMouvement({ montant: ht, type: 'credit', compteInfo: crediteur });
+        } else
+            piece.addMouvement({ montant: ttc, type: 'credit', compteInfo: crediteur });
 
 
         if (piece.tryClose())

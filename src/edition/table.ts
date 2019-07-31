@@ -2,7 +2,7 @@ import { PartialRecursive } from '../util/types';
 import { TableUserConfig, ColumnConfig, table } from 'table';
 import makeConfig from 'table/dist/makeConfig';
 import stringWidth from 'string-width';
-import { assignDefaultOption, assignRecursive } from '../../../linked-modules/@mt/browser-util/assign';
+import { assignDefaultOption, assignRecursive } from '../../linked-modules/@mt/browser-util/assign';
 
 
 export type TableItem = string | number;

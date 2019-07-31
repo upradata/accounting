@@ -194,521 +194,490 @@ id;numero;libelle
 193;3950000;Provi. dépréc. des stocks de produits
 194;3970000;Provi. dépréc. des stocks de marchandises
 195;4010000;Fournisseurs (compte collectif)
-196;4010000;Fournisseurs (compte collectif)
-197;4011000;Fournisseur SDM
-198;4011000;Fournisseurs SDM
-199;4012000;Fournisseur Frais Généraux
-200;4012000;Fournisseur Frais Généraux
-201;4013000;Frais Greffe
-202;4013000;Frais Greffe
-203;4030000;Fournisseurs - Effets à payer
-204;4040000;Fournisseurs d'immobilisations
-205;4040000;Fournisseurs d'immobilisations
-206;4050000;Fournisseurs d'immo. - Effets à payer
-207;4080000;Fournisseurs - Factures non parvenues
-208;4081000;Fournisseurs - Factures non parvenues-Fournisseurs
-209;4084000;Factures non parvenues-Fournisseurs d'immo.
-210;4088000;Factures non parvenues - Fournis.- Intérêts courus
-211;4090000;Fournisseurs Débiteurs
-212;4098000;Fournisseurs Débiteurs - Avoirs à recevoir
-213;4110000;Clients (compte collectif)
-214;4110000;Clients (compte collectif)
-215;4130000;Clients - Effets à recevoir
-216;4160000;Clients douteux ou litigieux
-217;4170000;Créances sur travaux non encore facturables
-218;4180000;Clients - Produits non encore facturés
-219;4181000;Clients - Factures à établir
-220;4190000;Clients Créditeurs - Acomptes TVA 1
-221;4190007;Clients Créditeurs - Acomptes TVA 2
-222;4190100;Clients Créditeurs - Acomptes TVA exonérée
-223;4198000;Clients Créditeurs - Avoirs à établir
-224;4210000;Personnel - Rémunérations dues
-225;4210000;Personnel - Rémunérations dues
-226;4220000;Comités d'entreprise, d'établissement
-227;4220000;Comités d'entreprise, d'établissement
-228;4240000;Participation des salariés
-229;4240000;Participation des salariés
-230;4246000;Participation des salariés : Réserve spéciale
-231;4246000; Réserve spéciale
-232;4248000;Participation des salariés : Comptes courants
-233;4248000; Comptes courants
-234;4250000;Personnel - Avances et acomptes
-235;4250000;Personnel - Avances et acomptes
-236;4260000;Personnel - Dépôts
-237;4260000;Personnel - Dépôts
-238;4270000;Personnel - Oppositions
-239;4270000;Personnel - Oppositions
-240;4282000;Personnel-Dettes provisionnées pour congés à payer
-241;4282000;Personnel-Dettes provisionnées pour congés à payer
-242;4286000;Personnel-Autres charges à payer
-243;4286000;Personnel-Autres charges à payer
-244;4287000;Personnel-Produits à recevoir
-245;4287000;Personnel-Produits à recevoir
-246;4310000;URSSAF
-247;4310000;URSSAF
-248;4372000;Mutuelle
-249;4372000;Mutuelle
-250;4373000;Retraite Obligatoire
-251;4373000;Retraite Obligatoire
-252;4374000;ASSEDIC
-253;4374000;ASSEDIC
-254;4375000;Retraite Cadres
-255;4375000;Retraite Cadres
-256;4382000;Organismes sociaux-Chges sociales s/congés à payer
-257;4382000;Organismes sociaux-Chges sociales s/congés à payer
-258;4386000;Organismes sociaux-Charges à payer
-259;4386000;Organismes sociaux-Charges à payer
-260;4387000;Organismes sociaux-Produits à recevoir
-261;4387000;Organismes sociaux-Produits à recevoir
-262;4410000;Etat - Subventions à recevoir
-263;4420000;Etat - Impôts et taxes recouvrables sur des tiers
-264;4430000;Opérations particulières avec l'Etat,collectivités
-265;4440000;Etat - Impôts sur les bénéfices
-266;4452011;TVA due intracomunautaire Taux 1/Factures
-267;4452012;TVA due intracomunautaire Taux 2/Factures
-268;4452013;TVA due intracomunautaire Taux 3/Factures
-269;4452021;TVA due intracomunautaire Taux 1/Décaissements
-270;4452022;TVA due intracomunautaire Taux 2/Décaissements
-271;4452023;TVA due intracomunautaire Taux 3/Décaissements
-272;4455100;TVA à décaisser
-273;4455800;Taxes assimilées à la TVA
-274;4456200;TVA déductible sur immobilisations
-275;4456610;TVA déductible Achats exonérés/Factures
-276;4456611;TVA déductible Achats Taux 1/Factures
-277;4456612;TVA déductible Achats Taux 2/Factures
-278;4456613;TVA déductible Achats Taux 3/Factures
-279;4456614;TVA déductible Achats Taux 4/Factures
-280;4456620;TVA déductible Achats exonérés/Décaissements
-281;4456621;TVA déductible Achats Taux 1/Décaissements
-282;4456622;TVA déductible Achats Taux 2/Décaissements
-283;4456623;TVA déductible Achats Taux 3/Décaissements
-284;4456624;TVA déductible Achats Taux 4/Décaissements
-285;4456631;TVA déductible Achats UE Taux 1/Factures
-286;4456632;TVA déductible Achats UE Taux 2/Factures
-287;4456633;TVA déductible Achats UE Taux 3/Factures
-288;4456641;TVA déductible Achats UE Taux 1/Décaissements
-289;4456642;TVA déductible Achats UE Taux 2/Décaissements
-290;4456643;TVA déductible Achats UE Taux 3/Décaissements
-291;4456700;Crédit de TVA à reporter
-292;4456800;Taxes assimilées à la TVA 
-293;4457110;TVA collectée Ventes exonérées/Factures
-294;4457111;TVA collectée Ventes Taux 1/Factures
-295;4457112;TVA collectée Ventes Taux 2/Factures
-296;4457113;TVA collectée Ventes Taux 3/Factures
-297;4457114;TVA collectée Ventes Taux 4/Factures
-298;4457120;TVA collectée Ventes exonérées/Encaissements
-299;4457121;TVA collectée Ventes Taux 1/Encaissements
-300;4457122;TVA collectée Ventes Taux 2/Encaissements
-301;4457123;TVA collectée Ventes Taux 3/Encaissements
-302;4457124;TVA collectée Ventes Taux 4/Encaissements
-303;4457130;TVA collectée Ventes UE/Factures
-304;4457140;TVA collectée Ventes UE/Encaissements
-305;4457800;Taxes assimilées à la TVA 
-306;4458100;Acomptes - Régime simplifié d'imposition
-307;4458200;Acomptes - Régime du forfait
-308;4458300;Remboursement de taxes sur le chiffre d'affaires
-309;4458400;TVA récupérée d'avance
-310;4458600;Taxes s/le chiffre d'aff. s/factures non parvenues
-311;4458700;Taxes s/le chiffre d'aff. s/factures à établir
-312;4458701;TVA collectée Ventes Taux 1/Acomptes
-313;4458702;TVA collectée Ventes Taux 2/Acomptes
-314;4460000;Obligations cautionnées
-315;4470000;Autres impôts, taxes et versements assimilés
-316;4482000;Etat - Charges fiscales sur congés à payer
-317;4486000;Etat - Autres charges à payer
-318;4487000;Etat - Produits à recevoir
-319;4510000;Groupe
-320;4551000;Associés - Comptes courants : Principal
-321;4551100;Compte courant associé Thomas Milotti
-322;4558000;Associés - Comptes courants : Intérêts courus
-323;4560000;Associés - Opérations sur le capital
-324;4561500;Associés - Comptes d'apport en numéraire
-325;4562500;Associés - Capital appelé, non versé
-326;4570000;Associés - Dividendes à payer
-327;4580000;Associés - Opérations faites en commun et en GIE
-328;4620000;Créances sur cessions d'immobilisations
-329;4620000;Créances sur cessions d'immobilisations
-330;4640000;Dettes s/acquisitions valeurs mobilières placement
-331;4640000;Dettes s/acquisitions valeurs mobilières placement
-332;4650000;Créances s/cessions valeurs mobilières placement
-333;4650000;Créances s/cessions valeurs mobilières placement
-334;4670000;Autres comptes débiteurs et créditeurs
-335;4670000;Autres comptes débiteurs et créditeurs
-336;4686000;Divers - Charges à payer
-337;4686000;Divers - Charges à payer
-338;4687000;Divers - Produits à recevoir
-339;4687000;Divers - Produits à recevoir
-340;4710000;Compte d'attente
-341;4760000;Différences de conversion - ACTIF
-342;4770000;Différences de conversion - PASSIF
-343;4780000;Autres comptes transitoires
-344;4810000;Charges à répartir sur plusieurs exercices
-345;4860000;Charges constatées d'avance
-346;4870000;Produits constatés d'avance
-347;4910000;Provisions pour dépréciation des comptes clients
-348;4950000;Provis. pour dépréc. des comptes associés
-349;4960000;Provis. pour dépréc. des comptes débiteurs divers
-350;5020000;Actions propres
-351;5030000;Actions
-352;5031000;Actions : Titres cotés
-353;5035000;Actions : Titres non cotés
-354;5040000;Autres titres conférant un droit de propriété
-355;5050000;Obligations/Bons émis par la société et rachetés
-356;5060000;Obligations
-357;5061000;Obligations : Titres cotés
-358;5065000;Obligations : Titres non cotés
-359;5070000;Bons du Trésor et bons de caisse à court terme
-360;5080000;Autres valeurs mobilières et créances assimilées
-361;5090000;Versements restant à effectuer s/valeurs non libé.
-362;5110000;Valeurs à l'encaissement
-363;5120000;Banques
-364;5140000;Chèques postaux
-365;5150000;Caisses du Trésor et des établissements publics
-366;5160000;Agents de change
-367;5170000;Autres organismes financiers
-368;5186000;Intérêts courus à payer
-369;5187000;Intérêts courus à recevoir
-370;5198000;Intérêts courus sur concours bancaires courants
-371;5300000;Caisse
-372;5800000;Virements internes
-373;5900000;Provis. pour dépréc. valeurs mobilières placement
-374;6010000;Achats stockés - Matières premières TVA 1
-375;6010002;Achats stockés - Matières premières TVA 2
-376;6010003;Achats stockés - Matières premières TVA 3
-377;6010100;Achats stockés - Matières premières exonérés
-378;6010200;Achats stockés - Matières premières UE TVA 1
-379;6010202;Achats stockés - Matières premières UE TVA 2
-380;6010203;Achats stockés - Matières premières UE TVA 3
-381;6020000;Achats stockés - Autres approvisionnements
-382;6021000;Achats stockés - Matières consommables
-383;6022000;Achats stockés - Fournitures consommables
-384;6022100;Achats stockés - Combustibles
-385;6022200;Achats stockés - Produits d'entretien
-386;6022300;Achats stockés - Fournitures d'atelier et d'usine
-387;6022400;Achats stockés - Fournitures de magasin
-388;6022500;Achats stockés - Fournitures de bureau
-389;6026000;Achats stockés - Emballages
-390;6026100;Achats stockés - Emballages perdus
-391;6026500;Achats stockés - Emball. récupérables non identif.
-392;6026700;Achats stockés - Emballages à usage mixte
-393;6031000;Variation des stocks de matières premières
-394;6032000;Variation des stocks des autres approvisionnements
-395;6037000;Variation des stocks de marchandises
-396;6040000;Achats études et prestations de services TVA 1
-397;6040002;Achats études et prestations de services TVA 2
-398;6040003;Achats études et prestations de services TVA 3
-399;6040100;Achats études et prestations de services exonérés
-400;6040200;Achats études et prestations de services UE TVA 1
-401;6040202;Achats études et prestations de services UE TVA 2
-402;6040203;Achats études et prestations de services UE TVA 3
-403;6050000;Achats matériels, équipements et travaux TVA 1
-404;6050002;Achats matériels, équipements et travaux TVA 2
-405;6050003;Achats matériels, équipements et travaux TVA 3
-406;6050100;Achats matériels, équipements et travaux exonérés
-407;6050200;Achats matériels, équipements et travaux UE TVA 1
-408;6050202;Achats matériels, équipements et travaux UE TVA 2
-409;6050203;Achats matériels, équipements et travaux UE TVA 3
-410;6060000;Achats non stockés matières, fournitures TVA 1
-411;6060002;Achats non stockés matières, fournitures TVA 2
-412;6060003;Achats non stockés matières, fournitures TVA 3
-413;6060100;Achats non stockés matières, fournitures exonérés
-414;6060200;Achats non stockés matières, fournitures UE TVA 1
-415;6060202;Achats non stockés matières, fournitures UE TVA 2
-416;6060203;Achats non stockés matières, fournitures UE TVA 3
-417;6061100;EDF Consommations
-418;6061103;EDF Abonnement TVA 3
-419;6061200;Carburant
-420;6061300;Eau
-421;6062000;Fournitures d'entretien
-422;6063000;Petit matériel et outillage
-423;6064000;Fournitures administratives
-424;6068000;Autres matières, fournitures
-425;6070000;Achats de marchandises TVA 1
-426;6070002;Achats de marchandises TVA 2
-427;6070003;Achats de marchandises TVA 3
-428;6070004;Achats de marchandises TVA 4
-429;6070100;Achats de marchandises exonérés
-430;6070200;Achats de marchandises UE TVA 1
-431;6070202;Achats de marchandises UE TVA 2
-432;6070203;Achats de marchandises UE TVA 3
-433;6080000;Frais accessoires sur achats TVA 1
-434;6080100;Frais accessoires sur achats exonérés
-435;6080200;Frais accessoires sur achats UE TVA 1
-436;6090000;Rabais, remises et ristournes obtenus sur achats
-437;6100000;Services extérieurs
-438;6110000;Sous-traitance générale
-439;6122000;Redevances de crédit-bail mobilier
-440;6125000;Redevances de crédit-bail immobilier
-441;6132000;Locations immobilières
-442;6135000;Locations mobilières
-443;6136000;Locations : Malis sur emballages
-444;6140000;Charges locatives et de copropriété
-445;6152000;Entretien et réparations : sur biens immobiliers
-446;6155000;Entretien et réparations : sur biens mobiliers
-447;6156000;Maintenance
-448;6161000;Primes d'assurances : Multirisques
-449;6162000;Primes d'assurances : Dommage-Construction
-450;6163000;Assurance transport
-451;6163600;Assurance transport : sur achats
-452;6163700;Assurance transport : sur ventes
-453;6163800;Assurance transport : sur autres biens
-454;6164000;Primes d'assurances : Risques d'exploitation
-455;6165000;Primes d'assurances : Insolvabilité clients
-456;6170000;Etudes et recherches
-457;6180000;Divers
-458;6181000;Documentation générale
-459;6183000;Documentation technique
-460;6185000;Frais de colloques, séminaires, conférences
-461;6190000;Rabais,remises,ristournes obtenus s/services exté.
-462;6210000;Personnel extérieur à l'entreprise
-463;6211000;Personnel intérimaire
-464;6214000;Personnel détaché ou prêté à l'entreprise
-465;6221000;Commissions et courtages sur achats
-466;6222000;Commissions et courtages sur ventes
-467;6224000;Rémunérations des transitaires
-468;6225000;Rémunérations d'affacturage
-469;6226000;Honoraires
-470;6227000;Frais d'actes et de contentieux
-471;6228000;Rémunéra. d'intermédiaires et honoraires : divers
-472;6230000;Publicité, publications, relations publiques
-473;6231000;Annonces et insertions
-474;6232000;Echantillons
-475;6233000;Foires et expositions
-476;6234000;Cadeaux à la clientèle
-477;6235000;Primes
-478;6236000;Catalogues et imprimés
-479;6237000;Publications
-480;6238000;Divers (pourboires, dons courants...)
-481;6241000;Transports sur achats
-482;6242000;Transports sur ventes
-483;6243000;Transports entre établissements ou chantiers
-484;6244000;Transports administratifs
-485;6247000;Transports collectifs du personnel
-486;6248000;Transports de biens et personnel : divers
-487;6251000;Voyages et déplacements
-488;6255000;Frais de déménagement
-489;6256000;Missions
-490;6257000;Réceptions
-491;6260000;Frais postaux et télécommunications
-492;6270000;Services bancaires et assimilés
-493;6271000;Frais sur titres (achat, vente, garde)
-494;6272000;Commissions et frais sur émission d'emprunts
-495;6275000;Frais sur effets
-496;6276000;Location de coffres
-497;6278000;Frais et commissions banque
-498;6281000;Concours divers (cotisations...)
-499;6284000;Frais de recrutement de personnel
-500;6290000;Rabais,remises,ristou. obtenus s/autres services
-501;6311000;Taxe sur les salaires
-502;6312000;Taxe d'apprentissage
-503;6313000;Participation employeurs à la formation professio.
-504;6314000;Cotisa. pour défaut d'investis.obliga. dans const.
-505;6318000;Autres
-506;6331000;Versement de transport
-507;6332000;Allocation logement
-508;6333000;Participation employeurs à la formation professio.
-509;6334000;Participa. employeurs à l'effort de construction
-510;6335000;Versements libératoires pour exo. taxe apprentis.
-511;6338000;Autres
-512;6351000;Impôts directs (sauf impôts sur les bénéfices)
-513;6351100;Taxe professionnelle
-514;6351200;Taxes foncières
-515;6351300;Autres impôts locaux
-516;6351400;Taxe sur les véhicules de société
-517;6352000;Taxes sur le chiffre d'affaires non récupérables
-518;6353000;impôts indirects
-519;6354000;Droits d'enregistrement et de timbres
-520;6354100;Droits de mutation
-521;6358000;Autres droits
-522;6371000;Contribution sociale de solidarité
-523;6378000;Taxes diverses
-524;6411000;Salaires, appointements, commissions de base
-525;6412000;Congés payés
-526;6413000;Primes et gratifications
-527;6414000;Indemnités et avantages divers
-528;6415000;Supplément familial
-529;6440000;Rémunération du travail de l'exploitant
-530;6450000;Charges de sécurité sociale et de prévoyance
-531;6451000;Cotisations à l'URSSAF
-532;6452000;Cotisations aux mutuelles
-533;6453000;Cotisations aux caisses de retraites
-534;6454000;Cotisations aux ASSEDIC
-535;6458000;Cotisations aux autres organismes sociaux
-536;6460000;Cotisations sociales personnelles de l'exploitant
-537;6471000;Prestations directes
-538;6472000;Versements aux comités d'entreprise et d'établis.
-539;6473000;Versement aux comités d'hygiène et de sécurité
-540;6474000;Versement aux autres oeuvres sociales
-541;6475000;Médecine du travail, pharmacie
-542;6480000;Autres charges de personnel
-543;6490000;CREDIT IMPOT COMPETITIVITE EMPLOI
-544;6510000;Redevances pour concessions, brevets, licences
-545;6530000;Jetons de présence
-546;6540000;Pertes sur créances irrécouvrables
-547;6550000;Quotes-parts de résultat s/opérations en commun
-548;6580000;Charges diverses de gestion courante
-549;6611000;Intérêts des emprunts et dettes
-550;6615000;Intérêts des comptes courants et des dépôts
-551;6616000;Intérêts bancaires et s/ opérations de financement
-552;6617000;Intérêts des obligations cautionnées
-553;6618000;Intérêts des autres dettes
-554;6640000;Pertes sur créances liées à des participations
-555;6650000;Escomptes accordés
-556;6660000;Pertes de change
-557;6670000;Charges nettes sur cessions de valeurs mobilières
-558;6680000;Autres charges financières
-559;6688000;Arrondi conversion EURO
-560;6710000;Charges exceptionnelles s/opérations de gestion
-561;6711000;Pénalités sur marchés (et dédits payés)
-562;6712000;Pénalités, amendes fiscales et pénales
-563;6713000;Dons, libéralités
-564;6714000;Créances devenues irrécouvrables dans l'exercice
-565;6714200;Créances irrécouvrables à 20.6 %
-566;6715000;Subventions accordées
-567;6717000;Rappels d'impôts (autres qu'impôts s/ bénéfices)
-568;6718000;Autres charges exceptionnelles s/opération gestion
-569;6720000;Charges exceptionnelles sur exercices antérieurs
-570;6750000;Valeurs comptables des éléments d'actif cédés
-571;6751000;Valeurs comptables éléts cédés : immo. incorpor.
-572;6752000;Valeurs comptables éléts cédés : immo. corporelles
-573;6756000;Valeurs comptables éléts cédés : immo. financières
-574;6758000;Valeurs comptables éléts cédés : autres éléments
-575;6780000;Autres charges exceptionnelles
-576;6788000;Malis s/ différences de règlement
-577;6811000;Dota. amorts. immo. incorporelles et corporelles
-578;6812000;Dota. amorts. charges d'exploitation à répartir
-579;6815000;Dota. provis. pour risques et charges exploitation
-580;6816000;Dota. provis. pour dépréc. immo. incorpo. et corpo
-581;6817000;Dota. provis. pour dépréc. des actifs circulants
-582;6860000;Dota. aux amorts. et provis. - Charges financières
-583;6861000;Dota. amorts. primes de remboursement obligations
-584;6865000;Dota. provis. pour risques et charges financiers
-585;6866000;Dota. provis. pour dépréc. des éléments financiers
-586;6868000;Autres dotations
-587;6871000;Dota. amorts. exceptionnels des immobilisations
-588;6872000;Dota. provis. réglementées (immobilisations)
-589;6872500;Amortissements dérogatoires
-590;6873000;Dota. provis. réglementées (stocks)
-591;6874000;Dotations aux autres provisions réglementées
-592;6875000;Dota. aux provis. pour risques et charges excepti.
-593;6876000;Dota. provis. pour dépréciations exceptionnelles
-594;6910000;Participation des salariés
-595;6950000;Impôts sur les bénéfices
-596;6970000;Imposition forfaitaire annuelle des sociétés
-597;6980000;Contribution de 10 %
-598;6990000;Produits - Reports en arrière des déficits
-599;6999990;Centralisateur des comptes Charges en clôture
-600;7010000;Ventes de produits finis TVA 1
-601;7010002;Ventes de produits finis TVA 2
-602;7010003;Ventes de produits finis TVA 3
-603;7010004;Ventes de produits finis TVA 4
-604;7010100;Ventes de produits finis exonérées
-605;7010110;Ventes de produits finis UE
-606;7020000;Ventes de produits intermédiaires
-607;7030000;Ventes de produits résiduels
-608;7040000;Travaux TVA 1
-609;7040002;Travaux TVA 2
-610;7040003;Travaux TVA 3
-611;7040004;Travaux TVA 4
-612;7040100;Travaux exonérés
-613;7040110;Travaux UE
-614;7050000;Etudes TVA 1
-615;7050002;Etudes TVA 2
-616;7050003;Etudes TVA 3
-617;7050004;Etudes TVA 4
-618;7050100;Etudes exonérées
-619;7050110;Etudes UE
-620;7060000;Prestations de services TVA 1
-621;7060002;Prestations de services TVA 2
-622;7060003;Prestations de services TVA 3
-623;7060004;Prestations de services TVA 4
-624;7060100;Prestations de services exonérées
-625;7060110;Prestations de services UE
-626;7070000;Ventes de marchandises TVA 1
-627;7070002;Ventes de marchandises TVA 2
-628;7070003;Ventes de marchandises TVA 3
-629;7070004;Ventes de marchandises TVA 4
-630;7070100;Ventes de marchandises exonérées
-631;7070110;Ventes de marchandises UE
-632;7080000;Produits des activités annexes TVA 1
-633;7080002;Produits des activités annexes TVA 2
-634;7080003;Produits des activités annexes TVA 3
-635;7080004;Produits des activités annexes TVA 4
-636;7080100;Produits des activités annexes exonérés
-637;7080110;Produits des activités annexes UE
-638;7083000;Locations diverses
-639;7085000;Ports frais accessoires facturés TVA 1
-640;7085100;Ports frais accessoires facturés exonérés
-641;7086000;Bonis sur reprises d'emballages consignés
-642;7088000;Autres produits d'activités annexes
-643;7090000;Rabais, remises et ristournes accordés TVA 1
-644;7090002;Rabais, remises et ristournes accordés TVA 2
-645;7090003;Rabais, remises et ristournes accordés TVA 3
-646;7090004;Rabais, remises et ristournes accordés TVA 4
-647;7090100;Rabais, remises et ristournes accordés exonérés
-648;7090110;Rabais, remises et ristournes accordés UE
-649;7130000;Variation stocks (en-cours de production,produits)
-650;7133000;Variation des en-cours de production de biens
-651;7134000;Variation des en-cours de production de services
-652;7135000;Variation des stocks de produits
-653;7200000;Production immobilisée
-654;7310000;Produits nets partiels s/opérations en cours
-655;7390000;Produits nets partiels s/opérations terminées
-656;7400000;Subventions d'exploitation
-657;7510000;Redevances pour concessions, brevets, licences...
-658;7520000;Revenus immeubles non affectés aux activités prof.
-659;7530000;Jetons de présence et rémunération administrateurs
-660;7540000;Ristournes perçues des coopératives
-661;7550000;Quotes-parts de résultat s/opérations en commun
-662;7580000;Produits divers de gestion courante
-663;7610000;Produits de participations
-664;7611000;Revenus des titres de participation
-665;7616000;Revenus sur autres formes de participation
-666;7617000;Revenus des créances rattachées à participations
-667;7620000;Produits des autres immobilisations financières
-668;7621000;Revenus des titres immobilisés
-669;7624000;Revenus des prêts
-670;7627000;Revenus des créances immobilisées
-671;7630000;Revenus des autres créances
-672;7640000;Revenus des valeurs mobilières de placement
-673;7650000;Escomptes obtenus
-674;7660000;Gains de change
-675;7670000;Produits nets sur cessions de valeurs mobilières
-676;7680000;Autres produits financiers
-677;7688000;Arrondi conversion EURO
-678;7710000;Produits exceptionnels sur opérations de gestion
-679;7711000;Dédits et pénalités perçus s/achats et s/ventes
-680;7713000;Libéralités perçues
-681;7714000;Rentrées sur créances amorties
-682;7714200;Rentrées sur créances amorties à 20.6 %
-683;7715000;Subventions d'équilibre
-684;7717000;Dégrèvements d'impôts (autres qu'impôts s/bénéf.)
-685;7718000;Autres produits exceptionnels s/opéra. de gestion
-686;7720000;Produits exceptionnels sur exercices antérieurs
-687;7750000;Produits des cessions d'éléments d'actif
-688;7751000;Produits des cessions : immo. incorporelles
-689;7752000;Produits des cessions : immo. corporelles
-690;7756000;Produits des cessions : immo. financières
-691;7758000;Produits des cessions : autres éléments d'actif
-692;7770000;Quote-part des subventions d'investissement
-693;7780000;Autres produits exceptionnels
-694;7788000;Bonis s/ différences de règlement
-695;7788100;Produit exceptionel Abandon Compte Thomas Milottti
-696;7810000;Reprises s/amortis. et provisions (exploitation)
-697;7811000;Reprises s/amort. immo. incorpo. et corporelles
-698;7815000;Reprises s/provis. pour risques et charges exploi.
-699;7816000;Reprises s/provis. dépré. immo. incorpo. et corpor
-700;7817000;Reprises s/provis. pour dépréci. actifs circulants
-701;7860000;Reprises sur provisions (produits financiers)
-702;7865000;Reprises s/provi. risques et charges financiers
-703;7866000;Reprises s/provi. dépréciation éléments financiers
-704;7870000;Reprises sur provisions (produits exceptionnels)
-705;7872000;Reprises sur provisions réglementées (immo.)
-706;7873000;Reprises sur provisions réglementées (stocks)
-707;7874000;Reprises sur autres provisions réglementées
-708;7875000;Reprises s/provis. pour risques et charges except.
-709;7876000;Reprises s/provis. pour dépréciations exception.
-710;7910000;Transferts de charges d'exploitation
-711;7960000;Transferts de charges financières
-712;7970000;Transferts de charges exceptionnelles
-713;7999990;Centralisateur des comptes Produits en clôture
+196;4011000;Fournisseur SDM
+197;4012000;Fournisseur Frais Généraux
+198;4013000;Frais Greffe
+199;4030000;Fournisseurs - Effets à payer
+200;4040000;Fournisseurs d'immobilisations
+201;4050000;Fournisseurs d'immo. - Effets à payer
+202;4080000;Fournisseurs - Factures non parvenues
+203;4081000;Fournisseurs - Factures non parvenues-Fournisseurs
+204;4084000;Factures non parvenues-Fournisseurs d'immo.
+205;4088000;Factures non parvenues - Fournis.- Intérêts courus
+206;4090000;Fournisseurs Débiteurs
+207;4098000;Fournisseurs Débiteurs - Avoirs à recevoir
+208;4110000;Clients (compte collectif)
+209;4130000;Clients - Effets à recevoir
+210;4160000;Clients douteux ou litigieux
+211;4170000;Créances sur travaux non encore facturables
+212;4180000;Clients - Produits non encore facturés
+213;4181000;Clients - Factures à établir
+214;4190000;Clients Créditeurs - Acomptes TVA 1
+215;4190007;Clients Créditeurs - Acomptes TVA 2
+216;4190100;Clients Créditeurs - Acomptes TVA exonérée
+217;4198000;Clients Créditeurs - Avoirs à établir
+218;4210000;Personnel - Rémunérations dues
+219;4220000;Comités d'entreprise, d'établissement
+220;4240000;Participation des salariés
+221;4246000;Participation des salariés : Réserve spéciale
+222;4248000;Participation des salariés : Comptes courants
+223;4250000;Personnel - Avances et acomptes
+224;4260000;Personnel - Dépôts
+225;4270000;Personnel - Oppositions
+226;4282000;Personnel-Dettes provisionnées pour congés à payer
+227;4286000;Personnel-Autres charges à payer
+228;4287000;Personnel-Produits à recevoir
+229;4310000;URSSAF
+230;4372000;Mutuelle
+231;4373000;Retraite Obligatoire
+232;4374000;ASSEDIC
+233;4375000;Retraite Cadres
+234;4382000;Organismes sociaux-Chges sociales s/congés à payer
+235;4386000;Organismes sociaux-Charges à payer
+236;4387000;Organismes sociaux-Produits à recevoir
+237;4410000;Etat - Subventions à recevoir
+238;4420000;Etat - Impôts et taxes recouvrables sur des tiers
+239;4430000;Opérations particulières avec l'Etat,collectivités
+240;4440000;Etat - Impôts sur les bénéfices
+241;4452011;TVA due intracomunautaire Taux 1/Factures
+242;4452012;TVA due intracomunautaire Taux 2/Factures
+243;4452013;TVA due intracomunautaire Taux 3/Factures
+244;4452021;TVA due intracomunautaire Taux 1/Décaissements
+245;4452022;TVA due intracomunautaire Taux 2/Décaissements
+246;4452023;TVA due intracomunautaire Taux 3/Décaissements
+247;4455100;TVA à décaisser
+248;4455800;Taxes assimilées à la TVA
+249;4456200;TVA déductible sur immobilisations
+250;4456610;TVA déductible Achats exonérés/Factures
+251;4456611;TVA déductible Achats Taux 1/Factures
+252;4456612;TVA déductible Achats Taux 2/Factures
+253;4456613;TVA déductible Achats Taux 3/Factures
+254;4456614;TVA déductible Achats Taux 4/Factures
+255;4456620;TVA déductible Achats exonérés/Décaissements
+256;4456621;TVA déductible Achats Taux 1/Décaissements
+257;4456622;TVA déductible Achats Taux 2/Décaissements
+258;4456623;TVA déductible Achats Taux 3/Décaissements
+259;4456624;TVA déductible Achats Taux 4/Décaissements
+260;4456631;TVA déductible Achats UE Taux 1/Factures
+261;4456632;TVA déductible Achats UE Taux 2/Factures
+262;4456633;TVA déductible Achats UE Taux 3/Factures
+263;4456641;TVA déductible Achats UE Taux 1/Décaissements
+264;4456642;TVA déductible Achats UE Taux 2/Décaissements
+265;4456643;TVA déductible Achats UE Taux 3/Décaissements
+266;4456700;Crédit de TVA à reporter
+267;4456800;Taxes assimilées à la TVA 
+268;4457110;TVA collectée Ventes exonérées/Factures
+269;4457111;TVA collectée Ventes Taux 1/Factures
+270;4457112;TVA collectée Ventes Taux 2/Factures
+271;4457113;TVA collectée Ventes Taux 3/Factures
+272;4457114;TVA collectée Ventes Taux 4/Factures
+273;4457120;TVA collectée Ventes exonérées/Encaissements
+274;4457121;TVA collectée Ventes Taux 1/Encaissements
+275;4457122;TVA collectée Ventes Taux 2/Encaissements
+276;4457123;TVA collectée Ventes Taux 3/Encaissements
+277;4457124;TVA collectée Ventes Taux 4/Encaissements
+278;4457130;TVA collectée Ventes UE/Factures
+279;4457140;TVA collectée Ventes UE/Encaissements
+280;4457800;Taxes assimilées à la TVA 
+281;4458100;Acomptes - Régime simplifié d'imposition
+282;4458200;Acomptes - Régime du forfait
+283;4458300;Remboursement de taxes sur le chiffre d'affaires
+284;4458400;TVA récupérée d'avance
+285;4458600;Taxes s/le chiffre d'aff. s/factures non parvenues
+286;4458700;Taxes s/le chiffre d'aff. s/factures à établir
+287;4458701;TVA collectée Ventes Taux 1/Acomptes
+288;4458702;TVA collectée Ventes Taux 2/Acomptes
+289;4460000;Obligations cautionnées
+290;4470000;Autres impôts, taxes et versements assimilés
+291;4482000;Etat - Charges fiscales sur congés à payer
+292;4486000;Etat - Autres charges à payer
+293;4487000;Etat - Produits à recevoir
+294;4510000;Groupe
+295;4551000;Associés - Comptes courants : Principal
+296;4551100;Compte courant associé Thomas Milotti
+297;4558000;Associés - Comptes courants : Intérêts courus
+298;4560000;Associés - Opérations sur le capital
+299;4561500;Associés - Comptes d'apport en numéraire
+300;4562500;Associés - Capital appelé, non versé
+301;4570000;Associés - Dividendes à payer
+302;4580000;Associés - Opérations faites en commun et en GIE
+303;4620000;Créances sur cessions d'immobilisations
+304;4640000;Dettes s/acquisitions valeurs mobilières placement
+305;4650000;Créances s/cessions valeurs mobilières placement
+306;4670000;Autres comptes débiteurs et créditeurs
+307;4686000;Divers - Charges à payer
+308;4687000;Divers - Produits à recevoir
+309;4710000;Compte d'attente
+310;4760000;Différences de conversion - ACTIF
+311;4770000;Différences de conversion - PASSIF
+312;4780000;Autres comptes transitoires
+313;4810000;Charges à répartir sur plusieurs exercices
+314;4860000;Charges constatées d'avance
+315;4870000;Produits constatés d'avance
+316;4910000;Provisions pour dépréciation des comptes clients
+317;4950000;Provis. pour dépréc. des comptes associés
+318;4960000;Provis. pour dépréc. des comptes débiteurs divers
+319;5020000;Actions propres
+320;5030000;Actions
+321;5031000;Actions : Titres cotés
+322;5035000;Actions : Titres non cotés
+323;5040000;Autres titres conférant un droit de propriété
+324;5050000;Obligations/Bons émis par la société et rachetés
+325;5060000;Obligations
+326;5061000;Obligations : Titres cotés
+327;5065000;Obligations : Titres non cotés
+328;5070000;Bons du Trésor et bons de caisse à court terme
+329;5080000;Autres valeurs mobilières et créances assimilées
+330;5090000;Versements restant à effectuer s/valeurs non libé.
+331;5110000;Valeurs à l'encaissement
+332;5120000;Banques
+333;5140000;Chèques postaux
+334;5150000;Caisses du Trésor et des établissements publics
+335;5160000;Agents de change
+336;5170000;Autres organismes financiers
+337;5186000;Intérêts courus à payer
+338;5187000;Intérêts courus à recevoir
+339;5198000;Intérêts courus sur concours bancaires courants
+340;5300000;Caisse
+341;5800000;Virements internes
+342;5900000;Provis. pour dépréc. valeurs mobilières placement
+343;6010000;Achats stockés - Matières premières TVA 1
+344;6010002;Achats stockés - Matières premières TVA 2
+345;6010003;Achats stockés - Matières premières TVA 3
+346;6010100;Achats stockés - Matières premières exonérés
+347;6010200;Achats stockés - Matières premières UE TVA 1
+348;6010202;Achats stockés - Matières premières UE TVA 2
+349;6010203;Achats stockés - Matières premières UE TVA 3
+350;6020000;Achats stockés - Autres approvisionnements
+351;6021000;Achats stockés - Matières consommables
+352;6022000;Achats stockés - Fournitures consommables
+353;6022100;Achats stockés - Combustibles
+354;6022200;Achats stockés - Produits d'entretien
+355;6022300;Achats stockés - Fournitures d'atelier et d'usine
+356;6022400;Achats stockés - Fournitures de magasin
+357;6022500;Achats stockés - Fournitures de bureau
+358;6026000;Achats stockés - Emballages
+359;6026100;Achats stockés - Emballages perdus
+360;6026500;Achats stockés - Emball. récupérables non identif.
+361;6026700;Achats stockés - Emballages à usage mixte
+362;6031000;Variation des stocks de matières premières
+363;6032000;Variation des stocks des autres approvisionnements
+364;6037000;Variation des stocks de marchandises
+365;6040000;Achats études et prestations de services TVA 1
+366;6040002;Achats études et prestations de services TVA 2
+367;6040003;Achats études et prestations de services TVA 3
+368;6040100;Achats études et prestations de services exonérés
+369;6040200;Achats études et prestations de services UE TVA 1
+370;6040202;Achats études et prestations de services UE TVA 2
+371;6040203;Achats études et prestations de services UE TVA 3
+372;6050000;Achats matériels, équipements et travaux TVA 1
+373;6050002;Achats matériels, équipements et travaux TVA 2
+374;6050003;Achats matériels, équipements et travaux TVA 3
+375;6050100;Achats matériels, équipements et travaux exonérés
+376;6050200;Achats matériels, équipements et travaux UE TVA 1
+377;6050202;Achats matériels, équipements et travaux UE TVA 2
+378;6050203;Achats matériels, équipements et travaux UE TVA 3
+379;6060000;Achats non stockés matières, fournitures TVA 1
+380;6060002;Achats non stockés matières, fournitures TVA 2
+381;6060003;Achats non stockés matières, fournitures TVA 3
+382;6060100;Achats non stockés matières, fournitures exonérés
+383;6060200;Achats non stockés matières, fournitures UE TVA 1
+384;6060202;Achats non stockés matières, fournitures UE TVA 2
+385;6060203;Achats non stockés matières, fournitures UE TVA 3
+386;6061100;EDF Consommations
+387;6061103;EDF Abonnement TVA 3
+388;6061200;Carburant
+389;6061300;Eau
+390;6062000;Fournitures d'entretien
+391;6063000;Petit matériel et outillage
+392;6064000;Fournitures administratives
+393;6068000;Autres matières, fournitures
+394;6070000;Achats de marchandises TVA 1
+395;6070002;Achats de marchandises TVA 2
+396;6070003;Achats de marchandises TVA 3
+397;6070004;Achats de marchandises TVA 4
+398;6070100;Achats de marchandises exonérés
+399;6070200;Achats de marchandises UE TVA 1
+400;6070202;Achats de marchandises UE TVA 2
+401;6070203;Achats de marchandises UE TVA 3
+402;6080000;Frais accessoires sur achats TVA 1
+403;6080100;Frais accessoires sur achats exonérés
+404;6080200;Frais accessoires sur achats UE TVA 1
+405;6090000;Rabais, remises et ristournes obtenus sur achats
+406;6100000;Services extérieurs
+407;6110000;Sous-traitance générale
+408;6122000;Redevances de crédit-bail mobilier
+409;6125000;Redevances de crédit-bail immobilier
+410;6132000;Locations immobilières
+411;6135000;Locations mobilières
+412;6136000;Locations : Malis sur emballages
+413;6140000;Charges locatives et de copropriété
+414;6152000;Entretien et réparations : sur biens immobiliers
+415;6155000;Entretien et réparations : sur biens mobiliers
+416;6156000;Maintenance
+417;6161000;Primes d'assurances : Multirisques
+418;6162000;Primes d'assurances : Dommage-Construction
+419;6163000;Assurance transport
+420;6163600;Assurance transport : sur achats
+421;6163700;Assurance transport : sur ventes
+422;6163800;Assurance transport : sur autres biens
+423;6164000;Primes d'assurances : Risques d'exploitation
+424;6165000;Primes d'assurances : Insolvabilité clients
+425;6170000;Etudes et recherches
+426;6180000;Divers
+427;6181000;Documentation générale
+428;6183000;Documentation technique
+429;6185000;Frais de colloques, séminaires, conférences
+430;6190000;Rabais,remises,ristournes obtenus s/services exté.
+431;6210000;Personnel extérieur à l'entreprise
+432;6211000;Personnel intérimaire
+433;6214000;Personnel détaché ou prêté à l'entreprise
+434;6221000;Commissions et courtages sur achats
+435;6222000;Commissions et courtages sur ventes
+436;6224000;Rémunérations des transitaires
+437;6225000;Rémunérations d'affacturage
+438;6226000;Honoraires
+439;6227000;Frais d'actes et de contentieux
+440;6228000;Rémunéra. d'intermédiaires et honoraires : divers
+441;6230000;Publicité, publications, relations publiques
+442;6231000;Annonces et insertions
+443;6232000;Echantillons
+444;6233000;Foires et expositions
+445;6234000;Cadeaux à la clientèle
+446;6235000;Primes
+447;6236000;Catalogues et imprimés
+448;6237000;Publications
+449;6238000;Divers (pourboires, dons courants...)
+450;6241000;Transports sur achats
+451;6242000;Transports sur ventes
+452;6243000;Transports entre établissements ou chantiers
+453;6244000;Transports administratifs
+454;6247000;Transports collectifs du personnel
+455;6248000;Transports de biens et personnel : divers
+456;6251000;Voyages et déplacements
+457;6255000;Frais de déménagement
+458;6256000;Missions
+459;6257000;Réceptions
+460;6260000;Frais postaux et télécommunications
+461;6270000;Services bancaires et assimilés
+462;6271000;Frais sur titres (achat, vente, garde)
+463;6272000;Commissions et frais sur émission d'emprunts
+464;6275000;Frais sur effets
+465;6276000;Location de coffres
+466;6278000;Frais et commissions banque
+467;6281000;Concours divers (cotisations...)
+468;6284000;Frais de recrutement de personnel
+469;6290000;Rabais,remises,ristou. obtenus s/autres services
+470;6311000;Taxe sur les salaires
+471;6312000;Taxe d'apprentissage
+472;6313000;Participation employeurs à la formation professio.
+473;6314000;Cotisa. pour défaut d'investis.obliga. dans const.
+474;6318000;Autres
+475;6331000;Versement de transport
+476;6332000;Allocation logement
+477;6333000;Participation employeurs à la formation professio.
+478;6334000;Participa. employeurs à l'effort de construction
+479;6335000;Versements libératoires pour exo. taxe apprentis.
+480;6338000;Autres
+481;6351000;Impôts directs (sauf impôts sur les bénéfices)
+482;6351100;Taxe professionnelle
+483;6351200;Taxes foncières
+484;6351300;Autres impôts locaux
+485;6351400;Taxe sur les véhicules de société
+486;6352000;Taxes sur le chiffre d'affaires non récupérables
+487;6353000;impôts indirects
+488;6354000;Droits d'enregistrement et de timbres
+489;6354100;Droits de mutation
+490;6358000;Autres droits
+491;6371000;Contribution sociale de solidarité
+492;6378000;Taxes diverses
+493;6411000;Salaires, appointements, commissions de base
+494;6412000;Congés payés
+495;6413000;Primes et gratifications
+496;6414000;Indemnités et avantages divers
+497;6415000;Supplément familial
+498;6440000;Rémunération du travail de l'exploitant
+499;6450000;Charges de sécurité sociale et de prévoyance
+500;6451000;Cotisations à l'URSSAF
+501;6452000;Cotisations aux mutuelles
+502;6453000;Cotisations aux caisses de retraites
+503;6454000;Cotisations aux ASSEDIC
+504;6458000;Cotisations aux autres organismes sociaux
+505;6460000;Cotisations sociales personnelles de l'exploitant
+506;6471000;Prestations directes
+507;6472000;Versements aux comités d'entreprise et d'établis.
+508;6473000;Versement aux comités d'hygiène et de sécurité
+509;6474000;Versement aux autres oeuvres sociales
+510;6475000;Médecine du travail, pharmacie
+511;6480000;Autres charges de personnel
+512;6490000;CREDIT IMPOT COMPETITIVITE EMPLOI
+513;6510000;Redevances pour concessions, brevets, licences
+514;6530000;Jetons de présence
+515;6540000;Pertes sur créances irrécouvrables
+516;6550000;Quotes-parts de résultat s/opérations en commun
+517;6580000;Charges diverses de gestion courante
+518;6611000;Intérêts des emprunts et dettes
+519;6615000;Intérêts des comptes courants et des dépôts
+520;6616000;Intérêts bancaires et s/ opérations de financement
+521;6617000;Intérêts des obligations cautionnées
+522;6618000;Intérêts des autres dettes
+523;6640000;Pertes sur créances liées à des participations
+524;6650000;Escomptes accordés
+525;6660000;Pertes de change
+526;6670000;Charges nettes sur cessions de valeurs mobilières
+527;6680000;Autres charges financières
+528;6688000;Arrondi conversion EURO
+529;6710000;Charges exceptionnelles s/opérations de gestion
+530;6711000;Pénalités sur marchés (et dédits payés)
+531;6712000;Pénalités, amendes fiscales et pénales
+532;6713000;Dons, libéralités
+533;6714000;Créances devenues irrécouvrables dans l'exercice
+534;6714200;Créances irrécouvrables à 20.6 %
+535;6715000;Subventions accordées
+536;6717000;Rappels d'impôts (autres qu'impôts s/ bénéfices)
+537;6718000;Autres charges exceptionnelles s/opération gestion
+538;6720000;Charges exceptionnelles sur exercices antérieurs
+539;6750000;Valeurs comptables des éléments d'actif cédés
+540;6751000;Valeurs comptables éléts cédés : immo. incorpor.
+541;6752000;Valeurs comptables éléts cédés : immo. corporelles
+542;6756000;Valeurs comptables éléts cédés : immo. financières
+543;6758000;Valeurs comptables éléts cédés : autres éléments
+544;6780000;Autres charges exceptionnelles
+545;6788000;Malis s/ différences de règlement
+546;6811000;Dota. amorts. immo. incorporelles et corporelles
+547;6812000;Dota. amorts. charges d'exploitation à répartir
+548;6815000;Dota. provis. pour risques et charges exploitation
+549;6816000;Dota. provis. pour dépréc. immo. incorpo. et corpo
+550;6817000;Dota. provis. pour dépréc. des actifs circulants
+551;6860000;Dota. aux amorts. et provis. - Charges financières
+552;6861000;Dota. amorts. primes de remboursement obligations
+553;6865000;Dota. provis. pour risques et charges financiers
+554;6866000;Dota. provis. pour dépréc. des éléments financiers
+555;6868000;Autres dotations
+556;6871000;Dota. amorts. exceptionnels des immobilisations
+557;6872000;Dota. provis. réglementées (immobilisations)
+558;6872500;Amortissements dérogatoires
+559;6873000;Dota. provis. réglementées (stocks)
+560;6874000;Dotations aux autres provisions réglementées
+561;6875000;Dota. aux provis. pour risques et charges excepti.
+562;6876000;Dota. provis. pour dépréciations exceptionnelles
+563;6910000;Participation des salariés
+564;6950000;Impôts sur les bénéfices
+565;6970000;Imposition forfaitaire annuelle des sociétés
+566;6980000;Contribution de 10 %
+567;6990000;Produits - Reports en arrière des déficits
+568;6999990;Centralisateur des comptes Charges en clôture
+569;7010000;Ventes de produits finis TVA 1
+570;7010002;Ventes de produits finis TVA 2
+571;7010003;Ventes de produits finis TVA 3
+572;7010004;Ventes de produits finis TVA 4
+573;7010100;Ventes de produits finis exonérées
+574;7010110;Ventes de produits finis UE
+575;7020000;Ventes de produits intermédiaires
+576;7030000;Ventes de produits résiduels
+577;7040000;Travaux TVA 1
+578;7040002;Travaux TVA 2
+579;7040003;Travaux TVA 3
+580;7040004;Travaux TVA 4
+581;7040100;Travaux exonérés
+582;7040110;Travaux UE
+583;7050000;Etudes TVA 1
+584;7050002;Etudes TVA 2
+585;7050003;Etudes TVA 3
+586;7050004;Etudes TVA 4
+587;7050100;Etudes exonérées
+588;7050110;Etudes UE
+589;7060000;Prestations de services TVA 1
+590;7060002;Prestations de services TVA 2
+591;7060003;Prestations de services TVA 3
+592;7060004;Prestations de services TVA 4
+593;7060100;Prestations de services exonérées
+594;7060110;Prestations de services UE
+595;7070000;Ventes de marchandises TVA 1
+596;7070002;Ventes de marchandises TVA 2
+597;7070003;Ventes de marchandises TVA 3
+598;7070004;Ventes de marchandises TVA 4
+599;7070100;Ventes de marchandises exonérées
+600;7070110;Ventes de marchandises UE
+601;7080000;Produits des activités annexes TVA 1
+602;7080002;Produits des activités annexes TVA 2
+603;7080003;Produits des activités annexes TVA 3
+604;7080004;Produits des activités annexes TVA 4
+605;7080100;Produits des activités annexes exonérés
+606;7080110;Produits des activités annexes UE
+607;7083000;Locations diverses
+608;7085000;Ports frais accessoires facturés TVA 1
+609;7085100;Ports frais accessoires facturés exonérés
+610;7086000;Bonis sur reprises d'emballages consignés
+611;7088000;Autres produits d'activités annexes
+612;7090000;Rabais, remises et ristournes accordés TVA 1
+613;7090002;Rabais, remises et ristournes accordés TVA 2
+614;7090003;Rabais, remises et ristournes accordés TVA 3
+615;7090004;Rabais, remises et ristournes accordés TVA 4
+616;7090100;Rabais, remises et ristournes accordés exonérés
+617;7090110;Rabais, remises et ristournes accordés UE
+618;7130000;Variation stocks (en-cours de production,produits)
+619;7133000;Variation des en-cours de production de biens
+620;7134000;Variation des en-cours de production de services
+621;7135000;Variation des stocks de produits
+622;7200000;Production immobilisée
+623;7310000;Produits nets partiels s/opérations en cours
+624;7390000;Produits nets partiels s/opérations terminées
+625;7400000;Subventions d'exploitation
+626;7510000;Redevances pour concessions, brevets, licences...
+627;7520000;Revenus immeubles non affectés aux activités prof.
+628;7530000;Jetons de présence et rémunération administrateurs
+629;7540000;Ristournes perçues des coopératives
+630;7550000;Quotes-parts de résultat s/opérations en commun
+631;7580000;Produits divers de gestion courante
+632;7610000;Produits de participations
+633;7611000;Revenus des titres de participation
+634;7616000;Revenus sur autres formes de participation
+635;7617000;Revenus des créances rattachées à participations
+636;7620000;Produits des autres immobilisations financières
+637;7621000;Revenus des titres immobilisés
+638;7624000;Revenus des prêts
+639;7627000;Revenus des créances immobilisées
+640;7630000;Revenus des autres créances
+641;7640000;Revenus des valeurs mobilières de placement
+642;7650000;Escomptes obtenus
+643;7660000;Gains de change
+644;7670000;Produits nets sur cessions de valeurs mobilières
+645;7680000;Autres produits financiers
+646;7688000;Arrondi conversion EURO
+647;7710000;Produits exceptionnels sur opérations de gestion
+648;7711000;Dédits et pénalités perçus s/achats et s/ventes
+649;7713000;Libéralités perçues
+650;7714000;Rentrées sur créances amorties
+651;7714200;Rentrées sur créances amorties à 20.6 %
+652;7715000;Subventions d'équilibre
+653;7717000;Dégrèvements d'impôts (autres qu'impôts s/bénéf.)
+654;7718000;Autres produits exceptionnels s/opéra. de gestion
+655;7720000;Produits exceptionnels sur exercices antérieurs
+656;7750000;Produits des cessions d'éléments d'actif
+657;7751000;Produits des cessions : immo. incorporelles
+658;7752000;Produits des cessions : immo. corporelles
+659;7756000;Produits des cessions : immo. financières
+660;7758000;Produits des cessions : autres éléments d'actif
+661;7770000;Quote-part des subventions d'investissement
+662;7780000;Autres produits exceptionnels
+663;7788000;Bonis s/ différences de règlement
+664;7788100;Produit exceptionel Abandon Compte Thomas Milottti
+665;7810000;Reprises s/amortis. et provisions (exploitation)
+666;7811000;Reprises s/amort. immo. incorpo. et corporelles
+667;7815000;Reprises s/provis. pour risques et charges exploi.
+668;7816000;Reprises s/provis. dépré. immo. incorpo. et corpor
+669;7817000;Reprises s/provis. pour dépréci. actifs circulants
+670;7860000;Reprises sur provisions (produits financiers)
+671;7865000;Reprises s/provi. risques et charges financiers
+672;7866000;Reprises s/provi. dépréciation éléments financiers
+673;7870000;Reprises sur provisions (produits exceptionnels)
+674;7872000;Reprises sur provisions réglementées (immo.)
+675;7873000;Reprises sur provisions réglementées (stocks)
+676;7874000;Reprises sur autres provisions réglementées
+677;7875000;Reprises s/provis. pour risques et charges except.
+678;7876000;Reprises s/provis. pour dépréciations exception.
+679;7910000;Transferts de charges d'exploitation
+680;7960000;Transferts de charges financières
+681;7970000;Transferts de charges exceptionnelles
+682;7999990;Centralisateur des comptes Produits en clôture

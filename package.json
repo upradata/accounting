@@ -5,12 +5,12 @@
     "license": "MIT",
     "scripts": {
         "build": "tsc",
-        "program": "node dist/accounting/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json",
-        "program-edit": " node dist/accounting/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --edit --edit-short",
-        "program-edit-list": " node dist/accounting/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: data/depenses.csv, depensesPieces:  data/depenses-pieces.csv, saisiePieces: data/saisie-pieces.csv, balanceReouverture: data/balance-reouverture.csv, planComptable: data/plan-comptable.csv:, journaux: data/journaux.csv'",
-        "program-edit-list-name": "node dist/accounting/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv:, journaux: journaux.csv'",
-        "program-edit-list-partial": " node dist/accounting/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv'",
-        "program-fec": " node dist/accounting/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --fec",
+        "program": "node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json",
+        "program-edit": " node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --edit --edit-short --output-dir Output",
+        "program-edit-list": " node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: data/depenses.csv, depensesPieces:  data/depenses-pieces.csv, saisiePieces: data/saisie-pieces.csv, balanceReouverture: data/balance-reouverture.csv, planComptable: data/plan-comptable.csv, journaux: data/journaux.csv' --output-dir Output",
+        "program-edit-list-name": "node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv, journaux: journaux.csv'",
+        "program-edit-list-partial": " node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv' --output-dir Output",
+        "program-fec": " node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --fec --output-dir Output",
         "tsc-watch": "npx tsc -w --listEmittedFiles --preserveWatchOutput"
     },
     "dependencies": {
