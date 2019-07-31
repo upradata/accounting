@@ -7,7 +7,8 @@ import { PlanComptable } from '../metadata/plan-comptable';
 import { Journaux } from '../metadata/journaux';
 import { Pieces } from './piece/pieces';
 import { ComptabiliteMetadata } from '../metadata/accounting-metadata';
-import { ImporterOption, ImporterFile } from '../import/importer-option';
+import { ImporterOption } from '../import/importer-option';
+import { ImporterFile } from '../import/importer-input';
 
 
 export interface AccountingInterface {

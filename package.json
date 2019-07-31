@@ -8,10 +8,11 @@
         "program": "node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json",
         "program-edit": " node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --edit --edit-short --output-dir Output",
         "program-edit-list": " node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: data/depenses.csv, depensesPieces:  data/depenses-pieces.csv, saisiePieces: data/saisie-pieces.csv, balanceReouverture: data/balance-reouverture.csv, planComptable: data/plan-comptable.csv, journaux: data/journaux.csv' --output-dir Output",
-        "program-edit-list-name": "node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv, journaux: journaux.csv'",
+        "program-edit-list-name": "node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv, journaux: journaux.csv'  --output-dir Output",
         "program-edit-list-partial": " node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv' --output-dir Output",
         "program-fec": " node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --fec --output-dir Output",
-        "tsc-watch": "npx tsc -w --listEmittedFiles --preserveWatchOutput"
+        "tsc-watch": "npx tsc -w --listEmittedFiles --preserveWatchOutput",
+        "test": "jest --config jest-ut.config.js"
     },
     "dependencies": {
         "@ts-kit/di": "^2.0.2",
@@ -36,6 +37,12 @@
     },
     "devDependencies": {
         "@types/csvtojson": "^1.1.5",
-        "@types/node": "^12.6.8"
+        "@types/jest": "^24.0.16",
+        "@types/node": "^12.6.8",
+        "jest": "^24.8.0",
+        "jest-expect-message": "^1.0.2",
+        "rimraf": "^2.6.3",
+        "ts-jest": "^24.0.2",
+        "typescript": "^3.5.3"
     }
 }

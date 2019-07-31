@@ -16,7 +16,8 @@ import * as path from 'path';
 import { BalanceDesComptes } from './balance-comptes/balance-des-comptes';
 import { JournalCentraliseur } from './journal-centraliseur/journal-centraliseur';
 import { AccountingInterface } from './accounting.inteface';
-import { ImporterOption, ImporterFile } from '../import/importer-option';
+import { ImporterOption } from '../import/importer-option';
+import { ImporterFile } from '../import/importer-input';
 
 
 

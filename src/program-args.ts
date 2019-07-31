@@ -1,7 +1,6 @@
 import program from 'commander';
-import { ImporterFiles } from './import/importer-option';
 import { createDirIfNotExist } from './util/util';
-import { INPUT_DATA_DEFAULTS } from './import/importer-input';
+import { INPUT_DATA_DEFAULTS, ImporterFiles } from './import/importer-input';
 
 program
     .version('1.0.0')

@@ -53,7 +53,7 @@ export class FecBuilder {
         const debit = !isCredit ? montantWithComma : '';
 
         const letter = lettrage.letter || '';
-        const lettrageDate = lettrage.date || '';
+        const lettrageDate = lettrage.date ? dateToFecDate(date) : '';
 
         // tslint:disable-next-line: max-line-length
         return `${journal};${journalLibelle};${ecritureId};${ecritureDate};${compte.numero};${compteLibelle};${compteAux ? compteAux.numero : ''};${compteAuxLibelle};${pieceId};${dateToFecDate(date)};${libelle};${debit};${credit};${letter};${lettrageDate};${validationDate};;;;;;;IMPORT`.replace(/;/g, this.separator);
