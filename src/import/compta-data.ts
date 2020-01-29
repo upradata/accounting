@@ -8,7 +8,7 @@ export interface ComptaDepensePiece<numberT = string, compteT = string> {
 }
 
 
-export interface ComptaDepense<NumberT = string, DateT = string> {
+export interface ComptaDepense<NumberT = string, DateT = string, BooleanT = string | boolean> {
     id: string;
     libelle: string;
     ttc: NumberT;
@@ -19,9 +19,10 @@ export interface ComptaDepense<NumberT = string, DateT = string> {
     credit: string;
     debit: string;
     pieceRef: string;
+    isImported: BooleanT;
 }
 
-export interface ComptaSaisieMouvement<NumberT = string, DateT = string, CompteT = string> {
+export interface ComptaSaisieMouvement<NumberT = string, DateT = string, CompteT = string, BooleanT = string | boolean> {
     id: string;
     libelle: string;
 
@@ -31,6 +32,7 @@ export interface ComptaSaisieMouvement<NumberT = string, DateT = string, CompteT
     compteAux?: CompteT;
     debit: NumberT;
     credit: NumberT;
+    isImported: BooleanT;
 }
 
 

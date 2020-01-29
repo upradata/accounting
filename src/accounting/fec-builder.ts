@@ -12,6 +12,7 @@ const writeFile = promisify(fsWriteFile);
 
 export class FecBuilderOption {
     separator?: string = ';';
+    onlyNonImported?: boolean = true;
 }
 
 interface SaisieArgs {

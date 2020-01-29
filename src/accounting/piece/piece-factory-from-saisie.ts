@@ -2,6 +2,7 @@ import { ComptaSaisieMouvement } from '../../import/compta-data';
 import { Compte, CompteInfo } from '../compte';
 import { Piece } from './piece';
 import { arrayToObjOfArrayById } from '../../util/util';
+import { isDefined } from '@upradata/util';
 
 export class PiecesfromSaisiePieces {
 
@@ -12,7 +13,8 @@ export class PiecesfromSaisiePieces {
         for (const mouvements of Object.values(saisiePieces)) {
 
             const { journal, libelle, date } = mouvements[ 0 ];
-            const piece = new Piece({ journal, libelle, date });
+            const isImported = isDefined(mouvements.find(m => m.isImported));
+            const piece = new Piece({ journal, libelle, date, isImported });
 
             for (const mouvement of mouvements) {
 

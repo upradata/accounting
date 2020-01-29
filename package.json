@@ -1,48 +1,54 @@
 {
-    "name": "upradata-fiscalite",
-    "version": "0.0.1",
-    "main": "index.js",
-    "license": "MIT",
-    "scripts": {
-        "build": "tsc",
-        "program": "node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json",
-        "program-edit": " node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --edit --edit-short --output-dir Output",
-        "program-edit-list": " node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: data/depenses.csv, depensesPieces:  data/depenses-pieces.csv, saisiePieces: data/saisie-pieces.csv, balanceReouverture: data/balance-reouverture.csv, planComptable: data/plan-comptable.csv, journaux: data/journaux.csv' --output-dir Output",
-        "program-edit-list-name": "node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv, journaux: journaux.csv'  --output-dir Output",
-        "program-edit-list-partial": " node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv' --output-dir Output",
-        "program-fec": " node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --fec --output-dir Output",
-        "tsc-watch": "npx tsc -w --listEmittedFiles --preserveWatchOutput",
-        "test": "jest --config jest-ut.config.js"
-    },
-    "dependencies": {
-        "@ts-kit/di": "^2.0.2",
-        "@types/ajv": "^1.0.0",
-        "@types/collections": "^5.0.0",
-        "@types/table": "^4.0.5",
-        "ajv": "^6.10.2",
-        "canvas": "^2.5.0",
-        "collections": "^5.1.9",
-        "columnify": "^1.5.4",
-        "commander": "^2.20.0",
-        "csvtojson": "^2.0.10",
-        "fixed-width-string": "^1.0.0",
-        "glob": "^7.1.4",
-        "jsdom": "^15.1.1",
-        "lodash": "^4.17.11",
-        "pdf2json": "^1.1.8",
-        "string-width": "^4.1.0",
-        "table": "^5.4.1",
-        "urldecode": "^1.0.1",
-        "winston": "^3.2.1"
-    },
-    "devDependencies": {
-        "@types/csvtojson": "^1.1.5",
-        "@types/jest": "^24.0.16",
-        "@types/node": "^12.6.8",
-        "jest": "^24.8.0",
-        "jest-expect-message": "^1.0.2",
-        "rimraf": "^2.6.3",
-        "ts-jest": "^24.0.2",
-        "typescript": "^3.5.3"
-    }
+	"name": "upradata-fiscalite",
+	"version": "0.0.1",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"build": "tsc",
+		"program": "node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json",
+		"program-edit": " node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --edit --edit-short --output-dir Output",
+		"program-edit-list": " node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: data/depenses.csv, depensesPieces:  data/depenses-pieces.csv, saisiePieces: data/saisie-pieces.csv, balanceReouverture: data/balance-reouverture.csv, planComptable: data/plan-comptable.csv, journaux: data/journaux.csv' --output-dir Output",
+		"program-edit-list-name": "node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv, planComptable: plan-comptable.csv, journaux: journaux.csv'  --output-dir Output",
+		"program-edit-list-partial": " node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --edit --edit-short --list-csv 'depenses: depenses.csv, depensesPieces: depenses-pieces.csv, saisiePieces: saisie-pieces.csv, balanceReouverture: balance-reouverture.csv' --output-dir Output",
+		"program-fec": " node dist/index.js --exercise-start 01022018 --ods data/compta.ods --metadata ./metadata.json --fec --output-dir Output",
+		"tsc-watch": "npx tsc -w --listEmittedFiles --preserveWatchOutput",
+		"test": "jest --config jest-ut.config.js"
+	},
+	"dependencies": {
+		"@ts-kit/di": "^2.0.2",
+		"@types/ajv": "^1.0.0",
+		"@types/collections": "^5.0.0",
+		"@types/table": "^4.0.5",
+		"ajv": "^6.10.2",
+		"canvas": "^2.5.0",
+		"collections": "^5.1.9",
+		"columnify": "^1.5.4",
+		"commander": "^2.20.0",
+		"csvtojson": "^2.0.10",
+		"fixed-width-string": "^1.0.0",
+		"glob": "^7.1.4",
+		"jsdom": "^15.1.1",
+		"lodash": "^4.17.11",
+		"pdf2json": "^1.1.8",
+		"string-width": "^4.1.0",
+		"table": "^5.4.1",
+		"urldecode": "^1.0.1",
+		"winston": "^3.2.1"
+	},
+	"devDependencies": {
+		"@types/csvtojson": "^1.1.5",
+		"@types/jest": "^24.0.16",
+		"@types/node": "^12.6.8",
+		"jest": "^24.8.0",
+		"jest-expect-message": "^1.0.2",
+		"rimraf": "^2.6.3",
+		"ts-jest": "^24.0.2",
+		"typescript": "^3.5.3"
+	},
+	"local": {
+		"dependencies": {
+			"@upradata/node-util": "link:/home/milottit/Libraries/Util/node-util@2.0.3",
+			"@upradata/util": "link:/home/milottit/Libraries/Util/util@1.0.24"
+		}
+	}
 }

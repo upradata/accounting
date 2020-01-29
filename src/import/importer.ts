@@ -32,7 +32,7 @@ export class Importer {
         if (!this.filenames)
             await this.init();
 
-        const hasBeenLoaded = (name: keyof ImporterFiles, data: any) => {
+        const hasBeenLoaded = <T>(name: keyof ImporterFiles, data: T): T => {
             console.log(`file for ${name} has been loaded: ${this.filenames[ name ]}`);
             return data;
         };
@@ -46,31 +46,41 @@ export class Importer {
         const [ depenses, depensePieces, saisies, balanceReouverture ] = await Promise.all([
             this.depenses().then(data => hasBeenLoaded('depenses', data)),
             this.depensePieces().then(data => hasBeenLoaded('depensesPieces', data)),
-            this.saisies().then(data => hasBeenLoaded('saisiePieces', data)),
+            this.saisies(this.filenames.saisiePieces).then(data => hasBeenLoaded('saisiePieces', data)),
             this.balanceReouverture().then(data => hasBeenLoaded('balanceReouverture', data))
         ]);
 
         return { depenses, depensePieces, saisies, balanceReouverture };
     }
 
-    async depenses(): Promise<ComptaDepense<number, Date>[]> {
+    async depenses(): Promise<ComptaDepense<number, Date, boolean>[]> {
+        if (!this.filenames.depenses)
+            return [];
+
         const depenses = await csvToJson(this.filenames.depenses, {
             delimiter: ';',
-            headers: [ 'id', 'libelle', 'ttc', 'ht', 'tva', 'date', 'journal', 'debit', 'credit', 'pieceRef' ],
+            headers: [ 'id', 'libelle', 'ttc', 'ht', 'tva', 'date', 'journal', 'debit', 'credit', 'pieceRef', 'isImported' ],
             onlyHeaderColumn: true
         }) as ComptaDepense<string, string>[];
 
 
-        return depenses.map(e => ({
-            ...e,
-            ttc: commaToNumber(e.ttc),
-            ht: commaToNumber(e.ht),
-            tva: commaToNumber(e.tva),
-            date: fecDateToDate(e.date)
-        }));
+        return depenses.map(e => {
+            console.log(e);
+            return {
+                ...e,
+                ttc: commaToNumber(e.ttc),
+                ht: commaToNumber(e.ht),
+                tva: commaToNumber(e.tva),
+                date: fecDateToDate(e.date),
+                isImported: e.isImported.toString().toLowerCase() === 'true'
+            }
+        });
     }
 
     async depensePieces(): Promise<ComptaDepensePiece<number, Compte>[]> {
+        if (!this.filenames.depensesPieces)
+            return [];
+
         const pieces = await csvToJson(this.filenames.depensesPieces, {
             delimiter: ';',
             headers: [ 'id', 'journal', 'compte', 'compteLibelle', 'compteAux', 'debit', 'credit' ],
@@ -95,10 +105,13 @@ export class Importer {
     }
 
     // | { compteInfo: CompteInfo }
-    async saisies(filename?: string): Promise<ComptaSaisieMouvement<number, Date, Compte>[]> {
-        const saisiePieces = await csvToJson(filename || this.filenames.saisiePieces, {
+    async saisies(filename: string): Promise<ComptaSaisieMouvement<number, Date, Compte, boolean>[]> {
+        if (!filename)
+            return [];
+
+        const saisiePieces = await csvToJson(filename, {
             delimiter: ';',
-            headers: [ 'id', 'libelle', 'journal', 'date', 'compte', 'compteLibelle', 'compteAux', 'debit', 'credit', ],
+            headers: [ 'id', 'libelle', 'journal', 'date', 'compte', 'compteLibelle', 'compteAux', 'debit', 'credit', 'isImported' ],
             onlyHeaderColumn: true
         }) as ComptaSaisieMouvement[];
 
@@ -111,7 +124,8 @@ export class Importer {
                 compteInfo: undefined,
                 date: fecDateToDate(e.date),
                 credit: commaToNumber(e.credit),
-                debit: commaToNumber(e.debit)
+                debit: commaToNumber(e.debit),
+                isImported: e.isImported.toString().toLowerCase() === 'true'
             };
 
             // saisie.compteInfo = new CompteInfo({ compte: saisie.compte, compteAux: saisie.compteAux });

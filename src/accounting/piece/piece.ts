@@ -8,6 +8,7 @@ export interface PieceOption {
     libelle: string;
     date: Date;
     journal: string;
+    isImported: boolean;
 }
 
 
@@ -23,6 +24,7 @@ export class Piece {
     libelle: string;
     date: Date;
     journal: string;
+    isImported: boolean;
     private isClosed: boolean = false;
     mouvements: Mouvement[] = [];
     grandLivre: GrandLivre;

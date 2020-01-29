@@ -7,7 +7,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "lib": [
-            "esnext"
+            "ESNext"
         ],
         "module": "commonjs",
         "moduleResolution": "node",

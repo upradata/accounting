@@ -89,6 +89,7 @@ export interface SpreadSheetToCsvOption {
     sheetName: string;
     outputFile?: string;
     outputDir?: string;
+    maxWait?: number;
 }
 
 export type XlsxToCsvOption = Omit<SpreadSheetToCsvOption, 'sheetName'>;
@@ -151,7 +152,28 @@ export async function odsToXlsx(option: XlsxToCsvOption): Promise<string> {
     const { filepath, outputDir, outputFile } = await builder.buildOption(defaultOutputFilename);
 
     return execAsync(`libreoffice --headless --convert-to xlsx ${filepath} --outdir ${outputDir}`)
-        .then(({ stdout, stderr }) => path.join(outputDir, path.basename(filepath, '.ods') + '.xlsx'))
+        .then(({ stdout, stderr }) => {
+            const output = path.join(outputDir, path.basename(filepath, '.ods') + '.xlsx');
+            let totalWait = 0;
+            const timeStep = 10;
+            const maxWait = option.maxWait || 2000;
+
+            // Strangely, we need to wait before the OS writes the file on the disk.
+            // We wait a maximum 2s
+            return new Promise<string>((res, rej) => {
+                const id = setInterval(async () => {
+                    if (await existAsync(output)) {
+                        res(output);
+                        clearInterval(id);
+                    } else if (totalWait > maxWait) {
+                        rej(new Error(`Error while converting ${filepath} to XLSX format. The conversion succeeded. But the OS did not write the output after a maximum waiting time of ${maxWait}ms`));
+                        clearInterval(id);
+                    }
+
+                    totalWait += timeStep;
+                }, timeStep);
+            });
+        })
         .catch(e => { throw new Error(`An error occured while converting ods file ${filepath} to xlsx: ${e}`); });
 }
 
@@ -179,6 +201,7 @@ export async function xlsxToCsv(option: SpreadSheetToCsvOption, nbRerun: number 
                 });
         }, 1000);
     }); */
+
     const defaultOutputFilename = option.sheetName.toLocaleLowerCase() + '.csv';
     const builder = new SpreadSheetConvertOptionBuilder<SpreadSheetToCsvOption>(option);
     const { filepath, outputDir, outputFile, sheetName } = await builder.buildOption(defaultOutputFilename);

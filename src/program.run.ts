@@ -12,19 +12,21 @@ import { JournalCentraliseur } from './accounting/journal-centraliseur/journal-c
 import { PlanComptable } from './metadata/plan-comptable';
 import { Journaux } from './metadata/journaux';
 import { Pieces } from './accounting/piece/pieces';
-import { programArgs } from './program-args';
+import { ProgramArguments } from './program-args';
 import { AccountingInterface } from './accounting/accounting.inteface';
+import { isDefined } from '@upradata/util';
+
 
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
 
-class Run {
+export class Run {
     private accounting: AccountingInterface;
     private metadataSchema: { path: string; schema: ObjectOf<any> };
     private metadata: ComptabiliteMetadata;
 
-    constructor() {
+    constructor(public options: ProgramArguments<string>) {
         const metadataSchemaPath = path.join(__dirname, './metadata/accounting-metadata.schema.json');
         this.metadataSchema = {
             path: metadataSchemaPath,
@@ -34,7 +36,7 @@ class Run {
 
 
     async loadMetadata(): Promise<ComptabiliteMetadata> {
-        const metadataFile = programArgs.metadata || 'metadata.json';
+        const metadataFile = this.options.metadata || path.join(__dirname, '../metadata.json');
         const metadataJson = await readFileAsync(metadataFile, { encoding: 'utf8' });
         const metadata = JSON.parse(metadataJson) as ComptabiliteMetadataOption<string>;
 
@@ -50,7 +52,7 @@ class Run {
             );
         }
 
-        const start = programArgs.exerciseStart;
+        const start = this.options.exerciseStart;
         const startDate = new Date(parseFloat(start.slice(4, 8)), parseFloat(start.slice(2, 4)), parseFloat(start.slice(0, 2)));
 
         return new ComptabiliteMetadata({ ...metadata, exercisePeriod: { start: startDate, periodMonth: parseFloat(metadata.exercisePeriod) } });
@@ -90,21 +92,23 @@ class Run {
     async run() {
         await this.init();
 
+        const { dataDirectory, ods, listCsv, fec } = this.options;
+
         await this.accounting.importComptaData({
-            directory: programArgs.dataDirectory,
-            odsFilename: programArgs.ods,
-            files: programArgs.listCsv
+            directory: dataDirectory,
+            odsFilename: ods,
+            files: listCsv
         });
 
         this.accounting.processLettrage();
 
         const promises: Promise<any>[] = [];
 
-        if (programArgs.fec !== undefined)
+        if (isDefined(fec) && fec)
             promises.push(this.generateFec());
 
 
-        const edit = programArgs.edit;
+        const edit = this.options.edit;
         if (edit)
             promises.push(this.edit());
 
@@ -113,13 +117,13 @@ class Run {
     }
 
     generateFec(): Promise<any> {
-        const { fec, outputDir } = programArgs;
-        return this.accounting.generateFec({ separator: ';', outputFilename: fec === 'default' ? undefined : fec, outputDir });
+        const { fec, fecOnlyNonImported, outputDir } = this.options;
+        return this.accounting.generateFec({ separator: ';', onlyNonImported: fecOnlyNonImported, outputFilename: typeof fec === 'string' ? fec : undefined, outputDir });
     }
 
     edit(): Promise<any> {
         const promises: Promise<any>[] = [];
-        const { outputDir } = programArgs;
+        const { outputDir } = this.options;
 
         let messageConsole = '';
 
@@ -135,17 +139,17 @@ class Run {
             }
         });
 
-        const option = { short: programArgs.editShort };
+        const option = { short: this.options.editShort };
 
-        if (programArgs.editGrandLivre)
+        if (this.options.editGrandLivre)
             promises.push(this.accounting.grandLivre.edit(editter('grand-livre'), option));
-        if (programArgs.editBalance)
+        if (this.options.editBalance)
             promises.push(this.accounting.balanceDesComptes.edit(editter('balance-comptes'), option));
-        if (programArgs.editJournal) {
+        if (this.options.editJournal) {
             promises.push(this.accounting.journalCentraliseur.edit(editter('journal-centraliseur'), option));
             promises.push(this.accounting.journalCentraliseur.edit(editter('journal-centraliseur-summary'), { ...option, byJournal: true }));
         }
-        if (programArgs.editPieces) {
+        if (this.options.editPieces) {
             const pieceEditter = editter('pieces');
             pieceEditter.loggers.console = undefined;
 
@@ -157,6 +161,3 @@ class Run {
     }
 
 }
-
-
-new Run().run();

@@ -10,28 +10,28 @@ export class PiecesFromDepense {
 
     constructor(private depensePieces: ComptaDepensePiece<number, Compte>[]) { }
 
-    getPieces(compteDepenses: ComptaDepense<number, Date>[]): Piece[] {
+    getPieces(compteDepenses: ComptaDepense<number, Date, boolean>[]): Piece[] {
         const pieces: Piece[] = [];
 
         for (const depenses of Object.values(arrayToObjOfArrayById(compteDepenses, 'id'))) {
 
             for (const depense of depenses) {
 
-                const { libelle, ttc, ht, tva, date, journal, credit, debit, pieceRef } = depense;
+                const { libelle, ttc, ht, tva, date, journal, credit, debit, pieceRef, isImported } = depense;
 
                 if (pieceRef)
                     pieces.push(
-                        ...getPiecesFromPieceRef({ comptaDepensePieces: this.depensePieces, pieceRef, pieceOption: { libelle, date } })
+                        ...getPiecesFromPieceRef({ comptaDepensePieces: this.depensePieces, pieceRef, pieceOption: { libelle, date, isImported } })
                     );
 
                 else if (credit || debit) {
-                    const piece = getPieceFromString(credit, debit, { libelle, date, journal });
+                    const piece = getPieceFromString(credit, debit, { libelle, date, journal, isImported });
                     if (piece)
                         pieces.push(piece);
                 }
 
                 else
-                    pieces.push(... new PieceFromLibelle(PREDIFINED_GENERATORS).generate({ libelle, ttc, ht, tva, date }));
+                    pieces.push(... new PieceFromLibelle(PREDIFINED_GENERATORS).generate({ libelle, ttc, ht, tva, date, isImported }));
             }
         }
 

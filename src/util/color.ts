@@ -1,4 +1,4 @@
-import { ColorType, colors as COLORS } from '../../linked-modules/@mt/node-util';
+import { ColorType, colors as COLORS } from '@upradata/node-util';
 
 const c = COLORS as ColorType;
 

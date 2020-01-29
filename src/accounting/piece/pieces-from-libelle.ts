@@ -11,6 +11,7 @@ export interface Depense {
     ttc: number;
     ht: number;
     tva: number;
+    isImported: boolean;
 }
 
 export type PieceFromLibelleGenerator = (depense: Depense) => Piece[];
