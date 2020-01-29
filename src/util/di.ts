@@ -44,7 +44,7 @@ export function InjectDep(provider: Constructor | string | symbol) {
         // propertyKey is always undefined because it is not a parameter decorator
         const constructorArgs: string = classPrototype.toString().match(/constructor[^(]*\(([^)]*)\)/)[ 1 ];
 
-        if (!constructorArgs) {
+        if (!constructorArgs || parameterIndex >= constructorArgs.split(/\W+/).length) {
             const providerName: string = (provider as any).name || String(provider);
             throw new Error(`Argument ${parameterIndex} in ${classPrototype.name}.constructor is missing to inject ${providerName}`);
         }

@@ -46,11 +46,12 @@ describe(
         // tslint:disable: max-line-length
         const configs = [
             { title: 'Build Fec', instance: new Run({ exerciseStart: '01022018', metadata: fromRoot('./metadata.json'), dataDirectory, fec: true, outputDir }) },
-            // command: `node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --data-directory ${dataDirectory} --fec --output-dir ${outputTest}` },
+            // command: `node dist/program.command.js --exercise-start 01022018 --metadata ./metadata.json --data-directory ${dataDirectory} --fec --output-dir ${outputTest}` },
+            { title: 'Build Fec Only Non Imported', instance: new Run({ exerciseStart: '01022018', metadata: fromRoot('./metadata.json'), dataDirectory, fec: true, fecOnlyNonImported: true, outputDir }) },
             { title: 'Edit Short', instance: new Run({ exerciseStart: '01022018', metadata: fromRoot('./metadata.json'), dataDirectory, edit: true, editShort: true, outputDir }) },
-            // command: `node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --data-directory ${dataDirectory} --edit --edit-short --output-dir ${outputDir}` },
+            // command: `node dist/program.command.js --exercise-start 01022018 --metadata ./metadata.json --data-directory ${dataDirectory} --edit --edit-short --output-dir ${outputDir}` },
             { title: 'Edit Long', instance: new Run({ exerciseStart: '01022018', metadata: fromRoot('./metadata.json'), dataDirectory, edit: true, outputDir }) },
-            // command: `node dist/index.js --exercise-start 01022018 --metadata ./metadata.json --data-directory ${dataDirectory} --edit --output-dir ${outputDir}` }
+            // command: `node dist/program.command.js --exercise-start 01022018 --metadata ./metadata.json --data-directory ${dataDirectory} --edit --output-dir ${outputDir}` }
         ];// .map(c => [ c.title, c.command ]);
 
 

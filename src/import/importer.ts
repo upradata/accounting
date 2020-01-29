@@ -64,17 +64,15 @@ export class Importer {
         }) as ComptaDepense<string, string>[];
 
 
-        return depenses.map(e => {
-            console.log(e);
-            return {
-                ...e,
-                ttc: commaToNumber(e.ttc),
-                ht: commaToNumber(e.ht),
-                tva: commaToNumber(e.tva),
-                date: fecDateToDate(e.date),
-                isImported: e.isImported.toString().toLowerCase() === 'true'
-            }
-        });
+        return depenses.map(e => ({
+            ...e,
+            ttc: commaToNumber(e.ttc),
+            ht: commaToNumber(e.ht),
+            tva: commaToNumber(e.tva),
+            date: fecDateToDate(e.date),
+            isImported: e.isImported.toString().toLowerCase() === 'true'
+
+        }));
     }
 
     async depensePieces(): Promise<ComptaDepensePiece<number, Compte>[]> {

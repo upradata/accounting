@@ -61,7 +61,7 @@ export class Run {
     async init() {
         this.metadata = await this.loadMetadata();
 
-        const grandLivre = new GrandLivre();
+        // const grandLivre = new GrandLivre();
         /* const services = {
             grandLivre: { provide: GrandLivre, useValue: grandLivre },
             balanceDesComptes: {

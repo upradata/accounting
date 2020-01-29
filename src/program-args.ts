@@ -53,6 +53,9 @@ export function parseArgs(): ProgramArguments<string> {
     programArgs.outputDir = args.outputDir || '.';
     createDirIfNotExist(args.outputDir);
 
+    if (args.fecOnlyNonImported)
+        programArgs.fec = programArgs.fec || true;
+
     const ods = args.ods;
     programArgs.ods = typeof ods === 'string' ? ods : INPUT_DATA_DEFAULTS.odsFilename; //  ods ? INPUT_DATA_DEFAULTS.odsFilename : undefined;
 

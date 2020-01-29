@@ -24,7 +24,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting",
-            "program": "${workspaceFolder}/dist/index.js",
+            "program": "${workspaceFolder}/dist/program.command.js",
             "args": [
                 "--exercise-start",
                 "01022018",
@@ -41,7 +41,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting Input Data",
-            "program": "${workspaceFolder}/dist/index.js",
+            "program": "${workspaceFolder}/dist/program.command.js",
             "args": [
                 "--exercise-start",
                 "01022018",
@@ -58,7 +58,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting Input Data + Files",
-            "program": "${workspaceFolder}/dist/index.js",
+            "program": "${workspaceFolder}/dist/program.command.js",
             "args": [
                 "--exercise-start",
                 "01022018",
@@ -77,7 +77,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting Input Data + Ods",
-            "program": "${workspaceFolder}/dist/index.js",
+            "program": "${workspaceFolder}/dist/program.command.js",
             "args": [
                 "--exercise-start",
                 "01022018",
@@ -95,7 +95,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting List",
-            "program": "${workspaceFolder}/dist/index.js",
+            "program": "${workspaceFolder}/dist/program.command.js",
             "args": [
                 "--exercise-start",
                 "01022018",
@@ -112,7 +112,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Accounting List Name",
-            "program": "${workspaceFolder}/dist/index.js",
+            "program": "${workspaceFolder}/dist/program.command.js",
             "args": [
                 "--exercise-start",
                 "01022018",
@@ -123,6 +123,23 @@
                 "--fec",
                 "--output-dir",
                 "Output"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Accounting FEC Non Imported",
+            "program": "${workspaceFolder}/dist/program.command.js",
+            "args": [
+                "--exercise-start",
+                "01022018",
+                "--metadata",
+                "./metadata.json",
+                "--fec-only-non-imported",
+                "--data-directory",
+                "data",
+                "--output-dir",
+                "Ouput"
             ]
         },
         {

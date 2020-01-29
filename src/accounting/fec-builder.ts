@@ -2,17 +2,18 @@ import { numberToComma } from '../util/util';
 import { Mouvement, Lettrage } from './mouvement';
 import { writeFile as fsWriteFile } from 'fs';
 import { promisify } from 'util';
-import { Injector } from '../util/di';
+import { Injector, InjectDep } from '../util/di';
 import { PlanComptable } from '../metadata/plan-comptable';
 import { Journaux } from '../metadata/journaux';
 import { dateToFecDate, TODAY } from '../util/compta-util';
+import { Pieces } from './piece/pieces';
 
 
 const writeFile = promisify(fsWriteFile);
 
 export class FecBuilderOption {
     separator?: string = ';';
-    onlyNonImported?: boolean = true;
+    onlyNonImported?: boolean = false;
 }
 
 interface SaisieArgs {
@@ -23,17 +24,19 @@ interface SaisieArgs {
 }
 
 export class FecBuilder {
+    private pieces?: Pieces;
     private separator: string;
     public fec: string = '';
     private planComptable: PlanComptable;
     private journaux: Journaux;
+    private onlyNonImported: boolean;
 
     constructor(option: FecBuilderOption = {}) {
+        this.pieces = Injector.app.get(Pieces);
         this.planComptable = Injector.app.get(PlanComptable);
         this.journaux = Injector.app.get(Journaux);
 
-        const o = { ...new FecBuilderOption(), ...option };
-        this.separator = o.separator;
+        Object.assign(this, new FecBuilderOption(), option);
     }
 
 
@@ -71,12 +74,16 @@ export class FecBuilder {
 
 
         for (const mouvement of mouvements) {
-            this.fec += this.ecritureMouvement({
-                mouvement,
-                ecritureId: `ecriture-${mouvement.pieceId}`,
-                ecritureDate: TODAY.fecFormat,
-                validationDate: '20190312',
-            }) + '\n';
+
+            if (!this.onlyNonImported || this.onlyNonImported && !this.pieces.get(mouvement.pieceId).isImported) {
+
+                this.fec += this.ecritureMouvement({
+                    mouvement,
+                    ecritureId: `ecriture-${mouvement.pieceId}`,
+                    ecritureDate: TODAY.fecFormat,
+                    validationDate: '20190312',
+                }) + '\n';
+            }
         }
 
         return this.fec;
