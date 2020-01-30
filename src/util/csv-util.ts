@@ -1,13 +1,17 @@
 import { ObjectOf } from './types';
 
 import csv from 'csvtojson';
-import { Converter } from 'csvtojson/src/Converter';
+// import { Converter } from 'csvtojson/src/Converter';
+import { RowSplit, RowSplitResult, MultipleRowResult } from 'csvtojson/v2/rowSplit';
 import { CSVParseParam } from 'csvtojson/v2/Parameters';
 import * as  fs from 'fs';
 import * as  path from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import { createDirIfNotExist } from './util';
+import { red } from '@upradata/node-util';
+import { Fileline } from 'csvtojson/v2/fileline';
+import { ProcessLineResult } from 'csvtojson/v2/Processor';
 
 const execAsync = promisify(exec);
 const existAsync = promisify(fs.exists);
@@ -35,6 +39,55 @@ export function readFirstLine(filename: string) {
 }
 
 export type CsvToJsonOption = Partial<CSVParseParam> & { onlyHeaderColumn?: boolean };
+
+// To filter empty rows (row with all empty columns)
+const oldParseMultiLines = RowSplit.prototype.parseMultiLines;
+RowSplit.prototype.parseMultiLines = function (lines: Fileline[]) {
+    const oldShift = lines.shift;
+    const self = this;
+
+    lines.shift = function () {
+        let line: string = '';
+
+        while (line === '' && lines.length > 0) {
+            line = oldShift.call(lines);
+            let delimiter: string;
+
+            if (self.conv.parseRuntime.delimiter instanceof Array || self.conv.parseRuntime.delimiter.toLowerCase() === 'auto') {
+                delimiter = self.getDelimiter(line);
+            } else
+                delimiter = self.conv.parseRuntime.delimiter;
+
+            const isOnlyEmptyCols = line.split(delimiter).find(c => c !== '') === undefined;
+
+            if (isOnlyEmptyCols)
+                line = '';
+        }
+
+        return line || '';
+    };
+
+    const oldIignoreEmpty = this.conv.parseParam.ignoreEmpty;
+    this.conv.parseParam.ignoreEmpty = true;
+
+    const processedLines = oldParseMultiLines.call(this, lines) as MultipleRowResult;
+
+    this.conv.parseParam.ignoreEmpty = oldIignoreEmpty;
+    return processedLines;
+};
+
+
+/*
+const oldParse = RowSplit.prototype.parse;
+
+RowSplit.prototype.parse = function (fileline: Fileline) {
+    const lineParsed = oldParse.call(this, fileline) as RowSplitResult;
+    console.log({ NULL: lineParsed.cells.length === 0 });
+
+
+    return lineParsed;
+}; */
+
 export async function csvToJson(filename: string, options: CsvToJsonOption = {}) {
     if (options.onlyHeaderColumn)
         options.includeColumns = new RegExp(options.headers.join('|'));
@@ -49,7 +102,7 @@ export async function csvToJson(filename: string, options: CsvToJsonOption = {})
         })) */
         .fromFile(filename)
         .on('error', e => {
-            throw new Error(`An error occured while converting csv file ${filename}: ${e}`);
+            throw new Error(red`An error occured while converting csv file ${filename}: ${e}`);
         });
 
     // Converter.then is defined => we can use it like a promise :)

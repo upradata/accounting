@@ -1,5 +1,6 @@
 import { PartialRecursive } from '../util/types';
 import { TableUserConfig, ColumnConfig, table } from 'table';
+import * as alignString from 'table/dist/alignString';
 import makeConfig from 'table/dist/makeConfig';
 import stringWidth from 'string-width';
 import { assignDefaultOption, assignRecursive } from '@upradata/util';
@@ -33,7 +34,26 @@ export interface TableStringOption {
 }
 
 
+const oldAlignString = alignString.default;
+alignString.default = (subject: string, containerWidth: number, alignment: 'center' | 'left' | 'right') => {
+    if (alignment === 'center')
+        return alignCenter(subject, containerWidth - stringWidth(subject));
 
+    return oldAlignString(subject, containerWidth, alignment);
+};
+
+// Fix bug in table.alignCenter where instead of whiteSpaces % 2 there was halfWidth % 2!!
+const alignCenter = (subject: string, whiteSpaces: number) => {
+    let halfWidth;
+
+    halfWidth = whiteSpaces / 2;
+
+    if (whiteSpaces % 2 === 0)
+        return ' '.repeat(halfWidth) + subject + ' '.repeat(halfWidth);
+
+    halfWidth = Math.floor(halfWidth);
+    return ' '.repeat(halfWidth) + subject + ' '.repeat(halfWidth + 1);
+};
 
 
 export class TableString {
@@ -52,7 +72,7 @@ export class TableString {
     }
 
     get(data: TableRows) {
-        // we compute it to get tableConfig.columns value computed to have paddingLeft, paddingRight
+        // we compute tableConfig to get tableConfig.columns value computed to be able to get paddingLeft, paddingRight
         // needed in this.getColumnsWidth
         this.tableConfig = makeConfig(data, this.userConfig) as TableConfig;
 
@@ -89,7 +109,6 @@ export class TableString {
                 if (cellWidth > columnsWidth[ i ])
                     columnsWidth[ i ] = cellWidth;
             }
-
         }
 
         if (maxCellWidth)

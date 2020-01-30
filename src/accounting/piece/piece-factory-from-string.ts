@@ -2,6 +2,7 @@ import { PieceOption, Piece } from './piece';
 import { MouvementType } from '../../util/types';
 import { MouvementData } from '../mouvement';
 import { CompteInfo } from '../compte';
+import { red } from '@upradata/node-util';
 
 
 export function getPieceFromString(credit: string, debit: string, pieceOption: PieceOption): Piece {
@@ -9,7 +10,7 @@ export function getPieceFromString(credit: string, debit: string, pieceOption: P
 
 
     if (!pieceOption.journal) {
-        console.error(`Le champ "${libelle}" n'a pas de journal`);
+        console.error(red`Le champ "${libelle}" n'a pas de journal`);
         return undefined;
     }
 

@@ -111,7 +111,7 @@ export class ImporterOption<T = string> {
                         .catch(e => {
                             console.warn(yellow`Could not load sheet ${sheetName} in ${this.dir(this.odsFilename)} due to following error:`);
                             console.warn(yellow`${e}`);
-                            console.warn(`Try load file ${this.dir(filename)}`);
+                            console.warn(yellow`Try load file ${this.dir(filename)}`);
                             this.fileLoaded(key, this.dir(filename));
                         })
                 );

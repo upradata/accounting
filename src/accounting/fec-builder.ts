@@ -2,11 +2,12 @@ import { numberToComma } from '../util/util';
 import { Mouvement, Lettrage } from './mouvement';
 import { writeFile as fsWriteFile } from 'fs';
 import { promisify } from 'util';
-import { Injector, InjectDep } from '../util/di';
+import { Injector } from '../util/di';
 import { PlanComptable } from '../metadata/plan-comptable';
 import { Journaux } from '../metadata/journaux';
 import { dateToFecDate, TODAY } from '../util/compta-util';
 import { Pieces } from './piece/pieces';
+import { red, colors } from '@upradata/node-util';
 
 
 const writeFile = promisify(fsWriteFile);
@@ -91,7 +92,7 @@ export class FecBuilder {
 
     writeFile(filename: string) {
         return writeFile(filename, this.fec, { encoding: 'utf8' })
-            .then(() => console.log(`FEC file generated: ${filename}`))
-            .catch(e => console.log(`Erro while writing FEC file in ${filename}: ${e}`));
+            .then(() => console.log(colors.green.bold.$`FEC file generated: ${filename}`))
+            .catch(e => console.error(red`Erro while writing FEC file in ${filename}: ${e}`));
     }
 }

@@ -10,6 +10,7 @@ import { Injector } from '../util/di';
 import { PlanComptable } from '../metadata/plan-comptable';
 import { ImporterOption } from './importer-option';
 import { ImporterFiles, ImporterFile } from './importer-input';
+import { colors } from '@upradata/node-util';
 
 
 
@@ -33,7 +34,7 @@ export class Importer {
             await this.init();
 
         const hasBeenLoaded = <T>(name: keyof ImporterFiles, data: T): T => {
-            console.log(`file for ${name} has been loaded: ${this.filenames[ name ]}`);
+            console.log(colors.magenta.bold.$`file for ${name} has been loaded: ${this.filenames[ name ]}`);
             return data;
         };
 
@@ -50,6 +51,7 @@ export class Importer {
             this.balanceReouverture().then(data => hasBeenLoaded('balanceReouverture', data))
         ]);
 
+        console.log(); // jump 1 line for clarity
         return { depenses, depensePieces, saisies, balanceReouverture };
     }
 

@@ -1,6 +1,7 @@
 import program from 'commander';
 import { createDirIfNotExist } from './util/util';
 import { INPUT_DATA_DEFAULTS, ImporterFiles } from './import/importer-input';
+import { EditterFormats } from './edition/editter';
 
 program
     .version('1.0.0')
@@ -10,23 +11,28 @@ program
     .option('-f, --fec [path]', 'Generate fec')
     .option('-F, --fec-only-non-imported', 'Generate fec (only non imported data in accounting software)')
     .option('-e, --edit', 'Edit accounting: Balance Des Comptes, Journal Centraliseur et Grand Livre')
-    .option('-es, --edit-short', 'Edit accounting condensed mode.')
-    .option('-eg, --edit-grandlivre', 'Edit Grand Livre.')
-    .option('-eb, --edit-balance', 'Edit Balance Des Comptes.')
-    .option('-ej, --edit-journal', 'Edit Journal Centraliseur.')
-    .option('-ep, --edit-pieces', 'Edit Pièces.')
+    .option('--edit-type <type>', 'Editter logger types', concat, [])
+    .option('--edit-short', 'Edit accounting condensed mode.')
+    .option('--edit-grandlivre', 'Edit Grand Livre.')
+    .option('--edit-balance', 'Edit Balance Des Comptes.')
+    .option('--edit-journal', 'Edit Journal Centraliseur.')
+    .option('--edit-pieces', 'Edit Pièces.')
     .option('-d, --data-directory <path>', 'Directory for input data.')
     .option('-o, --ods [path]', 'ODS file containing accounting data')
     .option('-l, --list-csv <input-csv-path>', 'comma separated list', commaSeparatedList);
 
 
-function commaSeparatedList(value: string, dummyPrevious: string) {
+function commaSeparatedList(value: string, dummyPrevious: string[]) {
     return value.split(',').reduce((o, v) => {
         const [ key, filename ] = v.split(':');
         o[ key.trim() ] = { filename: filename.trim() };
 
         return o;
     }, {});
+}
+
+function concat(value: string, previous: string[]) {
+    return previous.concat(value);
 }
 
 export interface ProgramArguments<StringOrBoolArg = string | boolean> {
@@ -36,6 +42,7 @@ export interface ProgramArguments<StringOrBoolArg = string | boolean> {
     fec?: string | boolean;
     fecOnlyNonImported?: boolean;
     edit?: boolean;
+    editType?: (keyof EditterFormats)[];
     editShort?: boolean;
     editGrandLivre?: boolean;
     editBalance?: boolean;
@@ -77,6 +84,8 @@ export function parseArgs(): ProgramArguments<string> {
     if (editKeys.find(k => args[ k ] === true))
         programArgs.edit = true;
 
+    if ((!args.editType || args.editType.length === 0) && programArgs.edit)
+        programArgs.editType = Object.keys(new EditterFormats()) as any;
 
     return programArgs;
 }

@@ -1,11 +1,13 @@
+import { yellow } from '@upradata/node-util';
+
 export type EditLogger = (content: string) => Promise<any>;
 
-class EditterFormats {
-    pdf;
-    csv;
-    text;
-    console;
-    json;
+export class EditterFormats {
+    pdf = undefined;
+    csv = undefined;
+    text = undefined;
+    console = undefined;
+    json = undefined;
 }
 
 export type EditterLoggers = { [ K in keyof EditterFormats ]?: EditLogger[] };
@@ -36,7 +38,7 @@ export class Editter {
                 for (const logger of loggers)
                     promises.push(logger(content));
             } else {
-                console.warn(`Edition not handle for ${format}`);
+                console.warn(yellow`Edition not handle for ${format}`);
             }
         }
 

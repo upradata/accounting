@@ -17,14 +17,29 @@ export class PiecesfromSaisiePieces {
             const piece = new Piece({ journal, libelle, date, isImported });
 
             for (const mouvement of mouvements) {
-
                 const { compte, compteAux, debit, credit } = mouvement;
                 const isCredit = credit !== undefined;
 
-                piece.addMouvement({
-                    montant: isCredit ? credit : debit, type: isCredit ? 'credit' : 'debit',
-                    compteInfo: new CompteInfo({ compte, compteAux })
-                });
+                if (isDefined(credit) && isDefined(debit)) {
+                    if (mouvement.journal.toLowerCase() === 'xou') {
+                        // only for journal réouverture, on autorise une saisie avec crédit et débit en même temps
+                        piece.addMouvement({
+                            montant: credit, type: 'credit', compteInfo: new CompteInfo({ compte, compteAux })
+                        });
+                        piece.addMouvement({
+                            montant: debit, type: 'debit', compteInfo: new CompteInfo({ compte, compteAux })
+                        });
+
+                    } else {
+                        throw new Error(`Un saisie de peut avoir une colonne crédit et débit en même temps: Mouvement => ${mouvement}`);
+                    }
+
+                } else {
+                    piece.addMouvement({
+                        montant: isCredit ? credit : debit, type: isCredit ? 'credit' : 'debit',
+                        compteInfo: new CompteInfo({ compte, compteAux })
+                    });
+                }
 
             }
 

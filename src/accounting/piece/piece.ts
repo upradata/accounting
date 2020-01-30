@@ -2,6 +2,7 @@ import { CompteInfo } from '../compte';
 import { Mouvement, MouvementData, MouvementMetadata } from '../mouvement';
 import { Injector } from '../../util/di';
 import { GrandLivre } from '../grand-livre/grand-livre';
+import { red } from '@upradata/node-util';
 
 
 export interface PieceOption {
@@ -99,7 +100,7 @@ export class Piece {
             this.close();
             return true;
         } catch (e) {
-            console.error(e.message);
+            console.error(red`${e.message}`);
             return false;
         }
     }

@@ -5,16 +5,17 @@ import Ajv from 'ajv';
 import { promisify } from 'util';
 import { ComptabiliteMetadata, ComptabiliteMetadataOption } from './metadata/accounting-metadata';
 import { Injector } from './util/di';
-import { Editter } from './edition/editter';
+import { Editter, EditterLoggers } from './edition/editter';
 import { GrandLivre } from './accounting/grand-livre/grand-livre';
 import { BalanceDesComptes } from './accounting/balance-comptes/balance-des-comptes';
 import { JournalCentraliseur } from './accounting/journal-centraliseur/journal-centraliseur';
 import { PlanComptable } from './metadata/plan-comptable';
 import { Journaux } from './metadata/journaux';
 import { Pieces } from './accounting/piece/pieces';
-import { ProgramArguments } from './program-args';
+import { ProgramArguments } from './program.arguments';
 import { AccountingInterface } from './accounting/accounting.inteface';
 import { isDefined } from '@upradata/util';
+import { green, yellow, colors } from '@upradata/node-util';
 
 
 const readFileAsync = promisify(fs.readFile);
@@ -128,16 +129,23 @@ export class Run {
         let messageConsole = '';
 
         const write = (filename: string, data: string) => writeFileAsync(filename, data, { encoding: 'utf8' })
-            .then(() => messageConsole += `${filename} generated` + '\n');
+            .then(() => messageConsole += colors.blue.bold.$`${filename} generated` + '\n');
 
 
-        const editter = (filename: string) => new Editter({
-            loggers: {
-                console: [ s => Promise.resolve(console.log(s)) ],
-                csv: [ s => write(path.join(outputDir, `${filename}.csv`), s) ],
-                json: [ s => write(path.join(outputDir, `${filename}.json`), s) ],
+        const editter = (filename: string) => {
+            const loggers: EditterLoggers = {};
+
+            for (const type of this.options.editType) {
+                switch (type) {
+                    case 'console': loggers.console = [ s => Promise.resolve(console.log(s)) ]; break;
+                    case 'csv': loggers.csv = [ s => write(path.join(outputDir, `${filename}.csv`), s) ]; break;
+                    case 'json': loggers.json = [ s => write(path.join(outputDir, `${filename}.json`), s) ]; break;
+                    default: if (promises.length === 0) messageConsole += yellow`Logger "${type}" non implemented\n`;
+                }
             }
-        });
+
+            return new Editter({ loggers });
+        }
 
         const option = { short: this.options.editShort };
 
