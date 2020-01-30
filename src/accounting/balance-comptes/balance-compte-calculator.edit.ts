@@ -54,7 +54,7 @@ export class BalanceComptesCalculator {
     balanceRangeSplit(compteRange?: CompteRange): BalanceComptesSplit[] {
         const balances: BalanceComptesSplit[] = [];
 
-        const balanceGlobalI = compteRange ? this.balance : this.balance.getBalanceRange(compteRange);
+        const balanceGlobalI = !compteRange ? this.balance : this.balance.getBalanceRange(compteRange);
         const balanceReouvertureI = balanceGlobalI.filter({ filter: filter(m => lower(m.journal) === 'xou') });
         const balanceExerciseI = balanceGlobalI.filter({ filter: filter(m => lower(m.journal) !== 'xou') });
 
@@ -76,8 +76,9 @@ export class BalanceComptesCalculator {
     }
 
     balanceClassSplit(classNumero: number): BalanceComptesSplit[] {
-        const mille = Math.pow(10, 6);
-        return this.balanceRangeSplit({ from: classNumero * mille, to: (classNumero + 1) * mille - 1 });
+        const million = Math.pow(10, 6);
+        console.log('IIII ==> ', classNumero, this.balanceRangeSplit({ from: classNumero * million, to: (classNumero + 1) * million - 1 }).map(b => b.compte));
+        return this.balanceRangeSplit({ from: classNumero * million, to: (classNumero + 1) * million - 1 });
     }
 
     balancesClassTotalSplit(classNumero: number): BalanceComptesSplit {

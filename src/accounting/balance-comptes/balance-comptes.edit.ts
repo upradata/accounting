@@ -97,8 +97,8 @@ export class BalanceDesComptesEdit extends Edit {
             const balancesTotalI = this.balanceCompteCalculator.balanceClassSplit(i);
 
             if (!option.short) {
-                for (const data of balancesTotalI)
-                    this.addToEdit(data.transform(transformF));
+                for (const balance of balancesTotalI)
+                    this.addToEdit(balance.transform(transformF));
             }
 
             this.addToEdit(this.balanceCompteCalculator.balancesClassTotalSplit(i).transform(transformF));

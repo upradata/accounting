@@ -44,7 +44,7 @@
             "program": "${workspaceFolder}/dist/program.command.js",
             "args": [
                 "--exercise-start",
-                "01022018",
+                "01022019",
                 "--data-directory",
                 "${workspaceFolder}/data",
                 "--metadata",
