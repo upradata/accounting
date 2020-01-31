@@ -40,14 +40,14 @@ export class Mouvement {
     lettrage?: Lettrage;
 
     constructor(option: MouvementOption) {
-        const o = flattenObject(option, { mergeKey: (k1, k2) => k2, nbLevels: 1 }) as Mouvement;
+        const opts = flattenObject<Mouvement>(option, { mergeKey: (k1, k2) => k2, nbLevels: 2 }); // we flatten option.data
 
         for (const k of Object.keys({ pieceId: '', ...new MouvementMetadata(), ...new MouvementData() })) {
-            if (k !== 'montant')
-                this[ k ] = o[ k ];
+            if (k !== 'montant' && opts[ k ])
+                this[ k ] = opts[ k ];
         }
 
-        this.montant = parseFloat((o.montant + '').replace(',', '.'));
+        this.montant = parseFloat((opts.montant + '').replace(',', '.'));
         this.id = 'mouvement-' + ++Mouvement.ID;
     }
 }

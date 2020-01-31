@@ -1,6 +1,6 @@
 import { Edit, EditOption } from '../../edition/edit';
 import { ComptesBalance } from './comptes-balance';
-import { flattenObject } from '../../util/util';
+import { flatObjectToValues } from '../../util/util';
 import { formattedNumber } from '../../util/compta-util';
 import { coloryfyDiff } from '../../edition/edit-util';
 import { TableColumns } from '../../edition/table';
@@ -75,11 +75,20 @@ export class BalanceDesComptesEdit extends Edit {
         return [ ...row.slice(0, -1), coloryfyDiff(lastValue) ];
     }
 
+    private buildRow(balanceSplit: Split<BalanceTotalData>) {
+        const row: (string | number)[] = [ balanceSplit.compte ];
+
+        for (const splitType of [ 'reouverture', 'exercise', 'global' ])
+            row.push(...flatObjectToValues(balanceSplit[ splitType ] as BalanceTotalData, [ 'debit', 'credit', 'diff' ]));
+
+        return row;
+    }
+
     private addToEdit(balanceSplit: Split<BalanceTotalData>) {
 
         this.setJson(balanceSplit.compte, balanceSplit);
 
-        const row = Object.values(flattenObject(balanceSplit)) as Array<number | string>;
+        const row = this.buildRow(balanceSplit);
         const rowFormatted = this.formatRow(row);
 
         this.editorOption.csv += row.join(';') + '\n';

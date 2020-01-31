@@ -2,6 +2,7 @@ import { Compte } from '../compte';
 import { BalanceMap, BalanceMapFilterOption } from '../balance/balance-map';
 import { Mouvement } from '../mouvement';
 import { BalanceMapData } from '../balance/balance-map-data';
+import { chain } from '@upradata/util';
 
 export type Numero = string | number;
 
@@ -24,7 +25,7 @@ export class ComptesBalance extends BalanceMap<CompteKey> {
     constructor() {
         super({
             keyCompare: (l, r) => l.localeCompare(r, undefined, { numeric: true }),
-            keyFromMouvement: mouvement => mouvement.compteInfo.compte.numero,
+            keyFromMouvement: mouvement => chain(() => mouvement.compteInfo.compteAux.numero) || mouvement.compteInfo.compte.numero,
             keyMutation: compteNumero => Compte.pad(compteNumero)
         });
     }

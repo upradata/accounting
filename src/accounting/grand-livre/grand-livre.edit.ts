@@ -8,6 +8,7 @@ import { coloryfyDiff } from '../../edition/edit-util';
 import { TableColumns } from '../../edition/table';
 import { ObjectOf } from '../../util/types';
 import { ComptesBalance } from '../balance-comptes/comptes-balance';
+import { flatObjectToValues } from '../../util/util';
 
 
 interface AddToEditOption {
@@ -106,7 +107,7 @@ export class GrandLivreEdit extends Edit {
             dataO = { compte, date, pieceId, period, debit, credit, solde };
 
 
-        const row = Object.values(dataO);
+        const row = flatObjectToValues(dataO, [ 'compte', 'date', 'pieceId', 'period', 'debit', 'credit', 'solde' ]);
         const rowFormatted = this.formatRow(row);
 
         this.setJson(compte, dataO);

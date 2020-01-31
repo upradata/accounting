@@ -1,6 +1,7 @@
 import { ObjectOf } from './types';
 import { promisify } from 'util';
 import * as  fs from 'fs';
+import { isDefined } from '@upradata/util';
 
 const existAsync = promisify(fs.exists);
 const mkdirAsync = promisify(fs.mkdir);
@@ -61,7 +62,7 @@ export class FlattenObjectOption {
     nbLevels?: number = NaN;
 }
 
-export function flattenObject(obj: ObjectOf<any>, option?: FlattenObjectOption, currentLevel = 0) {
+export function flattenObject<R>(obj: ObjectOf<any>, option?: FlattenObjectOption, currentLevel = 1): ObjectOf<R> {
     const { mergeKey, nbLevels } = Object.assign(new FlattenObjectOption, option);
 
     const flatO = {};
@@ -79,6 +80,19 @@ export function flattenObject(obj: ObjectOf<any>, option?: FlattenObjectOption, 
     return flatO;
 }
 
+
+export function flatObjectToValues<T>(obj: T, propOrders: (keyof T)[], options?: { onlyDefinedValues?: boolean }) {
+    const opts = Object.assign({ onlyDefinedValues: true }, options);
+
+    const values: (T[ keyof T ])[] = [];
+
+    for (const prop of propOrders) {
+        if (!opts.onlyDefinedValues || isDefined(obj[ prop as any ]))
+            values.push(obj[ prop as any ]);
+    }
+
+    return values;
+}
 
 export function isIterable<T>(obj: any): obj is Iterable<T> {
     // checks for null and undefined

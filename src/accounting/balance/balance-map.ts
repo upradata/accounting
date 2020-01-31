@@ -114,10 +114,6 @@ export class BalanceMap<Key> {
     *[ Symbol.iterator ](): IterableIterator<BalanceMapIteratorResult<Key>> {
         for (const { key, value: balanceData } of this.balanceMap) {
             yield { key, balanceData };
-            // const { mouvements, total } = balanceData;
-            // yield { key, balanceData: { mouvements, total: total.data } };
-            // the reason I do total.data is because total.diff is a getter property and it is not enumarable.
-            // Then Object.entries/keys/... will not work. So I transform the instance of BalanceTotal in a plain object
         }
     }
 }

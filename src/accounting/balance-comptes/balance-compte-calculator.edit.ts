@@ -77,7 +77,6 @@ export class BalanceComptesCalculator {
 
     balanceClassSplit(classNumero: number): BalanceComptesSplit[] {
         const million = Math.pow(10, 6);
-        console.log('IIII ==> ', classNumero, this.balanceRangeSplit({ from: classNumero * million, to: (classNumero + 1) * million - 1 }).map(b => b.compte));
         return this.balanceRangeSplit({ from: classNumero * million, to: (classNumero + 1) * million - 1 });
     }
 

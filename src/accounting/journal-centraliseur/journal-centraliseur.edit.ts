@@ -9,6 +9,7 @@ import { ObjectOf } from '../../util/types';
 import { coloryfyDiff } from '../../edition/edit-util';
 import { Pieces } from '../piece/pieces';
 import { Injector } from '../../util/di';
+import { flatObjectToValues } from '../../util/util';
 
 
 interface AddToEditOption {
@@ -149,7 +150,7 @@ export class JournalCentraliseurEdit extends Edit {
         }
 
 
-        const row = Object.values(dataO);
+        const row = flatObjectToValues(dataO, [ 'month', 'journal', 'date', 'debit', 'credit', 'totalDebit', 'totalCredit', 'solde' ]);
         const rowFormatted = this.formatRow(row);
 
         this.setJson(journal, dataO);
