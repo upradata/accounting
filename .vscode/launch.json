@@ -132,12 +132,10 @@
             "program": "${workspaceFolder}/dist/program.command.js",
             "args": [
                 "--exercise-start",
-                "01022018",
-                "--metadata",
-                "./metadata.json",
+                "01022019",
                 "--fec-only-non-imported",
                 "--data-directory",
-                "data",
+                "/home/milottit/Documents/UpraData/2019-2020/Comptabilité/data",
                 "--output-dir",
                 "Ouput"
             ]

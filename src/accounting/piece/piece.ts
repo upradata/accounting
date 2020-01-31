@@ -36,7 +36,7 @@ export class Piece {
         for (const k of Object.keys(option))
             this[ k ] = option[ k ];
 
-        this.id = `piece-${this.nextId()}`;
+        this.id = `piece-${this.journal}-${this.nextId()}`;
 
         this.grandLivre = Injector.app.get(GrandLivre);
     }

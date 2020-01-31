@@ -11,8 +11,15 @@ export interface ValueOverrideProvider<T> {
 
 export type OverrideProvider<T> = DiOverrideProvider<T> | ValueOverrideProvider<T>;
 
-const DiCreateSingletonFromOverride = (DiInjector.prototype as any).createSingletonFromOverride;
-(DiInjector.prototype as any).createSingletonFromOverride = function <T>(provider: OverrideProvider<T>): T {
+const createSingletonFromOverrideNames = [ 'createSingletonFromOverride', 'createFromOverride' ]; // previous version, current version
+const createSingletonFromOverrideName = createSingletonFromOverrideNames.find(k => !!(DiInjector.prototype as any)[ k ]);
+
+if (!createSingletonFromOverrideName) {
+    throw new Error(`DiInjector does not contain any method createSingletonFromOverride or similar due to version with a new api. Please, check in @ts-kit/di what is the new method name`);
+}
+
+const DiCreateSingletonFromOverride = (DiInjector.prototype as any)[ createSingletonFromOverrideName ];
+(DiInjector.prototype as any)[ createSingletonFromOverrideName ] = function <T>(provider: OverrideProvider<T>): T {
     if ('useValue' in provider)
         return provider.useValue;
 

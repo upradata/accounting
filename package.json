@@ -16,7 +16,6 @@
     },
     "dependencies": {
         "@ts-kit/di": "^2.0.2",
-        "@types/ajv": "^1.0.0",
         "@types/collections": "^5.0.0",
         "@types/table": "^4.0.5",
         "ajv": "^6.10.2",
@@ -36,6 +35,7 @@
         "winston": "^3.2.1"
     },
     "devDependencies": {
+        "@types/bluebird": "^3.5.29",
         "@types/csvtojson": "^1.1.5",
         "@types/jest": "^24.0.16",
         "@types/node": "^12.6.8",

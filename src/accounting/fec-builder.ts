@@ -76,7 +76,7 @@ export class FecBuilder {
 
         for (const mouvement of mouvements) {
 
-            if (!this.onlyNonImported || this.onlyNonImported && !this.pieces.get(mouvement.pieceId).isImported) {
+            if (!this.onlyNonImported || !this.pieces.get(mouvement.pieceId).isImported) {
 
                 this.fec += this.ecritureMouvement({
                     mouvement,
