@@ -5,10 +5,10 @@ import { Injector } from '../../util/di';
 import { BalanceTotalData } from '../balance/balance-total';
 import { formattedNumber } from '../../util/compta-util';
 import { coloryfyDiff } from '../../edition/edit-util';
-import { TableColumns } from '../../edition/table';
 import { ObjectOf } from '../../util/types';
 import { ComptesBalance } from '../balance-comptes/comptes-balance';
 import { flatObjectToValues } from '../../util/util';
+import { TableColumns } from '@upradata/node-util';
 
 
 interface AddToEditOption {

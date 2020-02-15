@@ -1,8 +1,7 @@
 import { EditterOption, Editter } from './editter';
-import { EditTextFormatting } from './edit-text-formatting';
 import { highlightMagenta } from '../util/color';
 import { ObjectOf, PartialRecursive } from '../util/types';
-import { TableConfig } from './table';
+import { Terminal, TableConfig } from '@upradata/node-util';
 
 export interface EditArgs {
     title: string;
@@ -14,8 +13,8 @@ export interface EditOption {
 }
 
 export abstract class Edit<ExtraOption = {}> {
-    protected textFormatting: EditTextFormatting;
-    protected consoleFormatting: EditTextFormatting;
+    protected textFormatting: Terminal;
+    protected consoleFormatting: Terminal;
     protected editorOption: EditterOption;
     protected textTable: Array<string | number>[];
     protected consoleTable: Array<string | number>[];
@@ -31,8 +30,8 @@ export abstract class Edit<ExtraOption = {}> {
         const { title } = this.args;
         const tableConfig = this.tableConfig();
 
-        this.textFormatting = new EditTextFormatting({ maxWidth: { row: { width: 80 } }, tableConfig });
-        this.consoleFormatting = new EditTextFormatting({ maxWidth: { row: { width: process.stdout.columns || 80 } }, tableConfig });
+        this.textFormatting = new Terminal({ maxWidth: { row: { width: 80 } }, tableConfig });
+        this.consoleFormatting = new Terminal({ maxWidth: { row: { width: process.stdout.columns || 80 } }, tableConfig });
 
         this.editorOption.text += this.textFormatting.title(title, { isBig: true });
         this.editorOption.console += this.consoleFormatting.title(title, { color: highlightMagenta, isBig: true });

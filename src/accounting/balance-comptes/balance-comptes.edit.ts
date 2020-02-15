@@ -3,7 +3,7 @@ import { ComptesBalance } from './comptes-balance';
 import { flatObjectToValues } from '../../util/util';
 import { formattedNumber } from '../../util/compta-util';
 import { coloryfyDiff } from '../../edition/edit-util';
-import { TableColumns } from '../../edition/table';
+import { TableColumns } from '@upradata/node-util';
 import { BalanceComptesCalculator, Split } from './balance-compte-calculator.edit';
 import { BalanceMapData } from '../balance/balance-map-data';
 import { BalanceTotalData } from '../balance/balance-total';

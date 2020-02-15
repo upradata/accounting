@@ -2,13 +2,13 @@ import { SortedArray } from '../../util/sorted-array';
 import { Mouvement } from '../mouvement';
 import { Edit, EditOption } from '../../edition/edit';
 import { Piece, PieceOption } from './piece';
-import { TableColumns } from '../../edition/table';
+import { TableColumns } from '@upradata/node-util';
 import { ExtraOption } from '../journal-centraliseur/journal-centraliseur.edit';
 import { formattedNumber } from '../../util/compta-util';
 import { ObjectOf } from '../../util/types';
 
 
-type AddToEditOption = PieceOption & { id: string; mouvement: Mouvement };
+type AddToEditOption = PieceOption & { id: string; mouvement: Mouvement; };
 
 
 export class PiecesEdit extends Edit {

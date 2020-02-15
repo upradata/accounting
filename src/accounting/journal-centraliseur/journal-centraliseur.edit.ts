@@ -3,7 +3,7 @@ import { Edit, EditOption } from '../../edition/edit';
 import { Mouvement } from '../mouvement';
 import { BalanceTotalData } from '../balance/balance-total';
 import { formattedNumber } from '../../util/compta-util';
-import { TableColumns } from '../../edition/table';
+import { TableColumns } from '@upradata/node-util';
 import { JournauxBalance } from './journaux-balance';
 import { ObjectOf } from '../../util/types';
 import { coloryfyDiff } from '../../edition/edit-util';
