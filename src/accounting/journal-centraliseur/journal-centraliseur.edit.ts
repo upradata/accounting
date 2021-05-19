@@ -3,13 +3,13 @@ import { Edit, EditOption } from '../../edition/edit';
 import { Mouvement } from '../mouvement';
 import { BalanceTotalData } from '../balance/balance-total';
 import { formattedNumber } from '../../util/compta-util';
-import { TableColumns } from '@upradata/node-util';
 import { JournauxBalance } from './journaux-balance';
-import { ObjectOf } from '../../util/types';
 import { coloryfyDiff } from '../../edition/edit-util';
 import { Pieces } from '../piece/pieces';
 import { Injector } from '../../util/di';
 import { flatObjectToValues } from '../../util/util';
+import { TableColumnConfig } from '@upradata/node-util';
+import { ObjectOf } from '@upradata/util';
 
 
 interface AddToEditOption {
@@ -43,7 +43,7 @@ export class JournalCentraliseurEdit extends Edit {
     protected tableConfig() {
         const length = this.header().length;
 
-        const columns = {} as TableColumns;
+        const columns = {} as TableColumnConfig;
         const nbRight = this.isByJournal || this.isShort ? 3 : 5;
 
         for (let i = length - nbRight; i < length; ++i)

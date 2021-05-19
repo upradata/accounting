@@ -3,7 +3,7 @@ import { ComptesBalance } from './comptes-balance';
 import { flatObjectToValues } from '../../util/util';
 import { formattedNumber } from '../../util/compta-util';
 import { coloryfyDiff } from '../../edition/edit-util';
-import { TableColumns } from '@upradata/node-util';
+import { TableColumnConfig } from '@upradata/node-util';
 import { BalanceComptesCalculator, Split } from './balance-compte-calculator.edit';
 import { BalanceMapData } from '../balance/balance-map-data';
 import { BalanceTotalData } from '../balance/balance-total';
@@ -20,7 +20,7 @@ export class BalanceDesComptesEdit extends Edit {
     protected tableConfig() {
         const length = this.header()[ 1 ].length;
 
-        const columns = {} as TableColumns;
+        const columns = {} as TableColumnConfig;
 
         for (let i = 1; i < length; ++i)
             columns[ i ] = { alignment: 'right' };

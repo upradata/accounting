@@ -1,4 +1,3 @@
-import { ObjectOf } from './util/types';
 import * as fs from 'fs';
 import * as path from 'path';
 import Ajv from 'ajv';
@@ -14,8 +13,8 @@ import { Journaux } from './metadata/journaux';
 import { Pieces } from './accounting/piece/pieces';
 import { ProgramArguments } from './program.arguments';
 import { AccountingInterface } from './accounting/accounting.inteface';
-import { isDefined } from '@upradata/util';
-import { green, yellow, colors } from '@upradata/node-util';
+import { entries, isDefined, ObjectOf } from '@upradata/util';
+import { green, yellow, colors, red } from '@upradata/node-util';
 
 
 const readFileAsync = promisify(fs.readFile);
@@ -24,10 +23,10 @@ const writeFileAsync = promisify(fs.writeFile);
 
 export class Run {
     private accounting: AccountingInterface;
-    private metadataSchema: { path: string; schema: ObjectOf<any> };
+    private metadataSchema: { path: string; schema: ObjectOf<any>; };
     private metadata: ComptabiliteMetadata;
 
-    constructor(public options: ProgramArguments<string>) {
+    constructor(public options: ProgramArguments) {
         const metadataSchemaPath = path.join(__dirname, './metadata/accounting-metadata.schema.json');
         this.metadataSchema = {
             path: metadataSchemaPath,
@@ -46,10 +45,15 @@ export class Run {
         const valid = validate(metadata);
 
         if (!valid) {
+            const message = validate.errors.map(e => {
+                const params = entries(e.params).map(([ k, v ]) => `${k} -> ${v}`).join(', ');
+                return `${e.instancePath} \n${params}: ${e.message}`;
+            });
+
+
             throw new Error(
-                `${metadataFile} is not respecting the following schema: ${this.metadataSchema.path}: ${validate.errors.map(e =>
-                    e.dataPath + ' ' +
-                    Object.entries(e.params).map(([ k, v ]) => `${k} -> ${v}`).join(', ') + ': ' + e.message)}`
+                `${metadataFile} is not respecting the following schema "${this.metadataSchema.path}":
+                 ${message}`
             );
         }
 
@@ -91,36 +95,41 @@ export class Run {
     }
 
     async run() {
-        await this.init();
+        try {
+            await this.init();
 
-        const { dataDirectory, ods, listCsv, fec } = this.options;
+            const { dataDirectory, inputOds, inputCsv, fec } = this.options;
 
-        await this.accounting.importComptaData({
-            directory: dataDirectory,
-            odsFilename: ods,
-            files: listCsv
-        });
+            await this.accounting.importComptaData({
+                directory: dataDirectory,
+                odsFilename: inputOds,
+                files: inputCsv
+            });
 
-        this.accounting.processLettrage();
+            this.accounting.processLettrage();
 
-        const promises: Promise<any>[] = [];
+            const promises: Promise<any>[] = [];
 
-        if (isDefined(fec) && fec)
-            promises.push(this.generateFec());
-
-
-        const edit = this.options.edit;
-        if (edit)
-            promises.push(this.edit());
+            if (isDefined(fec) && fec)
+                promises.push(this.generateFec());
 
 
-        return Promise.all(promises);
+            const edit = this.options.edit;
+            if (edit)
+                promises.push(this.edit());
+
+
+            return Promise.all(promises);
+
+        } catch (e) {
+            console.error(red`${e.message ? `ERROR => ${e.message}` : 'ERROR'}: \n`, e);
+        }
     }
 
     generateFec(): Promise<any> {
         const { fec, fecOnlyNonImported, outputDir } = this.options;
         return this.accounting.generateFec({ separator: ';', onlyNonImported: fecOnlyNonImported, outputFilename: typeof fec === 'string' ? fec : undefined, outputDir });
-    }
+    };
 
     edit(): Promise<any> {
         const promises: Promise<any>[] = [];
@@ -129,7 +138,7 @@ export class Run {
         let messageConsole = '';
 
         const write = (filename: string, data: string) => writeFileAsync(filename, data, { encoding: 'utf8' })
-            .then(() => messageConsole += colors.blue.bold.$`${filename} generated` + '\n');
+            .then(() => messageConsole += colors.blue.bold.$`${filename} generated\n`);
 
 
         const editter = (filename: string) => {
@@ -145,7 +154,7 @@ export class Run {
             }
 
             return new Editter({ loggers });
-        }
+        };
 
         const option = { short: this.options.editShort };
 

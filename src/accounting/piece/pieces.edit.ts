@@ -2,10 +2,10 @@ import { SortedArray } from '../../util/sorted-array';
 import { Mouvement } from '../mouvement';
 import { Edit, EditOption } from '../../edition/edit';
 import { Piece, PieceOption } from './piece';
-import { TableColumns } from '@upradata/node-util';
 import { ExtraOption } from '../journal-centraliseur/journal-centraliseur.edit';
 import { formattedNumber } from '../../util/compta-util';
-import { ObjectOf } from '../../util/types';
+import { ObjectOf } from '@upradata/util';
+import { TableColumnConfig } from '@upradata/node-util';
 
 
 type AddToEditOption = PieceOption & { id: string; mouvement: Mouvement; };
@@ -21,7 +21,7 @@ export class PiecesEdit extends Edit {
     protected tableConfig() {
         const length = this.header().length;
 
-        const columns = {} as TableColumns;
+        const columns = {} as TableColumnConfig;
 
         columns[ 0 ] = { alignment: 'center' };
         columns[ 3 ] = { alignment: 'center' };

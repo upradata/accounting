@@ -1,6 +1,8 @@
 import { arrayToObjOfArrayById } from '../util/util';
 import { Mouvement } from './mouvement';
 import { TODAY } from '../util/compta-util';
+import { ObjectOf } from '@upradata/util';
+
 
 interface ByCompte {
     [ k: string ]: Mouvement[];
@@ -9,8 +11,7 @@ interface ByCompte {
 export class LettrageProcessor {
     private fournisseursByCompte: ByCompte;
     private clientsByCompte: ByCompte;
-    static i: number = -1;
-    static letter: string = '';
+    static index: ObjectOf<{ i: number; letter: number; }> = {};
 
     constructor(mouvements: Mouvement[]) {
         this.fournisseursByCompte = arrayToObjOfArrayById(mouvements, 'compteInfo.compte.numero', {
@@ -21,8 +22,8 @@ export class LettrageProcessor {
         });
     }
 
-    private nextLetter(l: string | number) {
-        let i = LettrageProcessor.i;
+    private nextLetter(l: string) {
+        /* let i = LettrageProcessor.i;
 
         i = i > 10000 ? 0 : i + 1;
         if (i === 0) LettrageProcessor.letter += l;
@@ -30,7 +31,20 @@ export class LettrageProcessor {
         LettrageProcessor.i = i;
         LettrageProcessor.letter += i;
 
-        return LettrageProcessor.letter;
+        return LettrageProcessor.letter; */
+        const index = LettrageProcessor.index;
+
+        index[ l ] = index[ l ] || { i: -1, letter: 0 };
+
+        let { i, letter } = index[ l ];
+        i = i === -1 || i > 10000 ? 0 : i + 1;
+
+        if (i === 0)
+            ++letter;
+
+        index[ l ] = { i, letter };
+
+        return l.repeat(letter) + i;
     }
 
 
@@ -43,7 +57,7 @@ export class LettrageProcessor {
         ]) {
             for (const mouvementsInCompte of Object.values(byCompte)) {
 
-                const mouvementsByType = arrayToObjOfArrayById(mouvementsInCompte, 'type') as { credit: Mouvement[]; debit: Mouvement[] };
+                const mouvementsByType = arrayToObjOfArrayById(mouvementsInCompte, 'type') as { credit: Mouvement[]; debit: Mouvement[]; };
 
                 if (mouvementsByType.credit) {
                     for (const mouvementC of mouvementsByType.credit) {

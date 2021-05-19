@@ -1,13 +1,12 @@
 
 import * as  fs from 'fs';
 import * as path from 'path';
-import { assignRecursive } from '@upradata/util';
 import { tmpdir } from 'os';
 import { promisify } from 'util';
-import { PartialRecursive } from '../util/types';
 import { odsToXlsx, xlsxToCsv } from '../util/csv-util';
 import { ImporterFiles, ImporterOptionInput, ImporterFile, INPUT_DATA_DEFAULTS as defaults } from './importer-input';
 import { yellow } from '@upradata/node-util';
+import { PartialRecursive, assignRecursive, filter, makeObject, keys, RequiredProps } from '@upradata/util';
 
 const readdirAsync = promisify(fs.readdir);
 const tmpDir = tmpdir();
@@ -32,9 +31,8 @@ export class ImporterOption<T = string> {
         return file && !file.includes('/');
     }
 
-    private getRequiredFiles() {
-        const requiredArray = Object.entries<ImporterFile>(defaults.files as any).filter(([ k, f ]) => f.required);
-        return Object.fromEntries(requiredArray);
+    private getRequiredFiles(): RequiredProps<ImporterFiles<ImporterFile>> {
+        return filter(defaults.files, (_k, f) => f.required);
     }
 
     /* private isOnlyDataDirectory() {
@@ -43,17 +41,12 @@ export class ImporterOption<T = string> {
 
     private async getFilesInDataDirectory() {
         if (!this.directory)
-            return undefined;
+            return {};
 
         const files = await readdirAsync(this.directory);
 
-        const filepaths: Partial<ImporterFiles<ImporterFile>> = {};
-
-        for (const file of files) {
-            const [ k ] = Object.entries<ImporterFile>(defaults.files as any).find(([ k, f ]) => path.basename(f.filename) === file) || [ undefined ];
-            if (k)
-                filepaths[ k ] = { filename: file };
-        }
+        const defaultFiles = makeObject(defaults.files, (_k, importer) => ({ filename: path.basename(importer.filename) }));
+        const filepaths: Partial<ImporterFiles<ImporterFile>> = filter(defaultFiles, (_k, defaultFile) => files.some(file => defaultFile.filename === file));
 
         return filepaths;
     }
@@ -64,7 +57,6 @@ export class ImporterOption<T = string> {
         /* if (this.isOnlyDataDirectory())
             return filesInDirectory; */
 
-        const files: Partial<ImporterFiles<ImporterFile>> = {};
         let inputFiles = assignRecursive(filesInDirectory, this.option.files) as Partial<ImporterFiles<ImporterFile>>;
 
         if (Object.values(inputFiles).length === 0)
@@ -73,7 +65,7 @@ export class ImporterOption<T = string> {
             inputFiles = assignRecursive(this.getRequiredFiles(), inputFiles);
 
 
-        for (const [ key, file ] of Object.entries(inputFiles)) {
+        const files = makeObject(inputFiles, (key, file) => {
             const { sheetName, filename } = file as ImporterFile;
             const defaultSheetName = defaults.files[ key ].sheetName;
 
@@ -81,10 +73,12 @@ export class ImporterOption<T = string> {
             // filename => higher priority (if no sheetName and filename is specified, we use it, otherwisen we use the defaultSheetName)
 
             if (this.option.odsFilename && sheet)
-                files[ key ] = { sheetName: sheet, filename: filename || defaultSheetName };
-            else
-                files[ key ] = { filename: filename || defaultSheetName };
-        }
+                return { sheetName: sheet, filename: filename || defaultSheetName };
+
+            return { filename: filename || defaultSheetName };
+
+        }) as Partial<ImporterFiles<ImporterFile>>;
+
 
         return files;
     }
@@ -121,19 +115,16 @@ export class ImporterOption<T = string> {
         }
 
 
-        return Promise.all(promises).then(() => this.checkRequiredFilesLoaded());
+        return Promise.all(promises).then(() => {
+            const notLoaded = this.requiredFilesNotLoaded();
+
+            if (notLoaded.length > 0)
+                throw new Error(`Could not load: ${notLoaded.join(',')}`);
+        });
     }
 
-    private checkRequiredFilesLoaded() {
-        const notFound: string[] = [];
-
-        for (const requiredFile of Object.keys(this.getRequiredFiles())) {
-            if (!this.files[ requiredFile ])
-                notFound.push(requiredFile);
-        }
-
-        if (notFound.length > 0)
-            throw new Error(`Could not load: ${notFound.join(',')}`);
+    private requiredFilesNotLoaded() {
+        return keys(this.getRequiredFiles()).filter(requiredFile => !this.files[ requiredFile ]);
     }
 
     private fileLoaded(name: string, filepath: string) {

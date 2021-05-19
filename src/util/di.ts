@@ -1,12 +1,13 @@
-import { Injector as DiInjector, Provider, Inject, OverrideProvider as DiOverrideProvider } from '@ts-kit/di';
+import { Injector as DiInjector, ProviderToken, Inject, OverrideProvider as DiOverrideProvider } from '@ts-kit/di';
 
 export * from '@ts-kit/di';
 
 // create a new instance of our injector
 
 export interface ValueOverrideProvider<T> {
-    provide: Provider<T>;
+    provide: ProviderToken<T>;
     useValue: T;
+    provideInRoot?: boolean;
 }
 
 export type OverrideProvider<T> = DiOverrideProvider<T> | ValueOverrideProvider<T>;
@@ -28,7 +29,7 @@ const DiCreateSingletonFromOverride = (DiInjector.prototype as any)[ createSingl
 
 interface InjectorOptions {
     providers?: OverrideProvider<any>[];
-    bootstrap?: Provider<any>[];
+    bootstrap?: ProviderToken<any>[];
 }
 
 export class Injector {
@@ -40,12 +41,9 @@ export class Injector {
 }
 
 
-export interface Constructor {
-    new(...args: any[]): any;
-}
 
-export function InjectDep(provider: Constructor | string | symbol) {
-    const diInject = Inject(provider as Provider<any>);
+export function InjectDep(provider: ProviderToken<any>) {
+    const diInject = Inject(provider as ProviderToken<any>);
 
     return function (classPrototype: any, propertyKey: string | symbol, parameterIndex: number) {
         // propertyKey is always undefined because it is not a parameter decorator
@@ -63,7 +61,7 @@ export function InjectDep(provider: Constructor | string | symbol) {
 
         // Injector.app will be instanciated after, so we can call it later
         Object.defineProperty(classPrototype, argumentName, {
-            get: () => Injector.app.get(provider as Provider<any>),
+            get: () => Injector.app.get(provider as ProviderToken<any>),
             // writable: false,
             configurable: false,
             enumerable: true

@@ -1,7 +1,7 @@
-import { ObjectOf } from './types';
 import { promisify } from 'util';
 import * as  fs from 'fs';
-import { isDefined } from '@upradata/util';
+import { isDefined, ObjectOf } from '@upradata/util';
+
 
 const existAsync = promisify(fs.exists);
 const mkdirAsync = promisify(fs.mkdir);
@@ -29,7 +29,7 @@ export type IdKey<T> = (string | symbol) | ((m: T) => string | symbol);
 export const arrayToObjOfArrayById = function <T>(array: Iterable<T>, idKey: IdKey<T>, options?: ArrayToObjOfArrayByIdOption<T>) {
     const { key, filter, transform } = Object.assign(new ArrayToObjOfArrayByIdOption<T>(), options);
 
-    const objById = {} as { [ k: string ]: T[] };
+    const objById = {} as { [ k: string ]: T[]; };
 
     for (const value of array) {
         const kValue = getFromPath(typeof idKey === 'function' ? idKey(value) : idKey, value) as string | symbol;
@@ -81,7 +81,7 @@ export function flattenObject<R>(obj: ObjectOf<any>, option?: FlattenObjectOptio
 }
 
 
-export function flatObjectToValues<T>(obj: T, propOrders: (keyof T)[], options?: { onlyDefinedValues?: boolean }) {
+export function flatObjectToValues<T>(obj: T, propOrders: (keyof T)[], options?: { onlyDefinedValues?: boolean; }) {
     const opts = Object.assign({ onlyDefinedValues: true }, options);
 
     const values: (T[ keyof T ])[] = [];

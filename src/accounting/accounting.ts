@@ -10,7 +10,7 @@ import { FecBuilderOption, FecBuilder } from './fec-builder';
 import { loggerService } from '../util/logger';
 import { LettrageProcessor } from './lettrage';
 import { GrandLivre } from './grand-livre/grand-livre';
-import { PartialRecursive } from '../util/types';
+import { PartialRecursive } from '@upradata/util';
 import { dateToFecDate } from '../util/compta-util';
 import * as path from 'path';
 import { BalanceDesComptes } from './balance-comptes/balance-des-comptes';
@@ -45,12 +45,12 @@ export class Accounting implements Partial<AccountingInterface> {
     }
 
 
-    generateFec(fecBuilderOption: FecBuilderOption & { outputDir?: string; outputFilename?: string }): Promise<void> {
+    generateFec(fecBuilderOption: FecBuilderOption & { outputDir?: string; outputFilename?: string; }): Promise<void> {
         const fecBuilder = new FecBuilder(fecBuilderOption);
         fecBuilder.generate(this.grandLivre.mouvements.array);
 
         const { siren, exercisePeriod } = this.comptabiliteMetadata;
-        const defaultFecFilename = siren + 'FEC' + dateToFecDate(exercisePeriod.end) + '.txt';
+        const defaultFecFilename = `${siren}FEC${dateToFecDate(exercisePeriod.end)}.txt`;
 
         const { outputDir = '.', outputFilename = defaultFecFilename } = fecBuilderOption;
         const output = path.join(outputDir, outputFilename);
@@ -67,7 +67,7 @@ export class Accounting implements Partial<AccountingInterface> {
         if (mouvementsNonLettrable) {
             let mouvementsLog = '';
             for (const m of mouvementsNonLettrable)
-                mouvementsLog += `mouvement ${m.id} de la piece ${m.pieceId}` + '\n';
+                mouvementsLog += `mouvement ${m.id} de la piece ${m.pieceId}\n`;
 
             loggerService.info(`Mouvements non lettrables: ${mouvementsLog}`);
         }

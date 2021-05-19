@@ -1,7 +1,11 @@
-import program from 'commander';
+import program, { args } from 'commander';
+import path from 'path';
 import { createDirIfNotExist } from './util/util';
 import { INPUT_DATA_DEFAULTS, ImporterFiles } from './import/importer-input';
 import { EditterFormats } from './edition/editter';
+import { isDefined, assignRecursive, AssignOptions, keys } from '@upradata/util';
+import { red } from './util/color';
+
 
 program
     .version('1.0.0')
@@ -13,13 +17,13 @@ program
     .option('-e, --edit', 'Edit accounting: Balance Des Comptes, Journal Centraliseur et Grand Livre')
     .option('--edit-type <type>', 'Editter logger types', concat, [])
     .option('--edit-short', 'Edit accounting condensed mode.')
-    .option('--edit-grandlivre', 'Edit Grand Livre.')
+    .option('--edit-grand-livre', 'Edit Grand Livre.')
     .option('--edit-balance', 'Edit Balance Des Comptes.')
     .option('--edit-journal', 'Edit Journal Centraliseur.')
     .option('--edit-pieces', 'Edit Pièces.')
     .option('-d, --data-directory <path>', 'Directory for input data.')
-    .option('-o, --ods [path]', 'ODS file containing accounting data')
-    .option('-l, --list-csv <input-csv-path>', 'comma separated list', commaSeparatedList);
+    .option('-o, --input-ods [path]', 'ODS file containing accounting data')
+    .option('-l, --input-csv <input-csv-path>', 'comma separated list', commaSeparatedList);
 
 
 function commaSeparatedList(value: string, dummyPrevious: string[]) {
@@ -35,7 +39,7 @@ function concat(value: string, previous: string[]) {
     return previous.concat(value);
 }
 
-export interface ProgramArguments<StringOrBoolArg = string | boolean> {
+export interface InputArguments<StringOrBoolArg extends string | boolean> {
     exerciseStart: string;
     metadata?: string;
     outputDir: string;
@@ -49,46 +53,76 @@ export interface ProgramArguments<StringOrBoolArg = string | boolean> {
     editJournal?: boolean;
     editPieces?: boolean;
     dataDirectory?: string;
-    ods?: StringOrBoolArg;
-    listCsv?: ImporterFiles<{ filename: string }>;
+    inputOds?: StringOrBoolArg;
+    inputCsv?: ImporterFiles<{ filename: string; }>;
 }
 
-export function parseArgs(): ProgramArguments<string> {
-    const args: ProgramArguments = program.parse(process.argv) as any;
-    const programArgs: ProgramArguments<string> = { ...args } as any;
+export type ConsoleArguments = InputArguments<string | boolean>;
 
-    programArgs.outputDir = args.outputDir || '.';
+
+export class ProgramArguments implements InputArguments<string> {
+    exerciseStart: string = undefined;
+    metadata?: string = path.join(__dirname, '../metadata.json');
+    outputDir = '.';
+    fec = true;
+    fecOnlyNonImported = false;
+    edit = false;
+    editType = undefined;
+    editShort = false;
+    editGrandLivre: boolean = undefined;
+    editBalance: boolean = undefined;
+    editJournal: boolean = undefined;
+    editPieces: boolean = undefined;
+    dataDirectory: string = undefined;
+    inputOds = INPUT_DATA_DEFAULTS.odsFilename;
+    inputCsv?: ImporterFiles<{ filename: string; }> = undefined;
+
+
+    constructor(consoleArgs: ConsoleArguments) {
+        assignRecursive(this, consoleArgs, new AssignOptions({ onlyExistingProp: true, arrayMode: 'replace' }));
+
+        const enableEdit = keys(this).some(k => k.startsWith('edit') && !!this[ k ]);
+
+        if (enableEdit) {
+            this.edit = true;
+
+            if (!this.editType)
+                this.editType = [ 'console', 'csv' ];
+        }
+
+        const editKeys = [ 'editGrandLivre', 'editBalance', 'editJournal', 'editPieces' ];
+        const specificEditSpecified = editKeys.some(k => consoleArgs[ k ]);
+
+
+        // by default, if "edit" is true => all edits are true also (the same for false)
+        // but if a specific edit is specified, the rest is false
+        // the Object.assign is doing the affectation and thus isDefined is true
+        for (const k of editKeys) {
+            if (this.edit)
+                this[ k ] = isDefined(this[ k ]) ? this[ k ] : specificEditSpecified ? false : true;
+            else
+                this[ k ] = false;
+        }
+
+        if (this.fecOnlyNonImported)
+            this.fec = true;
+    }
+}
+
+export function parseArgs(): ProgramArguments {
+    program.parse(process.argv);
+    const args = new ProgramArguments(program.opts() as ConsoleArguments);
+
     createDirIfNotExist(args.outputDir);
 
-    if (args.fecOnlyNonImported)
-        programArgs.fec = programArgs.fec || true;
-
-    const ods = args.ods;
-    programArgs.ods = typeof ods === 'string' ? ods : INPUT_DATA_DEFAULTS.odsFilename; //  ods ? INPUT_DATA_DEFAULTS.odsFilename : undefined;
-
-
-    const editKeys = [ 'editGrandLivre', 'editBalance', 'editJournal', 'editPieces' ];
-
-    if (args.edit) {
-        for (const k of editKeys) {
-            if (args[ k ] === undefined)
-                programArgs[ k ] = true;
-        }
-    }
-
-    const needsEdit = editKeys.find(k => args[ k ]);
-    if (needsEdit)
-        programArgs.edit = true;
-
-
-    if (editKeys.find(k => args[ k ] === true))
-        programArgs.edit = true;
-
-    if ((!args.editType || args.editType.length === 0) && programArgs.edit)
-        programArgs.editType = Object.keys(new EditterFormats()) as any;
-
-    return programArgs;
+    return args;
 }
 
-/* console.log(parseArgs());
-process.exit(1); */
+
+program.configureOutput({
+    // Visibly override write routines as example!
+    writeOut: (str) => console.log(`${str}`),
+    writeErr: (str) => console.error(`[ERR] ${str}`),
+    // Highlight errors in color.
+    outputError: (str, write) => write(red`${str}`)
+});

@@ -1,3 +1,7 @@
 node_modules
 .~*.csv#
 .directory
+Output
+*.log
+coverage
+dist

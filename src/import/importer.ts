@@ -5,7 +5,7 @@ import { fecDateToDate } from '../util/compta-util';
 import { Compte, CompteInfo } from '../accounting/compte';
 import { Journaux } from '../metadata/journaux';
 
-import { PartialRecursive } from '../util/types';
+import { PartialRecursive } from '@upradata/util';
 import { Injector } from '../util/di';
 import { PlanComptable } from '../metadata/plan-comptable';
 import { ImporterOption } from './importer-option';

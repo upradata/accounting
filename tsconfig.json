@@ -12,7 +12,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "sourceMap": true,
-        "target": "esnext",
+        "target": "ESNext",
         "traceResolution": false,
         "outDir": "dist",
         "esModuleInterop": true,

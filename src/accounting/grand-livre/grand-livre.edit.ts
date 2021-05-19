@@ -5,10 +5,10 @@ import { Injector } from '../../util/di';
 import { BalanceTotalData } from '../balance/balance-total';
 import { formattedNumber } from '../../util/compta-util';
 import { coloryfyDiff } from '../../edition/edit-util';
-import { ObjectOf } from '../../util/types';
+import { ObjectOf } from '@upradata/util';
 import { ComptesBalance } from '../balance-comptes/comptes-balance';
 import { flatObjectToValues } from '../../util/util';
-import { TableColumns } from '@upradata/node-util';
+import { TableColumnConfig } from '@upradata/node-util';
 
 
 interface AddToEditOption {
@@ -45,7 +45,7 @@ export class GrandLivreEdit extends Edit {
     protected tableConfig() {
         const length = this.header().length;
 
-        const columns = {} as TableColumns;
+        const columns = {} as TableColumnConfig;
 
         for (let i = length - 3; i < length; ++i)
             columns[ i ] = { alignment: 'right' };

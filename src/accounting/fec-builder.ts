@@ -78,12 +78,12 @@ export class FecBuilder {
 
             if (!this.onlyNonImported || !this.pieces.get(mouvement.pieceId).isImported) {
 
-                this.fec += this.ecritureMouvement({
+                this.fec += `${this.ecritureMouvement({
                     mouvement,
                     ecritureId: `ecriture-${mouvement.pieceId}`,
                     ecritureDate: TODAY.fecFormat,
                     validationDate: '20190312',
-                }) + '\n';
+                })}\n`;
             }
         }
 

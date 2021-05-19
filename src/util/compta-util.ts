@@ -11,14 +11,14 @@ export function dateToFecDate(date: Date) {
     const dd = date.getDate();
     const mm = date.getMonth() + 1; // January is 0!
 
-    const dateDMY = { day: dd + '', month: mm + '', year: '' };
+    const dateDMY = { day: `${dd}`, month: `${mm}`, year: '' };
 
-    dateDMY.year = date.getFullYear() + '';
+    dateDMY.year = `${date.getFullYear()}`;
     if (dd < 10) {
-        dateDMY.day = '0' + dd;
+        dateDMY.day = `0${dd}`;
     }
     if (mm < 10) {
-        dateDMY.month = '0' + mm;
+        dateDMY.month = `0${mm}`;
     }
 
     return dateDMY.year + dateDMY.month + dateDMY.day;

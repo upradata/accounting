@@ -1,15 +1,15 @@
 
 import { SortedMap as SortedMapCollection } from 'collections/sorted-map';
-import { ObjectOf } from './types';
+import { ObjectOf } from '@upradata/util';
 
 export interface SortedMap<K, V> {
     get(key: K): V;
     set(key: K, value: V): void;
-    iterate(): Iterator<{ key: K, value: V }>;
-    [ Symbol.iterator ](): IterableIterator<{ key: K, value: V }>;
+    iterate(): Iterator<{ key: K, value: V; }>;
+    [ Symbol.iterator ](): IterableIterator<{ key: K, value: V; }>;
     toArray(): V[];
 
-    toObject(): ObjectOf<{ key: K, value: V }>;
+    toObject(): ObjectOf<{ key: K, value: V; }>;
 }
 
 export interface SortedMapConstructor {
