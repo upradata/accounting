@@ -1,9 +1,7 @@
-import { Edit, EditOption } from '../../edition/edit';
-import { ComptesBalance } from './comptes-balance';
-import { flatObjectToValues } from '../../util/util';
-import { formattedNumber } from '../../util/compta-util';
-import { coloryfyDiff } from '../../edition/edit-util';
 import { TableColumnConfig } from '@upradata/node-util';
+import { objectToArray, formattedNumber } from '@util';
+import { Edit, EditOption, coloryfyDiff } from '@edition';
+import { ComptesBalance } from './comptes-balance';
 import { BalanceComptesCalculator, Split } from './balance-compte-calculator.edit';
 import { BalanceMapData } from '../balance/balance-map-data';
 import { BalanceTotalData } from '../balance/balance-total';
@@ -79,7 +77,7 @@ export class BalanceDesComptesEdit extends Edit {
         const row: (string | number)[] = [ balanceSplit.compte ];
 
         for (const splitType of [ 'reouverture', 'exercise', 'global' ])
-            row.push(...flatObjectToValues(balanceSplit[ splitType ] as BalanceTotalData, [ 'debit', 'credit', 'diff' ]));
+            row.push(...objectToArray(balanceSplit[ splitType ] as BalanceTotalData, [ 'debit', 'credit', 'diff' ]));
 
         return row;
     }

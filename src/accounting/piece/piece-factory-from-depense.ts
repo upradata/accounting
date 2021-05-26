@@ -1,39 +1,38 @@
-import { ComptaDepensePiece, ComptaDepense } from '../../import/compta-data';
+import { values } from '@upradata/util';
+import { mapBy, logger } from '@util';
+import { ComptaDepensePiece, ComptaDepense } from '@import';
 import { Compte } from '../compte';
 import { Piece } from './piece';
-import { arrayToObjOfArrayById } from '../../util/util';
 import { getPiecesFromPieceRef } from './piece-factory-from-ref';
 import { getPieceFromString } from './piece-factory-from-string';
 import { PieceFromLibelle, PREDIFINED_GENERATORS } from './pieces-from-libelle';
+
+
 
 export class PiecesFromDepense {
 
     constructor(private depensePieces: ComptaDepensePiece<number, Compte>[]) { }
 
     getPieces(compteDepenses: ComptaDepense<number, Date, boolean>[]): Piece[] {
-        const pieces: Piece[] = [];
+        const depensesById = mapBy(compteDepenses, 'id');
 
-        for (const depenses of Object.values(arrayToObjOfArrayById(compteDepenses, 'id'))) {
+        const pieces: Piece[] = values(depensesById).flatMap(depenses => depenses.flatMap(depense => {
+            const { libelle, ttc, ht, tva, date, journal, credit, debit, pieceRef, isImported } = depense;
 
-            for (const depense of depenses) {
+            if (pieceRef)
+                return getPiecesFromPieceRef({ comptaDepensePieces: this.depensePieces, pieceRef, pieceOption: { libelle, date, isImported } });
 
-                const { libelle, ttc, ht, tva, date, journal, credit, debit, pieceRef, isImported } = depense;
+            if (credit || debit)
+                return getPieceFromString(credit, debit, { libelle, date, journal, isImported });
 
-                if (pieceRef)
-                    pieces.push(
-                        ...getPiecesFromPieceRef({ comptaDepensePieces: this.depensePieces, pieceRef, pieceOption: { libelle, date, isImported } })
-                    );
+            const pieces = new PieceFromLibelle(PREDIFINED_GENERATORS).generate({ libelle, ttc, ht, tva, date, isImported });
 
-                else if (credit || debit) {
-                    const piece = getPieceFromString(credit, debit, { libelle, date, journal, isImported });
-                    if (piece)
-                        pieces.push(piece);
-                }
+            if (pieces.length === 0)
+                logger.error(`Impossible de générer de pièces pour la ligne avec le libellé "${libelle}".`);
 
-                else
-                    pieces.push(... new PieceFromLibelle(PREDIFINED_GENERATORS).generate({ libelle, ttc, ht, tva, date, isImported }));
-            }
-        }
+            return pieces;
+        })).filter(v => !!v);
+
 
         return pieces;
     }

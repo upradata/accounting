@@ -1,5 +1,5 @@
 
-import * as path from 'path';
+import { fromDirIfRel } from '@upradata/node-util';
 
 
 export interface ImporterFile {
@@ -24,8 +24,9 @@ export interface ImporterOptionInput<T> {
     directory: string;
 }
 
-const defaultDirectory = path.join(__dirname, '../../data/');
-const dir = (p: string) => path.join(defaultDirectory, p);
+
+const defaultDataDirectory = '.';
+const dir = fromDirIfRel(defaultDataDirectory);
 
 export const INPUT_DATA_DEFAULTS: ImporterOptionInput<ImporterFile> = {
     files: {
@@ -37,5 +38,5 @@ export const INPUT_DATA_DEFAULTS: ImporterOptionInput<ImporterFile> = {
         balanceReouverture: { sheetName: 'BalanceReouverture', filename: dir('balance-reouverture.csv') }
     },
     odsFilename: 'comptabilite.ods',
-    directory: defaultDirectory
+    directory: defaultDataDirectory
 };

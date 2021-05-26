@@ -1,5 +1,5 @@
-import { yellow, green, red } from '../util/color';
-import { formattedNumber } from '../util/compta-util';
+import { yellow, green, red } from '@upradata/node-util';
+import { formattedNumber } from '@util';
 
 
 export interface CreditDebit<T = number> {
@@ -8,7 +8,7 @@ export interface CreditDebit<T = number> {
 }
 
 
-export function coloryfyDiff(diff: number, symbols: Partial<CreditDebit<string> & { zero: string }> = {}) {
+export function coloryfyDiff(diff: number, symbols: Partial<CreditDebit<string> & { zero: string; }> = {}) {
     const { credit = 'C', debit = 'D', zero = 'N' } = symbols;
 
     if (Math.abs(diff) < 0.01)

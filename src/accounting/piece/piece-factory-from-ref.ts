@@ -1,8 +1,9 @@
+import { mapBy } from '@util/util';
+import { isUndefined } from '@upradata/util';
+import { ComptaDepensePiece } from '@import';
 import { PieceOption, Piece } from './piece';
-import { ComptaDepensePiece } from '../../import/compta-data';
 import { Compte, CompteInfo } from '../compte';
-import { arrayToObjOfArrayById } from '../../util/util';
-import { isUndefined } from 'util';
+
 
 
 export interface PiecesFromPieceRefOption {
@@ -16,7 +17,7 @@ export function getPiecesFromPieceRef({ comptaDepensePieces, pieceRef, pieceOpti
     // In DepensePieces, there can ba few pieces => piece-reductuion-capital#1, piece-reductuion-capital#2, ... with few ecritures
     const piecesRegex = new RegExp(`^${pieceRef}#\\d+`);
 
-    const piecesById = arrayToObjOfArrayById(comptaDepensePieces, 'id');
+    const piecesById = mapBy(comptaDepensePieces, 'id');
     const comptaPiecesByIdFiltered = Object.values(piecesById).filter(ecritures => piecesRegex.test(ecritures[ 0 ].id));
     // all possible pieces
 

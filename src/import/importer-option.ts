@@ -1,16 +1,11 @@
 
-import * as  fs from 'fs';
-import * as path from 'path';
-import { tmpdir } from 'os';
-import { promisify } from 'util';
-import { odsToXlsx, xlsxToCsv } from '../util/csv-util';
-import { ImporterFiles, ImporterOptionInput, ImporterFile, INPUT_DATA_DEFAULTS as defaults } from './importer-input';
+import fs from 'fs-extra';
+import path from 'path';
+import os from 'os';
+import { odsToXlsx, xlsxToCsv } from '@util';
 import { yellow } from '@upradata/node-util';
 import { PartialRecursive, assignRecursive, filter, makeObject, keys, RequiredProps } from '@upradata/util';
-
-const readdirAsync = promisify(fs.readdir);
-const tmpDir = tmpdir();
-const makeTmpDir = promisify(fs.mkdtemp);
+import { ImporterFiles, ImporterOptionInput, ImporterFile, INPUT_DATA_DEFAULTS as defaults } from './importer-input';
 
 
 export class ImporterOption<T = string> {
@@ -43,7 +38,7 @@ export class ImporterOption<T = string> {
         if (!this.directory)
             return {};
 
-        const files = await readdirAsync(this.directory);
+        const files = await fs.readdir(this.directory);
 
         const defaultFiles = makeObject(defaults.files, (_k, importer) => ({ filename: path.basename(importer.filename) }));
         const filepaths: Partial<ImporterFiles<ImporterFile>> = filter(defaultFiles, (_k, defaultFile) => files.some(file => defaultFile.filename === file));
@@ -145,8 +140,11 @@ export class ImporterOption<T = string> {
     }
 
     private tmpdir() {
-        return makeTmpDir(`${tmpDir}${path.sep}`).catch(e => {
-            throw new Error(`An error occured while creating a tmp directory in ${`${tmpDir}${path.sep}`}: ${e}`);
+        const tmpDir = os.tmpdir();
+
+        return fs.mkdtemp(path.join(tmpDir, '@mt-accounting-')).catch(err => {
+            const e = err as Error;
+            throw new Error(`An error occured while creating a tmp directory in ${tmpDir}${e.message ? `: "${e.message}"` : ''}`);
         });
     }
 }

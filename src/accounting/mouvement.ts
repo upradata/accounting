@@ -1,6 +1,6 @@
-import { MouvementType } from '../util/types';
+import { assignRecursive, AssignOptions } from '@upradata/util';
+import { MouvementType, commaToNumber } from '@util';
 import { CompteInfo } from './compte';
-import { flattenObject } from '../util/util';
 
 
 export interface Lettrage {
@@ -27,27 +27,26 @@ export interface MouvementOption {
     data: MouvementData<string | number>;
 }
 
+
 export class Mouvement {
     static ID = 0;
-    id: string;
-    pieceId: string;
-    libelle: string;
-    date: Date;
-    journal: string;
-    montant: number;
-    compteInfo: CompteInfo;
-    type: MouvementType;
-    lettrage?: Lettrage;
+    id: string = undefined;
+    pieceId: string = undefined;
+    libelle: string = undefined;
+    date: Date = undefined;
+    journal: string = undefined;
+    montant: number = undefined;
+    compteInfo: CompteInfo = undefined;
+    type: MouvementType = undefined;
+    lettrage?: Lettrage = undefined;
+
 
     constructor(option: MouvementOption) {
-        const opts = flattenObject<Mouvement>(option, { mergeKey: (k1, k2) => k2, nbLevels: 2 }); // we flatten option.data
+        this.pieceId = option.pieceId;
+        assignRecursive(this, option.data, new AssignOptions({ onlyExistingProp: true }));
+        assignRecursive(this, option.metadata, new AssignOptions({ onlyExistingProp: true }));
 
-        for (const k of Object.keys({ pieceId: '', ...new MouvementMetadata(), ...new MouvementData() })) {
-            if (k !== 'montant' && opts[ k ])
-                this[ k ] = opts[ k ];
-        }
-
-        this.montant = parseFloat((opts.montant + '').replace(',', '.'));
-        this.id = 'mouvement-' + ++Mouvement.ID;
+        this.montant = commaToNumber(option.data.montant);
+        this.id = `mouvement-${++Mouvement.ID}`;
     }
 }

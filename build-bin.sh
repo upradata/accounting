@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 mkdir -p .bin
 
-for f in $(find dist -name '*.command.js'); do
-    ln -sf $(realpath $f) .bin/accounting-$(basename "$f" .command.js)
-    chmod +x $f
-done
+# for f in $(find dist -name '*.command.js'); do
+#   ln -sf $(realpath $f) .bin/accounting-$(basename "$f" .command.js)
+#   chmod +x $f
+# done
 
+PROGRAM=$(realpath dist/program.command.js)
+
+ln -sf $PROGRAM .bin/mt-accounting
+chmod +x $PROGRAM
 chmod +x -R .bin
 
 ## One command to remember how to use it :)

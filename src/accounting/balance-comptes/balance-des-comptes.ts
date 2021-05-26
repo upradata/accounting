@@ -1,11 +1,9 @@
-
+import { InjectDep } from '@util';
+import { Editter, EditOption } from '@edition';
 import { BalanceDesComptesEdit } from './balance-comptes.edit';
-import { InjectDep } from '../../util/di';
 import { Mouvement } from '../mouvement';
-import { Editter } from '../../edition/editter';
 import { GrandLivre } from '../grand-livre/grand-livre';
 import { ComptesBalance } from './comptes-balance';
-import { EditOption } from '../../edition/edit';
 
 
 

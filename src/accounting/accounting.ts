@@ -1,5 +1,7 @@
+import path from 'path';
+import { PartialRecursive } from '@upradata/util';
+import { logger, InjectDep, dateToFecDate } from '@util';
 import { ComptabiliteMetadata } from '../metadata/accounting-metadata';
-import { InjectDep } from '../util/di';
 import { PlanComptable } from '../metadata/plan-comptable';
 import { Journaux } from '../metadata/journaux';
 import { Pieces } from './piece/pieces';
@@ -7,12 +9,8 @@ import { Importer } from '../import/importer';
 import { PiecesFromDepense } from './piece/piece-factory-from-depense';
 import { PiecesfromSaisiePieces } from './piece/piece-factory-from-saisie';
 import { FecBuilderOption, FecBuilder } from './fec-builder';
-import { loggerService } from '../util/logger';
 import { LettrageProcessor } from './lettrage';
 import { GrandLivre } from './grand-livre/grand-livre';
-import { PartialRecursive } from '@upradata/util';
-import { dateToFecDate } from '../util/compta-util';
-import * as path from 'path';
 import { BalanceDesComptes } from './balance-comptes/balance-des-comptes';
 import { JournalCentraliseur } from './journal-centraliseur/journal-centraliseur';
 import { AccountingInterface } from './accounting.inteface';
@@ -56,7 +54,8 @@ export class Accounting implements Partial<AccountingInterface> {
         const output = path.join(outputDir, outputFilename);
 
         return fecBuilder.writeFile(output).catch((e: Error) => {
-            loggerService.error(`Writting in ${output} error: ${e.message}`);
+            logger.error(`Writting in ${output} error: ${e.message}`);
+            logger.error(e);
         });
     }
 
@@ -65,11 +64,8 @@ export class Accounting implements Partial<AccountingInterface> {
         const mouvementsNonLettrable = new LettrageProcessor(this.grandLivre.mouvements.array).process();
 
         if (mouvementsNonLettrable) {
-            let mouvementsLog = '';
-            for (const m of mouvementsNonLettrable)
-                mouvementsLog += `mouvement ${m.id} de la piece ${m.pieceId}\n`;
-
-            loggerService.info(`Mouvements non lettrables: ${mouvementsLog}`);
+            const mouvementsLog = mouvementsNonLettrable.map(m => `mouvement ${m.id} de la piece ${m.pieceId}`).join('\n');
+            logger.info(`Mouvements non lettrables: ${mouvementsLog}`);
         }
     }
 

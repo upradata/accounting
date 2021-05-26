@@ -1,7 +1,8 @@
-import { EditterOption, Editter } from './editter';
-import { highlightMagenta } from '../util/color';
 import { ObjectOf, PartialRecursive } from '@upradata/util';
 import { Terminal, TableConfig } from '@upradata/node-util';
+import { highlightMagenta } from '@util';
+import { EditterOption, Editter } from './editter';
+
 
 export interface EditArgs {
     title: string;

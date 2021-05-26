@@ -1,4 +1,4 @@
-import { SortedArray } from '../../util/sorted-array';
+import { SortedArray } from '@util';
 import { Mouvement } from '../mouvement';
 import { BalanceTotal, BalanceTotalData } from './balance-total';
 

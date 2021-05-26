@@ -1,11 +1,10 @@
-import { SortedArray } from '../../util/sorted-array';
-import { Mouvement } from '../mouvement';
-import { Edit, EditOption } from '../../edition/edit';
-import { Piece, PieceOption } from './piece';
-import { ExtraOption } from '../journal-centraliseur/journal-centraliseur.edit';
-import { formattedNumber } from '../../util/compta-util';
 import { ObjectOf } from '@upradata/util';
 import { TableColumnConfig } from '@upradata/node-util';
+import { Edit, EditOption } from '@edition';
+import { SortedArray, formattedNumber } from '@util';
+import { Mouvement } from '../mouvement';
+import { Piece, PieceOption } from './piece';
+import { ExtraOption } from '../journal-centraliseur/journal-centraliseur.edit';
 
 
 type AddToEditOption = PieceOption & { id: string; mouvement: Mouvement; };

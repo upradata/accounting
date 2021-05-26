@@ -1,10 +1,7 @@
-import { SortedArray } from '../../util/sorted-array';
+import { SortedArray, SortedMap, isIterable } from '@util';
 import { Mouvement } from '../mouvement';
-import { SortedMap } from '../../util/sorted-map';
 import { BalanceTotal } from './balance-total';
-import { isIterable } from '../../util/util';
 import { BalanceMapData } from './balance-map-data';
-
 
 
 export interface BalanceMapIteratorResult<K> {
@@ -17,7 +14,7 @@ export class FilterParams {
     done: boolean = false;
     pass: boolean;
 
-    constructor(param: { done?: boolean; pass?: boolean } | boolean | undefined) {
+    constructor(param: { done?: boolean; pass?: boolean; } | boolean | undefined) {
         if (typeof param === 'boolean')
             this.pass = param;
         else if (typeof param === 'undefined')
@@ -29,7 +26,7 @@ export class FilterParams {
 }
 
 
-export type BalanceMapFilter<K> = (key: K, mouvement: Mouvement) => { done?: boolean; pass?: boolean } | boolean | undefined;
+export type BalanceMapFilter<K> = (key: K, mouvement: Mouvement) => { done?: boolean; pass?: boolean; } | boolean | undefined;
 
 
 export interface BalanceMapFilterOption<K> {
@@ -43,7 +40,7 @@ export class BalanceMapOption<K> {
         if (keyLeft === keyRight) return 0;
         const [ k1, k2 ] = [ keyLeft, keyRight ].sort();
         return k1 === keyLeft ? -1 : 1;
-    }
+    };
     keyFromMouvement: (mouvement: Mouvement) => K;
     keyMutation?: (key: K) => K = k => k;
 }

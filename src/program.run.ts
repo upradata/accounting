@@ -1,7 +1,9 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs-extra';
+import path from 'path';
 import Ajv from 'ajv';
-import { promisify } from 'util';
+import { entries, isDefined, ObjectOf } from '@upradata/util';
+import { logger } from '@util';
+
 import { ComptabiliteMetadata, ComptabiliteMetadataOption } from './metadata/accounting-metadata';
 import { Injector } from './util/di';
 import { Editter, EditterLoggers } from './edition/editter';
@@ -13,12 +15,7 @@ import { Journaux } from './metadata/journaux';
 import { Pieces } from './accounting/piece/pieces';
 import { ProgramArguments } from './program.arguments';
 import { AccountingInterface } from './accounting/accounting.inteface';
-import { entries, isDefined, ObjectOf } from '@upradata/util';
-import { green, yellow, colors, red } from '@upradata/node-util';
 
-
-const readFileAsync = promisify(fs.readFile);
-const writeFileAsync = promisify(fs.writeFile);
 
 
 export class Run {
@@ -37,7 +34,7 @@ export class Run {
 
     async loadMetadata(): Promise<ComptabiliteMetadata> {
         const metadataFile = this.options.metadata || path.join(__dirname, '../metadata.json');
-        const metadataJson = await readFileAsync(metadataFile, { encoding: 'utf8' });
+        const metadataJson = await fs.readFile(metadataFile, { encoding: 'utf8' });
         const metadata = JSON.parse(metadataJson) as ComptabiliteMetadataOption<string>;
 
         const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
@@ -98,7 +95,7 @@ export class Run {
         try {
             await this.init();
 
-            const { dataDirectory, inputOds, inputCsv, fec } = this.options;
+            const { dataDirectory, inputOds, inputCsv, fec, edit } = this.options;
 
             await this.accounting.importComptaData({
                 directory: dataDirectory,
@@ -110,11 +107,9 @@ export class Run {
 
             const promises: Promise<any>[] = [];
 
-            if (isDefined(fec) && fec)
+            if (fec)
                 promises.push(this.generateFec());
 
-
-            const edit = this.options.edit;
             if (edit)
                 promises.push(this.edit());
 
@@ -122,23 +117,24 @@ export class Run {
             return Promise.all(promises);
 
         } catch (e) {
-            console.error(red`${e.message ? `ERROR => ${e.message}` : 'ERROR'}: \n`, e);
+            logger.error(e.message);
+            logger.error(e);
         }
     }
 
     generateFec(): Promise<any> {
         const { fec, fecOnlyNonImported, outputDir } = this.options;
         return this.accounting.generateFec({ separator: ';', onlyNonImported: fecOnlyNonImported, outputFilename: typeof fec === 'string' ? fec : undefined, outputDir });
-    };
+    }
 
     edit(): Promise<any> {
         const promises: Promise<any>[] = [];
         const { outputDir } = this.options;
 
-        let messageConsole = '';
+        // let messageConsole = '';
 
-        const write = (filename: string, data: string) => writeFileAsync(filename, data, { encoding: 'utf8' })
-            .then(() => messageConsole += colors.blue.bold.$`${filename} generated\n`);
+        const write = (filename: string, data: string) => fs.writeFile(filename, data, { encoding: 'utf8' })
+            .then(() => /* messageConsole += colors.blue.bold.$ */logger.info(`${filename} generated`));
 
 
         const editter = (filename: string) => {
@@ -149,7 +145,7 @@ export class Run {
                     case 'console': loggers.console = [ s => Promise.resolve(console.log(s)) ]; break;
                     case 'csv': loggers.csv = [ s => write(path.join(outputDir, `${filename}.csv`), s) ]; break;
                     case 'json': loggers.json = [ s => write(path.join(outputDir, `${filename}.json`), s) ]; break;
-                    default: if (promises.length === 0) messageConsole += yellow`Logger "${type}" non implemented\n`;
+                    default: if (promises.length === 0) /* messageConsole += yellow */logger.error(`Logger "${type}" non implemented`);
                 }
             }
 
@@ -174,7 +170,7 @@ export class Run {
         }
 
 
-        return Promise.all(promises).then(() => console.log(messageConsole));
+        return Promise.all(promises); // .then(() => logger.info(messageConsole));
     }
 
 }

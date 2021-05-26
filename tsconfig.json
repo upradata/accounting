@@ -16,7 +16,22 @@
         "traceResolution": false,
         "outDir": "dist",
         "esModuleInterop": true,
-        "incremental": true
+        "incremental": true,
+        "baseUrl": ".",
+        "paths": {
+            "@util/*": [
+                "src/util/*"
+            ],
+            "@util": [
+                "src/util"
+            ],
+            "@import": [
+                "src/import"
+            ],
+            "@edition": [
+                "src/edition"
+            ]
+        }
     },
     "include": [
         "src",

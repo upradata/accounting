@@ -1,7 +1,6 @@
-import { arrayToObjOfArrayById } from '../util/util';
-import { Mouvement } from './mouvement';
-import { TODAY } from '../util/compta-util';
 import { ObjectOf } from '@upradata/util';
+import { mapBy, TODAY } from '@util';
+import { Mouvement } from './mouvement';
 
 
 interface ByCompte {
@@ -14,24 +13,16 @@ export class LettrageProcessor {
     static index: ObjectOf<{ i: number; letter: number; }> = {};
 
     constructor(mouvements: Mouvement[]) {
-        this.fournisseursByCompte = arrayToObjOfArrayById(mouvements, 'compteInfo.compte.numero', {
+        this.fournisseursByCompte = mapBy(mouvements, 'compteInfo.compte.numero', {
             filter: m => /^401/.test(m.compteInfo.compte.numero) && m.journal.toLowerCase() !== 'xou' && !/(report|reouverture)/i.test(m.libelle)
         });
-        this.clientsByCompte = arrayToObjOfArrayById(mouvements, 'compteInfo.compte.numero', {
+        this.clientsByCompte = mapBy(mouvements, 'compteInfo.compte.numero', {
             filter: m => /^411/.test(m.compteInfo.compte.numero) && m.journal.toLowerCase() !== 'xou' && !/(report|reouverture)/i.test(m.libelle)
         });
     }
 
     private nextLetter(l: string) {
-        /* let i = LettrageProcessor.i;
 
-        i = i > 10000 ? 0 : i + 1;
-        if (i === 0) LettrageProcessor.letter += l;
-
-        LettrageProcessor.i = i;
-        LettrageProcessor.letter += i;
-
-        return LettrageProcessor.letter; */
         const index = LettrageProcessor.index;
 
         index[ l ] = index[ l ] || { i: -1, letter: 0 };
@@ -57,7 +48,7 @@ export class LettrageProcessor {
         ]) {
             for (const mouvementsInCompte of Object.values(byCompte)) {
 
-                const mouvementsByType = arrayToObjOfArrayById(mouvementsInCompte, 'type') as { credit: Mouvement[]; debit: Mouvement[]; };
+                const mouvementsByType = mapBy(mouvementsInCompte, 'type') as { credit: Mouvement[]; debit: Mouvement[]; };
 
                 if (mouvementsByType.credit) {
                     for (const mouvementC of mouvementsByType.credit) {

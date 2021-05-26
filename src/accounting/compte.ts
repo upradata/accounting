@@ -1,4 +1,4 @@
-import { Injector } from '../util/di';
+import { Injector } from '@util';
 import { PlanComptable } from '../metadata/plan-comptable';
 
 export class Compte {
@@ -15,7 +15,7 @@ export class Compte {
     }
 
     static pad(s: string | number, padding = '0') {
-        return s ? (s + '').padEnd(7, padding) : '';
+        return s ? `${s}`.padEnd(7, padding) : '';
     }
 
 

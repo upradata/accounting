@@ -1,25 +1,25 @@
+import { logger } from '@util';
+import { entries } from '@upradata/util';
 import { PieceOption, Piece } from './piece';
-import { MouvementType } from '../../util/types';
 import { MouvementData } from '../mouvement';
 import { CompteInfo } from '../compte';
-import { red } from '@upradata/node-util';
 
 
-export function getPieceFromString(credit: string, debit: string, pieceOption: PieceOption): Piece {
+export function getPieceFromString(credit: string, debit: string, pieceOption: PieceOption): Piece | undefined {
     const { libelle } = pieceOption;
 
 
     if (!pieceOption.journal) {
-        console.error(red`Le champ "${libelle}" n'a pas de journal`);
+        logger.error(`La ligne "${libelle}" n'a pas de journal`);
         return undefined;
     }
 
 
     const piece = new Piece(pieceOption);
 
-    for (const [ type, mouvementString ] of Object.entries({ debit, credit })) {
-        for (const data of getDataFromString(mouvementString))
-            piece.addMouvement({ type: type as MouvementType, ...data });
+    for (const [ type, mouvementString ] of entries({ debit, credit })) {
+        const mouvements = getDataFromString(mouvementString).map(data => ({ ...data, type }));
+        piece.addMouvement(...mouvements);
     }
 
 

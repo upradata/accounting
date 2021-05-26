@@ -40,6 +40,7 @@
         {
             "type": "node",
             "request": "launch",
+            "outputCapture": "std",
             "name": "Launch Accounting Input Data",
             "program": "${workspaceFolder}/dist/program.command.js",
             "args": [

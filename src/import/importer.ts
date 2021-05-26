@@ -1,17 +1,11 @@
-import { csvToJson } from '../util/csv-util';
+import { PartialRecursive } from '@upradata/util';
+import { Injector, csvToJson, commaToNumber, fecDateToDate, logger } from '@util';
 import { ComptaDepense, ComptaJournal, ComptaCompte, ComptaDepensePiece, ComptaSaisieMouvement } from './compta-data';
-import { commaToNumber } from '../util/util';
-import { fecDateToDate } from '../util/compta-util';
 import { Compte, CompteInfo } from '../accounting/compte';
 import { Journaux } from '../metadata/journaux';
-
-import { PartialRecursive } from '@upradata/util';
-import { Injector } from '../util/di';
 import { PlanComptable } from '../metadata/plan-comptable';
 import { ImporterOption } from './importer-option';
 import { ImporterFiles, ImporterFile } from './importer-input';
-import { colors } from '@upradata/node-util';
-
 
 
 export class Importer {
@@ -34,7 +28,7 @@ export class Importer {
             await this.init();
 
         const hasBeenLoaded = <T>(name: keyof ImporterFiles, data: T): T => {
-            console.log(colors.magenta.bold.$`file for ${name} has been loaded: ${this.filenames[ name ]}`);
+            logger.info(`file for ${name} has been loaded: ${this.filenames[ name ]}`);
             return data;
         };
 

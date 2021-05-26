@@ -1,5 +1,6 @@
+import { numberFixedDecimal } from '@util';
 import { Mouvement } from '../mouvement';
-import { numberFixedDecimal } from '../../util/compta-util';
+
 
 export interface BalanceTotalData {
     credit: number;

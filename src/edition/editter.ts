@@ -1,3 +1,4 @@
+import { entries } from '@upradata/util';
 import { yellow } from '@upradata/node-util';
 
 export type EditLogger = (content: string) => Promise<any>;
@@ -27,20 +28,21 @@ export class Editter {
     }
 
     edit(option: EditterOption): Promise<void[]> {
-        const promises: Promise<void>[] = [];
 
-        for (const [ format, loggers ] of Object.entries(this.loggers)) {
+        const promises: Promise<void>[] = entries(this.loggers).flatMap(([ format, loggers ]) => {
             const content = option[ format ] as string;
 
-            if (!loggers) continue;
+            if (!loggers)
+                return undefined;
 
-            if (content) {
-                for (const logger of loggers)
-                    promises.push(logger(content));
-            } else {
-                console.warn(yellow`Edition not handle for ${format}`);
-            }
-        }
+            if (content)
+                return loggers.map(logger => logger(content));
+
+            console.warn(yellow`Edition not handle for ${format}`);
+            return undefined;
+
+        }).filter(v => !!v);
+
 
         return Promise.all(promises);
     }

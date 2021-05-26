@@ -1,10 +1,5 @@
-import { promisify } from 'util';
-import * as  fs from 'fs';
-import { isDefined, ObjectOf } from '@upradata/util';
+import { arrayFromIterable, getRecursive, isDefined, RecordOf, toArray } from '@upradata/util';
 
-
-const existAsync = promisify(fs.exists);
-const mkdirAsync = promisify(fs.mkdir);
 
 export class ArrayToObjOfArrayByIdOption<T> {
     key?: (value: T) => string = undefined;
@@ -13,85 +8,37 @@ export class ArrayToObjOfArrayByIdOption<T> {
 }
 
 
-function getFromPath(k: string | symbol, o: ObjectOf<any>) {
-    if (typeof k === 'symbol') return k;
-
-    let v = o;
-
-    for (const key of k.split('.'))
-        v = v[ key ];
-
-    return v;
-}
-
 export type IdKey<T> = (string | symbol) | ((m: T) => string | symbol);
 
-export const arrayToObjOfArrayById = function <T>(array: Iterable<T>, idKey: IdKey<T>, options?: ArrayToObjOfArrayByIdOption<T>) {
+export const mapBy = function <T extends {}>(array: Iterable<T>, idKey: IdKey<T>, options?: ArrayToObjOfArrayByIdOption<T>) {
     const { key, filter, transform } = Object.assign(new ArrayToObjOfArrayByIdOption<T>(), options);
 
-    const objById = {} as { [ k: string ]: T[]; };
-
-    for (const value of array) {
-        const kValue = getFromPath(typeof idKey === 'function' ? idKey(value) : idKey, value) as string | symbol;
+    const objById = arrayFromIterable(array).reduce((o, value) => {
+        const kValue = getRecursive(value, typeof idKey === 'function' ? idKey(value) : idKey) as string | symbol;
         const k = key ? key(value) : kValue as string;
-        // as string because Typescript does not allow yet to access an obj with a symbol index [s]]
 
-        const arr = objById[ k ] || [];
         if (filter(value))
-            arr.push(transform(value));
+            o[ k ] = [ ...(o[ k ] || []), transform(value) ];
 
-        if (arr.length > 0)
-            objById[ k ] = arr;
-
-    }
+        return o;
+    }, {} as RecordOf<T[]>);
 
     return objById;
 };
 
 
-export const numberToComma = (n: number | string) => (n + '').replace('.', ',');
-export const commaToNumber = (s: string) => s === '' ? undefined : parseFloat(s.replace(',', '.'));
+export const numberToComma = (n: number | string) => `${n}`.replace('.', ',');
+export const commaToNumber = (s: number | string) => s === '' ? undefined : parseFloat(`${s}`.replace(',', '.'));
 
 
-export const firstLetterUpperCase = (s: string) => s[ 0 ].toUpperCase() + s.slice(1);
 
-
-export type FlattenMergeKey = (key: string, nextKey: string) => string;
-export class FlattenObjectOption {
-    mergeKey?: FlattenMergeKey = (k1, k2) => k1 + firstLetterUpperCase(k2);
-    nbLevels?: number = NaN;
-}
-
-export function flattenObject<R>(obj: ObjectOf<any>, option?: FlattenObjectOption, currentLevel = 1): ObjectOf<R> {
-    const { mergeKey, nbLevels } = Object.assign(new FlattenObjectOption, option);
-
-    const flatO = {};
-
-    for (const [ k, v ] of Object.entries(obj)) {
-        if (typeof v === 'object' && v !== null && !Array.isArray(v) && currentLevel !== nbLevels) {
-            const flatten = flattenObject(v, option, currentLevel + 1);
-            for (const [ flattenK, flattenV ] of Object.entries(flatten))
-                flatO[ mergeKey(k, flattenK) ] = flattenV;
-        } else
-            flatO[ mergeKey('', k) ] = v;
-    }
-
-
-    return flatO;
-}
-
-
-export function flatObjectToValues<T>(obj: T, propOrders: (keyof T)[], options?: { onlyDefinedValues?: boolean; }) {
+export function objectToArray<T>(obj: T, props: (keyof T)[], options?: { onlyDefinedValues?: boolean; }) {
     const opts = Object.assign({ onlyDefinedValues: true }, options);
 
-    const values: (T[ keyof T ])[] = [];
-
-    for (const prop of propOrders) {
-        if (!opts.onlyDefinedValues || isDefined(obj[ prop as any ]))
-            values.push(obj[ prop as any ]);
-    }
-
-    return values;
+    return toArray(obj, {
+        filter: k => props.some(p => p === k) && (!opts.onlyDefinedValues || isDefined(obj[ k ])),
+        onlyValues: true
+    });
 }
 
 export function isIterable<T>(obj: any): obj is Iterable<T> {
@@ -100,14 +47,4 @@ export function isIterable<T>(obj: any): obj is Iterable<T> {
         return false;
     }
     return typeof obj[ Symbol.iterator ] === 'function';
-}
-
-
-export async function createDirIfNotExist(outputDir: string) {
-
-    const exist = await existAsync(outputDir);
-
-    if (!exist)
-        // recursive property indicating whether parent folders should be created
-        return mkdirAsync(outputDir, { recursive: true });
 }

@@ -1,6 +1,6 @@
+import { SortedMap } from '@util';
 import { JournauxBalance } from './journaux-balance';
 import { Mouvement } from '../mouvement';
-import { SortedMap } from '../../util/sorted-map';
 
 
 export interface MonthYear {
@@ -41,7 +41,7 @@ export class JournauxBalanceByMonth {
     }
 
     // tslint:disable-next-line: function-name
-    *[ Symbol.iterator ](): IterableIterator<{ monthYear: MonthYear; balance: JournauxBalance }> {
+    *[ Symbol.iterator ](): IterableIterator<{ monthYear: MonthYear; balance: JournauxBalance; }> {
         for (const { key: monthYear, value: balance } of this.dateToBalance)
             yield { monthYear, balance };
     }

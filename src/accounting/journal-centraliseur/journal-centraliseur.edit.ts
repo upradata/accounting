@@ -1,15 +1,12 @@
-import { JournauxBalanceByMonth, MonthYear } from './journaux-balance-by-month';
-import { Edit, EditOption } from '../../edition/edit';
-import { Mouvement } from '../mouvement';
-import { BalanceTotalData } from '../balance/balance-total';
-import { formattedNumber } from '../../util/compta-util';
-import { JournauxBalance } from './journaux-balance';
-import { coloryfyDiff } from '../../edition/edit-util';
-import { Pieces } from '../piece/pieces';
-import { Injector } from '../../util/di';
-import { flatObjectToValues } from '../../util/util';
 import { TableColumnConfig } from '@upradata/node-util';
 import { ObjectOf } from '@upradata/util';
+import { formattedNumber, Injector, objectToArray } from '@util';
+import { Edit, EditOption, coloryfyDiff } from '@edition';
+import { JournauxBalanceByMonth, MonthYear } from './journaux-balance-by-month';
+import { Mouvement } from '../mouvement';
+import { BalanceTotalData } from '../balance/balance-total';
+import { JournauxBalance } from './journaux-balance';
+import { Pieces } from '../piece/pieces';
 
 
 interface AddToEditOption {
@@ -64,7 +61,7 @@ export class JournalCentraliseurEdit extends Edit {
 
         this.consoleTable = [ header ];
         this.textTable = [ header ];
-        this.editorOption.csv = header.join(';') + '\n';
+        this.editorOption.csv = `${header.join(';')}\n`;
     }
 
     private header(): string[] {
@@ -150,7 +147,7 @@ export class JournalCentraliseurEdit extends Edit {
         }
 
 
-        const row = flatObjectToValues(dataO, [ 'month', 'journal', 'date', 'debit', 'credit', 'totalDebit', 'totalCredit', 'solde' ]);
+        const row = objectToArray(dataO, [ 'month', 'journal', 'date', 'debit', 'credit', 'totalDebit', 'totalCredit', 'solde' ]);
         const rowFormatted = this.formatRow(row);
 
         this.setJson(journal, dataO);

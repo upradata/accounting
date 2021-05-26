@@ -1,21 +1,20 @@
-import { ObjectOf } from '@upradata/util';
-
 import csv from 'csvtojson';
 // import { Converter } from 'csvtojson/src/Converter';
 import { RowSplit, RowSplitResult, MultipleRowResult } from 'csvtojson/v2/rowSplit';
 import { CSVParseParam } from 'csvtojson/v2/Parameters';
-import * as  fs from 'fs';
-import * as  path from 'path';
+import fs from 'fs-extra';
+import path from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
-import { createDirIfNotExist } from './util';
-import { red } from '@upradata/node-util';
+
+import { ObjectOf } from '@upradata/util';
+import { fileExists } from '@upradata/node-util';
+
 import { Fileline } from 'csvtojson/v2/fileline';
 // import { ProcessLineResult } from 'csvtojson/v2/Processor';
 
 
 const execAsync = promisify(exec);
-const existAsync = promisify(fs.exists);
 
 export function readFirstLine(filename: string) {
     return new Promise((resolve, reject) => {
@@ -96,14 +95,14 @@ export async function csvToJson(filename: string, options: CsvToJsonOption = {})
     return csv(options)
         /* .subscribe((row: ObjectOf<string>) => Object.entries(row).forEach(([ k, v ]) => {
             const isNumber = /^\d+(,|\.)?\d*$/.test(v); // !isNaN(parseFloat(v));
- 
+
             if (isNumber) {
                 row[ k ] = parseFloat(v.replace(',', '.'));
             }
         })) */
         .fromFile(filename)
         .on('error', e => {
-            throw new Error(red`An error occured while converting csv file ${filename}: ${e}`);
+            throw new Error(`An error occured while converting csv file ${filename}: ${e.message}`);
         });
 
     // Converter.then is defined => we can use it like a promise :)
@@ -162,13 +161,13 @@ class SpreadSheetConvertOptionBuilder<T extends SpreadSheetToCsvOption | XlsxToC
 
         const outputFile = await this.getOutputFile(defaultOutput);
 
-        await createDirIfNotExist(outputDir);
+        await fs.ensureDir(outputDir);
 
         return Object.assign(this.option, { filepath, outputFile });
     }
 
     private async checkExist(filepath: string) {
-        const exists = await existAsync(filepath);
+        const exists = await fileExists(filepath);
 
         if (!exists)
             throw new Error(`${filepath} does not exist`);
@@ -177,7 +176,7 @@ class SpreadSheetConvertOptionBuilder<T extends SpreadSheetToCsvOption | XlsxToC
     private async getOutputFile(defaultName: string): Promise<string> {
         const outputFile = this.option.outputFile || defaultName;
 
-        await createDirIfNotExist(this.option.outputDir);
+        await fs.ensureDir(this.option.outputDir);
 
         let output: string = undefined;
 
@@ -216,7 +215,7 @@ export async function odsToXlsx(option: XlsxToCsvOption): Promise<string> {
             // We wait a maximum 2s
             return new Promise<string>((res, rej) => {
                 const id = setInterval(async () => {
-                    if (await existAsync(output)) {
+                    if (await fileExists(output)) {
                         res(output);
                         clearInterval(id);
                     } else if (totalWait > maxWait) {
@@ -278,12 +277,12 @@ export async function xlsxToCsv(option: SpreadSheetToCsvOption, nbRerun: number 
     } */
 
     /*  const tmp = path.join(__dirname, 'tmp' + Date.now());
- 
+
      try { fs.mkdir(tmp) } catch (e) { }
- 
+
      execSync(`cp ${file} ${tmp} && (cd ${tmp} && 
         UNOPATH=/usr/bin/libreoffice /usr/bin/python3.6 /usr/bin/unoconv -f csv -e FilterOptions="59,34,0,1" ${fileName} && cp ${fileNoExt}.csv ${process.cwd()})`);
- 
+
      fs.rmdir(tmp); */
 }
 

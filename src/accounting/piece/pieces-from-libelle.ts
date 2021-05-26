@@ -25,6 +25,7 @@ export class PieceFromLibelle {
     }
 
     generate(depense: Depense): Piece[] {
+        // return the first generator able to generate the pieces
         for (const generator of this.generators) {
             const pieces = generator(depense);
             if (pieces) return pieces;
@@ -35,7 +36,7 @@ export class PieceFromLibelle {
 }
 
 
-const generators = {} as { [ k: string ]: PieceFromLibelleGenerator };
+const generators = {} as { [ k: string ]: PieceFromLibelleGenerator; };
 
 generators.loyerGenerator = (depense: Depense): Piece[] => {
     if (/(SDM|Loyer)/i.test(depense.libelle)) {

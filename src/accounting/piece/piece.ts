@@ -1,8 +1,7 @@
+import { Injector, logger } from '@util';
 import { CompteInfo } from '../compte';
 import { Mouvement, MouvementData, MouvementMetadata } from '../mouvement';
-import { Injector } from '../../util/di';
 import { GrandLivre } from '../grand-livre/grand-livre';
-import { red } from '@upradata/node-util';
 
 
 export interface PieceOption {
@@ -30,7 +29,7 @@ export class Piece {
     mouvements: Mouvement[] = [];
     grandLivre: GrandLivre;
 
-    static idByJournal = {} as { [ k: string ]: number };
+    static idByJournal = {} as { [ k: string ]: number; };
 
     constructor(option: PieceOption) {
         for (const k of Object.keys(option))
@@ -100,7 +99,9 @@ export class Piece {
             this.close();
             return true;
         } catch (e) {
-            console.error(red`${e.message}`);
+            logger.error(`${e.message}`);
+            logger.error(e);
+
             return false;
         }
     }

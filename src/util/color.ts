@@ -1,11 +1,5 @@
-import { ColorType, colors as COLORS } from '@upradata/node-util';
+import { colors as c } from '@upradata/node-util';
 
-const c = COLORS as ColorType;
-
-export const colors = COLORS;
-export const yellow = c.yellow.$;
-export const green = c.green.$;
-export const red = c.red.$;
 export const highlightMagenta = c.white.bgMagenta.$;
 export const highlightYellow = c.white.bgYellow.$;
 export const highlightGreen = c.blue.bgGreen.$;

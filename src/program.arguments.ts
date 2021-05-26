@@ -1,10 +1,10 @@
-import program, { args } from 'commander';
+import program from 'commander';
 import path from 'path';
-import { createDirIfNotExist } from './util/util';
+import fs from 'fs-extra';
 import { INPUT_DATA_DEFAULTS, ImporterFiles } from './import/importer-input';
 import { EditterFormats } from './edition/editter';
 import { isDefined, assignRecursive, AssignOptions, keys } from '@upradata/util';
-import { red } from './util/color';
+import { red } from '@upradata/node-util';
 
 
 program
@@ -109,14 +109,14 @@ export class ProgramArguments implements InputArguments<string> {
     }
 }
 
-export function parseArgs(): ProgramArguments {
+export const parseArgs = async (): Promise<ProgramArguments> => {
     program.parse(process.argv);
     const args = new ProgramArguments(program.opts() as ConsoleArguments);
 
-    createDirIfNotExist(args.outputDir);
+    await fs.ensureDir(args.outputDir);
 
     return args;
-}
+};
 
 
 program.configureOutput({

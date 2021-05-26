@@ -1,14 +1,11 @@
-import { Edit, EditOption } from '../../edition/edit';
+import { TableColumnConfig } from '@upradata/node-util';
+import { ObjectOf } from '@upradata/util';
+import { Injector, formattedNumber, objectToArray } from '@util';
+import { Edit, EditOption, coloryfyDiff } from '@edition';
 import { Mouvement } from '../mouvement';
 import { Pieces } from '../piece/pieces';
-import { Injector } from '../../util/di';
 import { BalanceTotalData } from '../balance/balance-total';
-import { formattedNumber } from '../../util/compta-util';
-import { coloryfyDiff } from '../../edition/edit-util';
-import { ObjectOf } from '@upradata/util';
 import { ComptesBalance } from '../balance-comptes/comptes-balance';
-import { flatObjectToValues } from '../../util/util';
-import { TableColumnConfig } from '@upradata/node-util';
 
 
 interface AddToEditOption {
@@ -107,7 +104,7 @@ export class GrandLivreEdit extends Edit {
             dataO = { compte, date, pieceId, period, debit, credit, solde };
 
 
-        const row = flatObjectToValues(dataO, [ 'compte', 'date', 'pieceId', 'period', 'debit', 'credit', 'solde' ]);
+        const row = objectToArray(dataO, [ 'compte', 'date', 'pieceId', 'period', 'debit', 'credit', 'solde' ]);
         const rowFormatted = this.formatRow(row);
 
         this.setJson(compte, dataO);

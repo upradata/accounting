@@ -1,15 +1,16 @@
-import { ComptaSaisieMouvement } from '../../import/compta-data';
+import { mapBy } from '@util';
+import { isDefined } from '@upradata/util';
+import { ComptaSaisieMouvement } from '@import';
 import { Compte, CompteInfo } from '../compte';
 import { Piece } from './piece';
-import { arrayToObjOfArrayById } from '../../util/util';
-import { isDefined } from '@upradata/util';
+
 
 export class PiecesfromSaisiePieces {
 
     static getPieces(saisieMouvements: ComptaSaisieMouvement<number, Date, Compte>[]): Piece[] {
         const pieces: Piece[] = [];
 
-        const saisiePieces = arrayToObjOfArrayById(saisieMouvements, 'id');
+        const saisiePieces = mapBy(saisieMouvements, 'id');
         for (const mouvements of Object.values(saisiePieces)) {
 
             const { journal, libelle, date } = mouvements[ 0 ];
