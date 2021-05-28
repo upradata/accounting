@@ -1,5 +1,6 @@
 
 import { fromDirIfRel } from '@upradata/node-util';
+import { ComptaDataMap } from './compta-data.types';
 
 
 export interface ImporterFile {
@@ -8,21 +9,14 @@ export interface ImporterFile {
     required?: boolean;
 }
 
-export class ImporterFiles<T = string> {
-    planComptable: T = undefined;
-    journaux: T = undefined;
-    depenses?: T = undefined;
-    depensesPieces?: T = undefined;
-    saisiePieces?: T = undefined;
-    balanceReouverture?: T = undefined;
-}
 
-
-export interface ImporterOptionInput<T> {
+export interface ImporterOptionInput<T = string> {
     files: ImporterFiles<T>;
     odsFilename: string;
     directory: string;
 }
+
+export type ImporterFiles<T = ImporterFile> = ComptaDataMap<T>;
 
 
 const defaultDataDirectory = '.';

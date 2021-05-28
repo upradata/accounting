@@ -21,6 +21,6 @@ export interface AccountingInterface {
     pieces: Pieces;
     comptabiliteMetadata: ComptabiliteMetadata;
     importComptaData(option: PartialRecursive<ImporterOption<ImporterFile>>): Promise<void>;
-    generateFec(fecBuilderOption: FecBuilderOption & { outputDir: string; outputFilename: string }): Promise<void>;
+    generateFec(fecBuilderOption: FecBuilderOption & { outputDir: string; outputFilename: string; }): Promise<void>;
     processLettrage(): void;
 }

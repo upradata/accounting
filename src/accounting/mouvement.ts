@@ -1,6 +1,6 @@
 import { assignRecursive, AssignOptions } from '@upradata/util';
 import { MouvementType, commaToNumber } from '@util';
-import { CompteInfo } from './compte';
+import { CompteParentAux } from './compte';
 
 
 export interface Lettrage {
@@ -10,7 +10,7 @@ export interface Lettrage {
 
 export class MouvementData<MontantType extends number | string> {
     montant: MontantType = undefined;
-    compteInfo: CompteInfo = undefined;
+    compteInfo: CompteParentAux = undefined;
     type: MouvementType = undefined;
     lettrage?: Lettrage = undefined;
 }
@@ -36,7 +36,7 @@ export class Mouvement {
     date: Date = undefined;
     journal: string = undefined;
     montant: number = undefined;
-    compteInfo: CompteInfo = undefined;
+    compteInfo: CompteParentAux = undefined;
     type: MouvementType = undefined;
     lettrage?: Lettrage = undefined;
 

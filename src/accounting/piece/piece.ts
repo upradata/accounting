@@ -1,5 +1,5 @@
 import { Injector, logger } from '@util';
-import { CompteInfo } from '../compte';
+import { CompteParentAux } from '../compte';
 import { Mouvement, MouvementData, MouvementMetadata } from '../mouvement';
 import { GrandLivre } from '../grand-livre/grand-livre';
 
@@ -14,8 +14,8 @@ export interface PieceOption {
 
 export interface MouvementPartieDouble {
     montant: number | string;
-    crediteur: CompteInfo;
-    debiteur: CompteInfo;
+    crediteur: CompteParentAux;
+    debiteur: CompteParentAux;
 }
 
 

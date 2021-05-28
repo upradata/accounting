@@ -2,7 +2,7 @@ import { logger } from '@util';
 import { entries } from '@upradata/util';
 import { PieceOption, Piece } from './piece';
 import { MouvementData } from '../mouvement';
-import { CompteInfo } from '../compte';
+import { CompteParentAux } from '../compte';
 
 
 export function getPieceFromString(credit: string, debit: string, pieceOption: PieceOption): Piece | undefined {
@@ -35,7 +35,7 @@ function getDataFromString(s: string): Omit<MouvementData<string | number>, 'typ
         const [ comptes, montant ] = m.split(':');
         const [ compte, compteAux ] = comptes.split('.');
 
-        return { compteInfo: new CompteInfo({ compte, compteAux }), montant };
+        return { compteInfo: new CompteParentAux({ compte, compteAux }), montant };
     });
 
     return compteMontantList;

@@ -1,13 +1,13 @@
 import { mapBy } from '@util';
 import { isDefined } from '@upradata/util';
 import { ComptaSaisieMouvement } from '@import';
-import { Compte, CompteInfo } from '../compte';
+import { Compte, CompteParentAux } from '../compte';
 import { Piece } from './piece';
 
 
 export class PiecesfromSaisiePieces {
 
-    static getPieces(saisieMouvements: ComptaSaisieMouvement<number, Date, Compte>[]): Piece[] {
+    static getPieces(saisieMouvements: ComptaSaisieMouvement[]): Piece[] {
         const pieces: Piece[] = [];
 
         const saisiePieces = mapBy(saisieMouvements, 'id');
@@ -18,27 +18,27 @@ export class PiecesfromSaisiePieces {
             const piece = new Piece({ journal, libelle, date, isImported });
 
             for (const mouvement of mouvements) {
-                const { compte, compteAux, debit, credit } = mouvement;
+                const { debit, credit, compteInfo } = mouvement;
                 const isCredit = credit !== undefined;
 
                 if (isDefined(credit) && isDefined(debit)) {
                     if (mouvement.journal.toLowerCase() === 'xou') {
                         // only for journal réouverture, on autorise une saisie avec crédit et débit en même temps
                         piece.addMouvement({
-                            montant: credit, type: 'credit', compteInfo: new CompteInfo({ compte, compteAux })
+                            montant: credit, type: 'credit', compteInfo
                         });
                         piece.addMouvement({
-                            montant: debit, type: 'debit', compteInfo: new CompteInfo({ compte, compteAux })
+                            montant: debit, type: 'debit', compteInfo
                         });
 
                     } else {
-                        throw new Error(`Un saisie de peut avoir une colonne crédit et débit en même temps: Mouvement => ${mouvement}`);
+                        throw new Error(`Un saisie ne peut avoir une colonne crédit et débit en même temps: Mouvement => ${mouvement}`);
                     }
 
                 } else {
                     piece.addMouvement({
                         montant: isCredit ? credit : debit, type: isCredit ? 'credit' : 'debit',
-                        compteInfo: new CompteInfo({ compte, compteAux })
+                        compteInfo
                     });
                 }
 

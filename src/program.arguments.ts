@@ -1,7 +1,7 @@
 import program from 'commander';
 import path from 'path';
 import fs from 'fs-extra';
-import { INPUT_DATA_DEFAULTS, ImporterFiles } from './import/importer-input';
+import { ImporterFiles, INPUT_DATA_DEFAULTS } from './import/importer-input';
 import { EditterFormats } from './edition/editter';
 import { isDefined, assignRecursive, AssignOptions, keys } from '@upradata/util';
 import { red } from '@upradata/node-util';

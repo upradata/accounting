@@ -16,29 +16,8 @@ import { Fileline } from 'csvtojson/v2/fileline';
 
 const execAsync = promisify(exec);
 
-export function readFirstLine(filename: string) {
-    return new Promise((resolve, reject) => {
-        const rs = fs.createReadStream(filename, { encoding: 'utf8' });
-        let acc = '';
-        let pos = 0;
-        let index = 0;
 
-        rs
-            .on('data', function (chunk) {
-                index = chunk.indexOf('\n');
-                acc += chunk;
-                index !== -1 ? rs.close() : pos += chunk.length;
-            })
-            .on('close', function () {
-                resolve(acc.slice(0, pos + index));
-            })
-            .on('error', function (err) {
-                reject(err);
-            });
-    });
-}
-
-export type CsvToJsonOption = Partial<CSVParseParam> & { onlyHeaderColumn?: boolean; };
+export type CsvToJsonOption = Partial<CSVParseParam> & { includeOnlyProvidedHeaders?: boolean; };
 
 // To filter empty rows (row with all empty columns)
 const oldParseMultiLines = RowSplit.prototype.parseMultiLines;
@@ -89,8 +68,9 @@ RowSplit.prototype.parse = function (fileline: Fileline) {
 }; */
 
 export async function csvToJson(filename: string, options: CsvToJsonOption = {}) {
-    if (options.onlyHeaderColumn)
+    if (options.includeOnlyProvidedHeaders)
         options.includeColumns = new RegExp(options.headers.join('|'));
+
 
     return csv(options)
         /* .subscribe((row: ObjectOf<string>) => Object.entries(row).forEach(([ k, v ]) => {
@@ -280,7 +260,7 @@ export async function xlsxToCsv(option: SpreadSheetToCsvOption, nbRerun: number 
 
      try { fs.mkdir(tmp) } catch (e) { }
 
-     execSync(`cp ${file} ${tmp} && (cd ${tmp} && 
+     execSync(`cp ${file} ${tmp} && (cd ${tmp} &&
         UNOPATH=/usr/bin/libreoffice /usr/bin/python3.6 /usr/bin/unoconv -f csv -e FilterOptions="59,34,0,1" ${fileName} && cp ${fileNoExt}.csv ${process.cwd()})`);
 
      fs.rmdir(tmp); */

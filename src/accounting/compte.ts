@@ -31,16 +31,17 @@ export class Compte {
     } */
 }
 
-export interface CompteInfoOption {
+export interface CompteParentAuxOption {
     compte: string | number | Compte;
     compteAux?: string | number | Compte;
 }
 
-export class CompteInfo {
+
+export class CompteParentAux {
     compte: Compte;
     compteAux?: Compte;
 
-    constructor(option: CompteInfoOption) {
+    constructor(option: CompteParentAuxOption) {
         this.compte = Compte.create(option.compte);
         this.compteAux = Compte.create(option.compteAux);
     }

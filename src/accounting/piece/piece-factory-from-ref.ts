@@ -2,12 +2,12 @@ import { mapBy } from '@util/util';
 import { isUndefined } from '@upradata/util';
 import { ComptaDepensePiece } from '@import';
 import { PieceOption, Piece } from './piece';
-import { Compte, CompteInfo } from '../compte';
+import { CompteParentAux } from '../compte';
 
 
 
 export interface PiecesFromPieceRefOption {
-    comptaDepensePieces: ComptaDepensePiece<number, Compte>[];
+    comptaDepensePieces: ComptaDepensePiece[];
     pieceRef: string;
     pieceOption: Omit<PieceOption, 'journal'>;
 }
@@ -34,7 +34,7 @@ export function getPiecesFromPieceRef({ comptaDepensePieces, pieceRef, pieceOpti
 
             piece.addMouvement({
                 montant: credit || debit, type: credit ? 'credit' : 'debit',
-                compteInfo: new CompteInfo({ compte, compteAux })
+                compteInfo: new CompteParentAux({ compte, compteAux })
             });
         }
 

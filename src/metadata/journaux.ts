@@ -1,12 +1,11 @@
-import { ComptaJournal } from '../import/compta-data';
-import { Compte } from '../accounting/compte';
+import { ComptaJournal } from '@import';
 
 export class Journaux {
-    public journaux: ComptaJournal<Compte>[] = [];
+    public journaux: ComptaJournal[] = [];
 
     constructor() { }
 
-    add(...journaux: ComptaJournal<Compte>[]) {
+    add(...journaux: ComptaJournal[]) {
         this.journaux.push(...journaux);
     }
 

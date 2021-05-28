@@ -1,6 +1,6 @@
 import { Piece } from './piece';
 import { PieceFactory } from './piece-factory';
-import { Compte, CompteInfo } from '../compte';
+import { Compte, CompteParentAux } from '../compte';
 
 export class FromLibelle {
 
@@ -43,7 +43,7 @@ generators.loyerGenerator = (depense: Depense): Piece[] => {
         // 60 Opérations Diverses
         // 6132: Locations immobilieres (compte de charges)
         // 4011: Fournisseurs SDM (compte fournisseur)
-        const crediteur = new CompteInfo({ compte: 401, compteAux: 4011 });
+        const crediteur = new CompteParentAux({ compte: 401, compteAux: 4011 });
 
         return [
             PieceFactory.achat({ crediteur, debiteur: { compte: new Compte(6132) }, ...depense }),
@@ -59,10 +59,10 @@ generators.fraisGenerauxGenerator = (depense: Depense): Piece[] => {
         // 60 Opérations Diverses
         // 6064: Fournitures administratives (compte de charges)
         // 4012: Fournisseur Frais Généraux (compte fournisseur)
-        const crediteur = new CompteInfo({ compte: 401, compteAux: 4012 });
+        const crediteur = new CompteParentAux({ compte: 401, compteAux: 4012 });
 
         return [
-            PieceFactory.achat({ crediteur, debiteur: new CompteInfo({ compte: 6064 }), ...depense }),
+            PieceFactory.achat({ crediteur, debiteur: new CompteParentAux({ compte: 6064 }), ...depense }),
             PieceFactory.banque({ montant: depense.ttc, compteInfo: crediteur, type: 'achat', ...depense })
         ];
     }
@@ -74,10 +74,10 @@ generators.greffeGenerator = (depense: Depense): Piece[] => {
         // 60 Opérations Diverses
         // 6227: Frais d'actes et de contentieux (compte de charges)
         // 4013: Frais Greffe (compte fournisseur)
-        const crediteur = new CompteInfo({ compte: 401, compteAux: 4013 });
+        const crediteur = new CompteParentAux({ compte: 401, compteAux: 4013 });
 
         return [
-            PieceFactory.achat({ crediteur, debiteur: new CompteInfo({ compte: 6227 }), ...depense }),
+            PieceFactory.achat({ crediteur, debiteur: new CompteParentAux({ compte: 6227 }), ...depense }),
             PieceFactory.banque({ montant: depense.ttc, compteInfo: crediteur, type: 'achat', ...depense })
         ];
     }
@@ -91,9 +91,9 @@ generators.compteCourantGenerator = (depense: Depense): Piece[] => {
         // 77881 Produit exceptionel Abandon Compte Thomas Milottti
 
         return [
-            PieceFactory.banque({ montant: depense.ttc, compteInfo: new CompteInfo({ compte: 4551, compteAux: 45511 }), type: 'vente', ...depense }),
+            PieceFactory.banque({ montant: depense.ttc, compteInfo: new CompteParentAux({ compte: 4551, compteAux: 45511 }), type: 'vente', ...depense }),
             new Piece({ journal: '90', ...depense }).addMouvementPartieDouble({
-                montant: depense.ttc, crediteur: new CompteInfo({ compte: 77881 }), debiteur: new CompteInfo({ compte: 4551, compteAux: 45511 })
+                montant: depense.ttc, crediteur: new CompteParentAux({ compte: 77881 }), debiteur: new CompteParentAux({ compte: 4551, compteAux: 45511 })
             })
         ];
     }
@@ -105,10 +105,10 @@ generators.venteWebsite = (depense: Depense): Piece[] => {
         // 60 Opérations Diverses
         // 707: Vente de marchandise TVA1 (compte de produits) (70701 exonéré de TVA)
         // 4111: Compte Client Website (compte client)
-        const debiteur = new CompteInfo({ compte: 4111 });
+        const debiteur = new CompteParentAux({ compte: 4111 });
 
         return [
-            PieceFactory.achat({ crediteur: new CompteInfo({ compte: 707 }), debiteur, ...depense }),
+            PieceFactory.achat({ crediteur: new CompteParentAux({ compte: 707 }), debiteur, ...depense }),
             PieceFactory.banque({ montant: depense.ttc, compteInfo: debiteur, type: 'vente', ...depense })
         ];
     }

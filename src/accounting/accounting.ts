@@ -36,8 +36,8 @@ export class Accounting implements Partial<AccountingInterface> {
         const importer = new Importer(option);
 
         return importer.importAll().then(data => {
-            this.pieces.add(...new PiecesFromDepense(data.depensePieces).getPieces(data.depenses));
-            this.pieces.add(...PiecesfromSaisiePieces.getPieces(data.saisies));
+            this.pieces.add(...new PiecesFromDepense(data.depensesPieces).getPieces(data.depenses));
+            this.pieces.add(...PiecesfromSaisiePieces.getPieces(data.saisiePieces));
             this.pieces.add(...PiecesfromSaisiePieces.getPieces(data.balanceReouverture));
         });
     }

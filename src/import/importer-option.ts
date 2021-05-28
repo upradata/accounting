@@ -7,7 +7,6 @@ import { yellow } from '@upradata/node-util';
 import { PartialRecursive, assignRecursive, filter, makeObject, keys, RequiredProps } from '@upradata/util';
 import { ImporterFiles, ImporterOptionInput, ImporterFile, INPUT_DATA_DEFAULTS as defaults } from './importer-input';
 
-
 export class ImporterOption<T = string> {
     files: ImporterFiles<T>;
     odsFilename?: string;
