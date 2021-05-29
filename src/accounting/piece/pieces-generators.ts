@@ -1,10 +1,10 @@
+import { map } from '@upradata/util';
+import { ComptaDepenseType } from '@import';
 import { Piece } from './piece';
 import { PieceFactory } from './piece-factory';
 import { Compte, CompteParentAux } from '../compte';
 
-export class FromLibelle {
 
-}
 export interface Depense {
     libelle: string;
     date: Date;
@@ -16,30 +16,38 @@ export interface Depense {
 
 export type PieceFromLibelleGenerator = (depense: Depense) => Piece[];
 
-export class PieceFromLibelle {
 
-    constructor(private generators: PieceFromLibelleGenerator[] = []) { }
 
-    add(generator: PieceFromLibelleGenerator) {
-        this.generators.push((generator));
+export const generateFromLibelle = (generators: LibelleGenerators) => (depense: Depense): Piece[] => {
+    // return the first generator able to generate the pieces
+    for (const generator of Object.values(generators)) {
+        const pieces = generator(depense);
+        if (pieces) return pieces;
     }
 
-    generate(depense: Depense): Piece[] {
-        // return the first generator able to generate the pieces
-        for (const generator of this.generators) {
-            const pieces = generator(depense);
-            if (pieces) return pieces;
-        }
+    return [];
+};
 
-        return [];
+
+export const generatorFromType = (generators: Generators) => (type: ComptaDepenseType) => {
+    switch (type) {
+        case 'frais-generaux': return generators.fraisGeneraux;
+        case 'loyer': return generators.loyer;
+        case 'greffe': return generators.greffe;
+        case 'compte-courant': return generators.compteCourant;
+        case 'vente:website': return generators.venteWebsite;
+        default: throw new Error(`Le mouvement dépense de type "${type}" n'est pas implémenté`);
     }
-}
+};
 
 
-const generators = {} as { [ k: string ]: PieceFromLibelleGenerator; };
+const makeGenerator = (generator: PieceFromLibelleGenerator) => generator;
 
-generators.loyerGenerator = (depense: Depense): Piece[] => {
-    if (/(SDM|Loyer)/i.test(depense.libelle)) {
+
+
+export const PREDIFINED_GENERATORS = {
+
+    loyer: makeGenerator((depense: Depense) => {
         // 60 Opérations Diverses
         // 6132: Locations immobilieres (compte de charges)
         // 4011: Fournisseurs SDM (compte fournisseur)
@@ -49,13 +57,9 @@ generators.loyerGenerator = (depense: Depense): Piece[] => {
             PieceFactory.achat({ crediteur, debiteur: { compte: new Compte(6132) }, ...depense }),
             PieceFactory.banque({ montant: depense.ttc, compteInfo: crediteur, type: 'achat', ...depense })
         ];
-    }
-};
+    }),
 
-
-
-generators.fraisGenerauxGenerator = (depense: Depense): Piece[] => {
-    if (/frais generaux/i.test(depense.libelle)) {
+    fraisGeneraux: makeGenerator((depense: Depense): Piece[] => {
         // 60 Opérations Diverses
         // 6064: Fournitures administratives (compte de charges)
         // 4012: Fournisseur Frais Généraux (compte fournisseur)
@@ -65,12 +69,9 @@ generators.fraisGenerauxGenerator = (depense: Depense): Piece[] => {
             PieceFactory.achat({ crediteur, debiteur: new CompteParentAux({ compte: 6064 }), ...depense }),
             PieceFactory.banque({ montant: depense.ttc, compteInfo: crediteur, type: 'achat', ...depense })
         ];
-    }
-};
+    }),
 
-
-generators.greffeGenerator = (depense: Depense): Piece[] => {
-    if (/greffe|inpi|bodacc|kbis/i.test(depense.libelle)) {
+    greffe: makeGenerator((depense: Depense): Piece[] => {
         // 60 Opérations Diverses
         // 6227: Frais d'actes et de contentieux (compte de charges)
         // 4013: Frais Greffe (compte fournisseur)
@@ -80,12 +81,9 @@ generators.greffeGenerator = (depense: Depense): Piece[] => {
             PieceFactory.achat({ crediteur, debiteur: new CompteParentAux({ compte: 6227 }), ...depense }),
             PieceFactory.banque({ montant: depense.ttc, compteInfo: crediteur, type: 'achat', ...depense })
         ];
-    }
-};
+    }),
 
-
-generators.compteCourantGenerator = (depense: Depense): Piece[] => {
-    if (/compte courant/i.test(depense.libelle)) {
+    compteCourant: makeGenerator((depense: Depense): Piece[] => {
         // 4551 Associés - Comptes courants : Principal
         // 45511 Compte courant associé Thomas Milotti
         // 77881 Produit exceptionel Abandon Compte Thomas Milottti
@@ -96,12 +94,9 @@ generators.compteCourantGenerator = (depense: Depense): Piece[] => {
                 montant: depense.ttc, crediteur: new CompteParentAux({ compte: 77881 }), debiteur: new CompteParentAux({ compte: 4551, compteAux: 45511 })
             })
         ];
-    }
-};
+    }),
 
-
-generators.venteWebsite = (depense: Depense): Piece[] => {
-    if (/vente/i.test(depense.libelle) && /website/i.test(depense.libelle)) {
+    venteWebsite: makeGenerator((depense: Depense): Piece[] => {
         // 60 Opérations Diverses
         // 707: Vente de marchandise TVA1 (compte de produits) (70701 exonéré de TVA)
         // 4111: Compte Client Website (compte client)
@@ -111,9 +106,26 @@ generators.venteWebsite = (depense: Depense): Piece[] => {
             PieceFactory.achat({ crediteur: new CompteParentAux({ compte: 707 }), debiteur, ...depense }),
             PieceFactory.banque({ montant: depense.ttc, compteInfo: debiteur, type: 'vente', ...depense })
         ];
-    }
+    })
+} as const;
+
+
+export type Generators = typeof PREDIFINED_GENERATORS;
+
+export type LibelleGeneratorsTest = Record<keyof Generators, (libelle: string) => boolean>;
+export type LibelleGenerators = Record<keyof Generators, PieceFromLibelleGenerator>;
+
+
+export const libelleRegexes: LibelleGeneratorsTest = {
+    loyer: libelle => /(sdm|loyer)/i.test(libelle),
+    fraisGeneraux: libelle => /frais generaux/i.test(libelle),
+    greffe: libelle => /greffe|inpi|bodacc|kbis/i.test(libelle),
+    compteCourant: libelle => /compte courant/i.test(libelle),
+    venteWebsite: libelle => /vente/i.test(libelle) && /website/i.test(libelle)
 };
 
 
-
-export const PREDIFINED_GENERATORS: PieceFromLibelleGenerator[] = Object.values(generators);
+export const PREDIFINED_LIBELLE_GENERATORS: LibelleGenerators = map(libelleRegexes, (k, libelleTest) => makeGenerator((depense: Depense) => {
+    if (libelleTest(depense.libelle))
+        return PREDIFINED_GENERATORS[ k ](depense);
+}));

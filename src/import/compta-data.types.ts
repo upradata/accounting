@@ -117,12 +117,3 @@ export type ComptaData = {
 
 
 export type ComptaDataMap<T> = Record<keyof ComptaDataFactory, T>;
-
-/* export interface ComptaDataByIdCSV {
-    depensesById: ObjectOf<ComptaDepenseCSV[]>;
-    piecesById: ObjectOf<ComptaDepensePieceCSV[]>;
-    saisiePiecesById: ObjectOf<ComptaSaisieMouvementCSV[]>;
-    comptesByNumero: ObjectOf<ComptaCompteCSV>;
-    journauxByCode: ObjectOf<ComptaJournalCSV>;
-}
- */

@@ -4,7 +4,7 @@ import { ComptaDepense, ComptaDepensePiece } from '@import';
 import { Piece } from './piece';
 import { getPiecesFromPieceRef } from './piece-factory-from-ref';
 import { getPieceFromString } from './piece-factory-from-string';
-import { PieceFromLibelle, PREDIFINED_GENERATORS } from './pieces-from-libelle';
+import { PREDIFINED_GENERATORS, PREDIFINED_LIBELLE_GENERATORS, generateFromLibelle, generatorFromType } from './pieces-generators';
 
 
 
@@ -16,7 +16,7 @@ export class PiecesFromDepense {
         const depensesById = mapBy(compteDepenses, 'id');
 
         const pieces: Piece[] = values(depensesById).flatMap(depenses => depenses.flatMap(depense => {
-            const { libelle, ttc, ht, tva, date, journal, creditMouvement, debitMouvement, pieceRef, isImported } = depense;
+            const { libelle, ttc, ht, tva, date, journal, creditMouvement, debitMouvement, pieceRef, isImported, type } = depense;
 
             if (pieceRef)
                 return getPiecesFromPieceRef({ comptaDepensePieces: this.depensePieces, pieceRef, pieceOption: { libelle, date, isImported } });
@@ -24,7 +24,16 @@ export class PiecesFromDepense {
             if (creditMouvement || debitMouvement)
                 return getPieceFromString(creditMouvement, debitMouvement, { libelle, date, journal, isImported });
 
-            const pieces = new PieceFromLibelle(PREDIFINED_GENERATORS).generate({ libelle, ttc, ht, tva, date, isImported });
+            if (type) {
+                try {
+                    return generatorFromType(PREDIFINED_GENERATORS)(type)({ libelle, ttc, ht, tva, date, isImported });
+                } catch (e) {
+                    logger.error(e);
+                    logger.info(`Let's try to generate from the "libelle"`);
+                }
+            }
+
+            const pieces = generateFromLibelle(PREDIFINED_LIBELLE_GENERATORS)({ libelle, ttc, ht, tva, date, isImported });
 
             if (pieces.length === 0)
                 logger.error(`Impossible de générer de pièces pour la ligne avec le libellé "${libelle}".`);

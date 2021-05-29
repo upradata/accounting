@@ -92,6 +92,7 @@ export class Run {
     }
 
     async run() {
+
         try {
             await this.init();
 
@@ -112,7 +113,6 @@ export class Run {
 
             if (edit)
                 promises.push(this.edit());
-
 
             return Promise.all(promises);
 

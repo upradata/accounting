@@ -58,6 +58,22 @@
         {
             "type": "node",
             "request": "launch",
+            "outputCapture": "std",
+            "name": "Launch Accounting Input Data 2020",
+            "program": "${workspaceFolder}/dist/program.command.js",
+            "args": [
+                "--exercise-start",
+                "01022020",
+                "--data-directory",
+                "/home/milottit/Documents/UpraData/2020-2021/Comptabilité/data",
+                "--edit",
+                "--output-dir",
+                "Output"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch Accounting Input Data + Files",
             "program": "${workspaceFolder}/dist/program.command.js",
             "args": [

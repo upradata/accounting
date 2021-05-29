@@ -15,6 +15,7 @@ export type LevelMap<T> = Record<LevelNames, T>;
 export interface LoggerSettings {
     levels: LogLevels;
     styles: LevelMap<StyleOption>;
+    filenames: Omit<LevelMap<string>, 'info'>;
 }
 
 

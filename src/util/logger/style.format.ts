@@ -1,4 +1,4 @@
-import { map, ObjectOf, ensureArray, TT, Key } from '@upradata/util';
+import { map, composeLeft, ObjectOf, ensureArray, TT, Key } from '@upradata/util';
 import { styles as terminalStyles, TerminalStyles } from '@upradata/node-util';
 import { Format } from 'logform';
 import { LEVEL } from 'triple-beam';
@@ -71,9 +71,16 @@ export class Styler<LevelNames extends Key> implements Format {
     }
 
 
+    static stylize(option: { styles: StyleTransform[]; text: string; prop?: string; info?: Info; }) {
+        const { styles, text } = option;
 
+        if (!styles)
+            return text;
 
-    stylize(option: { level: LevelNames; text: string; prop: Key; info: Info; }) {
+        return styles.reduce((m, style) => style(m, option.prop, option.info), option.text);
+    }
+
+    stylize(option: { level: LevelNames; text: string; prop: string; info: Info; }) {
 
         // "symbol" has to be "unique symbol" to work in indexes
         // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-7.html#unique-symbol
@@ -81,10 +88,7 @@ export class Styler<LevelNames extends Key> implements Format {
         // and we cannot force to string | ... | unique symbol => casting to string is a weak workaround
         const styles = this.styles[ option.level as string ];
 
-        if (!styles)
-            return option.text;
-
-        return styles.reduce((m, style) => style(m, option.prop, option.info), option.text);
+        return Styler.stylize({ ...option, styles });
     }
 
     transform(info: Info, options: StylerTransformOptions) {
