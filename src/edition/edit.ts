@@ -1,6 +1,5 @@
 import { ObjectOf, PartialRecursive } from '@upradata/util';
-import { Terminal, TableConfig } from '@upradata/node-util';
-import { highlightMagenta } from '@util';
+import { Terminal, TableConfig, styles } from '@upradata/node-util';
 import { EditterOption, Editter } from './editter';
 
 
@@ -35,7 +34,7 @@ export abstract class Edit<ExtraOption = {}> {
         this.consoleFormatting = new Terminal({ maxWidth: { row: { width: process.stdout.columns || 80 } }, tableConfig });
 
         this.editorOption.text += this.textFormatting.title(title, { isBig: true });
-        this.editorOption.console += this.consoleFormatting.title(title, { color: highlightMagenta, isBig: true });
+        this.editorOption.console += this.consoleFormatting.title(title, { color: styles.white.bgMagenta.$, isBig: true });
 
         if (!this.consoleTable)
             this.consoleTable = [];

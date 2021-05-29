@@ -1,6 +1,4 @@
-export * from './color';
 export * from './compta-util';
-export * from './csv-util';
 export * from './di';
 export * from './logger';
 export * from './sorted-array';

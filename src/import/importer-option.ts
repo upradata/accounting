@@ -1,14 +1,13 @@
-
 import fs from 'fs-extra';
 import path from 'path';
-import os from 'os';
-import { odsToXlsx, xlsxToCsv } from '@util';
-import { yellow } from '@upradata/node-util';
-import { PartialRecursive, assignRecursive, filter, makeObject, keys, RequiredProps } from '@upradata/util';
+import { odsToXlsx, xlsxToCsv, createTmpDir } from '@upradata/node-util';
+import { PartialRecursive, assignRecursive, filter, makeObject, keys, RequiredProps, entries } from '@upradata/util';
+import { logger } from '@util';
 import { ImporterFiles, ImporterOptionInput, ImporterFile, INPUT_DATA_DEFAULTS as defaults } from './importer-input';
 
+
 export class ImporterOption<T = string> {
-    files: ImporterFiles<T>;
+    files: ImporterFiles<T> = {} as any;
     odsFilename?: string;
     directory: string;
 
@@ -78,43 +77,36 @@ export class ImporterOption<T = string> {
     }
 
     async init() {
-        const promises: Promise<any>[] = [];
-        const tmpDir = await this.tmpdir();
+        const { odsFilename } = this.option;
+        const tmpDir = await createTmpDir.async({ prefix: '@mt-accounting-' });
 
         const files = await this.getFiles();
 
-        const needsSheet = Object.values(files).find(file => !!file.sheetName);
-        let xlsx: string = undefined;
+        const xlsxFile = odsFilename ? await odsToXlsx(this.dir(this.odsFilename), { outputDir: tmpDir }) : undefined;
 
-        if (needsSheet)
-            xlsx = await odsToXlsx({ filepath: this.dir(this.odsFilename), outputDir: tmpDir });
-
-        for (const [ key, file ] of Object.entries(files)) {
-            const { sheetName, filename } = file as ImporterFile;
+        await Promise.all(entries(files).map(([ key, file ]) => {
+            const { sheetName, filename } = file;
 
             if (sheetName) {
-                promises.push(
-                    xlsxToCsv({ sheetName, filepath: this.dir(xlsx), outputDir: tmpDir })
-                        .then(csvOutput => this.fileLoaded(key, csvOutput))
-                        .catch(e => {
-                            console.warn(yellow`Could not load sheet ${sheetName} in ${this.dir(this.odsFilename)} due to following error:`);
-                            console.warn(yellow`${e}`);
-                            console.warn(yellow`Try load file ${this.dir(filename)}`);
-                            this.fileLoaded(key, this.dir(filename));
-                        })
-                );
+
+                return xlsxToCsv(xlsxFile, { sheetName, outputDir: tmpDir })
+                    .then(csvOutput => this.fileLoaded(key, csvOutput))
+                    .catch(e => {
+                        logger.error(`Could not load sheet ${sheetName} in ${this.dir(this.odsFilename)} due to following error:`);
+                        logger.error(e);
+                        logger.info(`Try load file ${this.dir(filename)}`);
+                    });
 
             } else
                 this.fileLoaded(key, this.dir(filename));
-        }
 
+        }));
 
-        return Promise.all(promises).then(() => {
-            const notLoaded = this.requiredFilesNotLoaded();
+        const notLoaded = this.requiredFilesNotLoaded();
 
-            if (notLoaded.length > 0)
-                throw new Error(`Could not load: ${notLoaded.join(',')}`);
-        });
+        if (notLoaded.length > 0)
+            throw new Error(`Could not load: ${notLoaded.join(',')}`);
+
     }
 
     private requiredFilesNotLoaded() {
@@ -122,8 +114,6 @@ export class ImporterOption<T = string> {
     }
 
     private fileLoaded(name: string, filepath: string) {
-        if (!this.files) this.files = {} as any;
-
         this.files[ name ] = filepath;
         // console.log(`file for ${name} has been loaded: ${filepath}`);
     }
@@ -136,14 +126,5 @@ export class ImporterOption<T = string> {
             return p;
 
         return path.join(this.directory, p);
-    }
-
-    private tmpdir() {
-        const tmpDir = os.tmpdir();
-
-        return fs.mkdtemp(path.join(tmpDir, '@mt-accounting-')).catch(err => {
-            const e = err as Error;
-            throw new Error(`An error occured while creating a tmp directory in ${tmpDir}${e.message ? `: "${e.message}"` : ''}`);
-        });
     }
 }
