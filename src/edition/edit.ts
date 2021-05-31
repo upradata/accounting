@@ -31,8 +31,11 @@ export abstract class Edit<ExtraOption = {}> {
         const { title } = this.args;
         const tableConfig = this.tableConfig();
 
+        const { isTTY } = process.stdout;
+        const consoleColumns = process.stdout.columns || 80;
+
         this.textFormatting = new Terminal({ maxWidth: { row: { width: 200 } }, tableConfig });
-        this.consoleFormatting = new Terminal({ maxWidth: { row: { width: process.stdout.columns || 80 } }, tableConfig });
+        this.consoleFormatting = new Terminal({ maxWidth: { row: { width: isTTY ? consoleColumns : 200 } }, tableConfig });
 
         this.editorOutputs.text += this.textFormatting.title(title, { isBig: true });
         this.editorOutputs.console += this.consoleFormatting.title(title, { color: styles.white.bgMagenta.$, isBig: true });
