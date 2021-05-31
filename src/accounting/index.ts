@@ -4,6 +4,7 @@ export * from './balance';
 export * from './balance-comptes';
 export * from './compte';
 export * from './fec-builder';
+export * from './grand-livre';
 export * from './journal-centraliseur';
 export * from './lettrage';
 export * from './mouvement';

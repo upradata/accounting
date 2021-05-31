@@ -1,21 +1,12 @@
 import fs from 'fs-extra';
 import path from 'path';
 import Ajv from 'ajv';
-import { entries, isDefined, ObjectOf } from '@upradata/util';
-import { logger } from '@util';
-
-import { ComptabiliteMetadata, ComptabiliteMetadataOption } from './metadata/accounting-metadata';
-import { Injector } from './util/di';
-import { Editter, EditterLoggers } from './edition/editter';
-import { GrandLivre } from './accounting/grand-livre/grand-livre';
-import { BalanceDesComptes } from './accounting/balance-comptes/balance-des-comptes';
-import { JournalCentraliseur } from './accounting/journal-centraliseur/journal-centraliseur';
-import { PlanComptable } from './metadata/plan-comptable';
-import { Journaux } from './metadata/journaux';
-import { Pieces } from './accounting/piece/pieces';
+import { entries, ObjectOf } from '@upradata/util';
+import { logger, Injector } from '@util';
+import { ComptabiliteMetadata, ComptabiliteMetadataOption, PlanComptable, Journaux, } from '@metadata';
+import { GrandLivre, BalanceDesComptes, JournalCentraliseur, Pieces, AccountingInterface } from '@accounting';
+import { Editter, EditterLoggers } from '@edition';
 import { ProgramArguments } from './program.arguments';
-import { AccountingInterface } from './accounting/accounting.inteface';
-
 
 
 export class Run {

@@ -43,9 +43,13 @@ export class Injector {
 
 
 export function InjectDep(provider: ProviderToken<any>) {
+    if (provider === undefined) {
+        throw new Error(`The dependence provider injected is "undefined". It can be caused by a [Circular] reference in your import.`);
+    }
+
     const diInject = Inject(provider as ProviderToken<any>);
 
-    return function (classPrototype: any, propertyKey: string | symbol, parameterIndex: number) {
+    return function (classPrototype: any, _propertyKey: string | symbol, parameterIndex: number) {
         // propertyKey is always undefined because it is not a parameter decorator
         const constructorArgs: string = classPrototype.toString().match(/constructor[^(]*\(([^)]*)\)/)[ 1 ];
 

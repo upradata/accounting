@@ -1,6 +1,6 @@
 import { InjectDep } from '@util';
 import { Editter, EditOption } from '@edition';
-import { GrandLivre } from '../grand-livre';
+import { GrandLivre } from '../grand-livre/grand-livre';
 import { Mouvement } from '../mouvement';
 import { JournalCentraliseurEdit, ExtraOption } from './journal-centraliseur.edit';
 import { JournauxBalanceByMonth } from './journaux-balance-by-month';

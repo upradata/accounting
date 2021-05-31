@@ -34,6 +34,9 @@
             "@accounting": [
                 "src/accounting"
             ],
+            "@accounting/*": [
+                "src/accounting/*"
+            ],
             "@root/*": [
                 "src/*"
             ]

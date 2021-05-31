@@ -3,8 +3,8 @@ import path from 'path';
 import fs from 'fs-extra';
 import { isDefined, assignRecursive, AssignOptions, keys } from '@upradata/util';
 import { logger } from '@util';
-import { EditterFormats } from './edition/editter';
 import { ImporterFiles, INPUT_DATA_DEFAULTS } from './import/importer-input';
+import { EditterFormats } from './edition/editter';
 
 
 
@@ -125,5 +125,5 @@ program.configureOutput({
     writeOut: s => logger.info(s),
     writeErr: s => logger.error(s),
     // Highlight errors in color.
-    // outputError: (str, write) => write(red`${str}`)
+    // outputError: (s, write) => write(red`${s}`)
 });

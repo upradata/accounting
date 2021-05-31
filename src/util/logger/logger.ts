@@ -2,8 +2,8 @@ import { Key } from '@upradata/util';
 import { styles, disableTTYStylesIfNotSupported, TerminalStyles, Style } from '@upradata/node-util';
 import winston from 'winston';
 import fs from 'fs-extra';
-import { LEVEL, MESSAGE } from 'triple-beam';
 import { Styler } from './style.format';
+import { printInfoFormat } from './print-info.format';
 import { LoggerSettings, DEFAULT_INFO_PROPS as INFO_PROPS, Info, LevelNames, Logger } from './types';
 
 
@@ -84,15 +84,15 @@ export const logger: Logger = winston.createLogger({
             format: winston.format.combine(
                 // winston.format.errors({ stack: true }),
                 // winston.format.json({ space: 4 }),
-                winston.format.simple()
+                // winston.format.simple()
+                printInfoFormat
             )
         }),
         new winston.transports.File({
             filename: loggerSettings.filenames.warn,
             level: 'warn',
             format: winston.format.combine(
-                // winston.format.json({ space: 4 }),
-                winston.format.simple()
+                printInfoFormat
             )
         })
     ]
@@ -143,12 +143,7 @@ if (process.env.NODE_ENV !== 'production') {
             // winston.format.colorize({ colors: loggerSettings.colors.message, message: true }),
             new Styler({ styles: loggerSettings.styles, props: [ INFO_PROPS.level, INFO_PROPS.message, INFO_PROPS.stack ] }),
             // winston.format.errors({ stack: true }),
-            winston.format.printf((info: Info) => {
-                const level = info[ LEVEL ] || info.level;
-                const message = info.message || info[ MESSAGE ];
-
-                return `${level}: ${info.stack || message}`;
-            })
+            printInfoFormat
             // winston.format.simple()
         )
     }));

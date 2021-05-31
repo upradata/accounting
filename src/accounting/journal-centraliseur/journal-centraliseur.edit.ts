@@ -37,7 +37,7 @@ export class JournalCentraliseurEdit extends Edit {
         this.pieces = Injector.app.get(Pieces);
     }
 
-    protected tableConfig() {
+    protected override tableConfig() {
         const length = this.header().length;
 
         const columns = {} as TableColumnConfig;
@@ -61,7 +61,7 @@ export class JournalCentraliseurEdit extends Edit {
 
         this.consoleTable = [ header ];
         this.textTable = [ header ];
-        this.editorOption.csv = `${header.join(';')}\n`;
+        this.editorOutputs.csv = `${header.join(';')}\n`;
     }
 
     private header(): string[] {
@@ -152,9 +152,9 @@ export class JournalCentraliseurEdit extends Edit {
 
         this.setJson(journal, dataO);
 
-        this.editorOption.csv += row.join(';') + '\n';
+        this.editorOutputs.csv += `${row.join(';')}\n`;
 
-        this.editorOption.pdf += ''; // Not yet implemented
+        this.editorOutputs.pdf += ''; // Not yet implemented
 
         this.textTable.push(rowFormatted);
         this.consoleTable.push(this.colorifyRow(rowFormatted));

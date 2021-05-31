@@ -1,4 +1,4 @@
-import { Compte } from '@accounting';
+import { Compte } from '@accounting/compte'; // keep full path to prevent circular dependency
 
 export class PlanComptable {
     public plan: Compte[] = [];

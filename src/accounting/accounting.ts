@@ -6,7 +6,7 @@ import { ComptabiliteMetadata, PlanComptable, Journaux } from '@metadata';
 import { Pieces, PiecesFromDepense, PiecesfromSaisiePieces } from './piece';
 import { FecBuilderOption, FecBuilder } from './fec-builder';
 import { LettrageProcessor } from './lettrage';
-import { GrandLivre } from './grand-livre/grand-livre';
+import { GrandLivre } from './grand-livre';
 import { BalanceDesComptes } from './balance-comptes';
 import { JournalCentraliseur } from './journal-centraliseur';
 import { AccountingInterface } from './accounting.inteface';

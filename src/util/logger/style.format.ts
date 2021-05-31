@@ -1,4 +1,4 @@
-import { map, composeLeft, ObjectOf, ensureArray, TT, Key } from '@upradata/util';
+import { map, ObjectOf, ensureArray, TT, Key } from '@upradata/util';
 import { styles as terminalStyles, TerminalStyles } from '@upradata/node-util';
 import { Format } from 'logform';
 import { LEVEL } from 'triple-beam';
@@ -14,6 +14,7 @@ export type Styles = ObjectOf<StyleOption>;
 interface StylerTransformOptions {
     props?: string[];
 }
+
 
 interface StylerOptions<LevelNames extends Key> extends StylerTransformOptions {
     styles?: Record<LevelNames, StyleOption>;

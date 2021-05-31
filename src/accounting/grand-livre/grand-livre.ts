@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import { SortedArray } from '@util';
 import { Editter, EditOption } from '@edition';
 import { Mouvement } from '../mouvement';
-import { ComptesBalance } from '../balance-comptes';
+import { ComptesBalance } from '../balance-comptes/comptes-balance'; // keep full path to prevent circular dependency
 import { GrandLivreEdit } from './grand-livre.edit';
 
 

@@ -35,11 +35,11 @@ export class GrandLivreEdit extends Edit {
 
         this.consoleTable = [ header ];
         this.textTable = [ header ];
-        this.editorOption.csv = header.join(';') + '\n';
+        this.editorOutputs.csv = `${header.join(';')}\n`;
     }
 
 
-    protected tableConfig() {
+    protected override tableConfig() {
         const length = this.header().length;
 
         const columns = {} as TableColumnConfig;
@@ -109,9 +109,9 @@ export class GrandLivreEdit extends Edit {
 
         this.setJson(compte, dataO);
 
-        this.editorOption.csv += row.join(';') + '\n';
+        this.editorOutputs.csv += `${row.join(';')}\n`;
 
-        this.editorOption.pdf += ''; // Not yet implemented
+        this.editorOutputs.pdf += ''; // Not yet implemented
 
         this.textTable.push(rowFormatted);
         this.consoleTable.push(this.colorifyRow(rowFormatted));
