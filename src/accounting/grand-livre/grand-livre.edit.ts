@@ -3,9 +3,9 @@ import { ObjectOf } from '@upradata/util';
 import { Injector, formattedNumber, objectToArray } from '@util';
 import { Edit, EditOption, coloryfyDiff } from '@edition';
 import { Mouvement } from '../mouvement';
-import { Pieces } from '../piece/pieces';
-import { BalanceTotalData } from '../balance/balance-total';
-import { ComptesBalance } from '../balance-comptes/comptes-balance';
+import { Pieces } from '../piece';
+import { BalanceTotalData } from '../balance';
+import { ComptesBalance } from '../balance-comptes';
 
 
 interface AddToEditOption {

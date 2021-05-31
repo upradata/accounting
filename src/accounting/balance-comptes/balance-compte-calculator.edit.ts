@@ -1,6 +1,6 @@
 import { ComptesBalance, CompteRange } from './comptes-balance';
 import { Mouvement } from '../mouvement';
-import { BalanceMapData } from '../balance/balance-map-data';
+import { BalanceMapData } from '../balance';
 
 export class Split<T = BalanceMapData> {
     compte: string;

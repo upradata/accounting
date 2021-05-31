@@ -1,10 +1,13 @@
 import { Key } from '@upradata/util';
-import { styles, TerminalStyles, Style } from '@upradata/node-util';
+import { styles, disableTTYStylesIfNotSupported, TerminalStyles, Style } from '@upradata/node-util';
 import winston from 'winston';
 import fs from 'fs-extra';
+import { LEVEL, MESSAGE } from 'triple-beam';
 import { Styler } from './style.format';
 import { LoggerSettings, DEFAULT_INFO_PROPS as INFO_PROPS, Info, LevelNames, Logger } from './types';
-import { LEVEL, MESSAGE } from 'triple-beam';
+
+
+disableTTYStylesIfNotSupported();
 
 
 const stylize = (s: string, options: { prop?: Key, info?: Info; color?: TerminalStyles, level: LevelNames; }) => {

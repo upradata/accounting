@@ -1,6 +1,5 @@
-import { CompteParentAux } from './../accounting/compte';
 import { keys } from '@upradata/util';
-import { Compte } from '../accounting/compte';
+import { Compte, CompteParentAux } from '@accounting';
 
 type ToCsvTypes<T> = {
     [ K in keyof T ]: T[ K ] extends boolean ? string | boolean :

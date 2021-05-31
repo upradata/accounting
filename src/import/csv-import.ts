@@ -1,7 +1,8 @@
 import { cellParsers, csvToJsonWithDefaultParsers, ParsersOptions, csvHeaders as getCsvHeaders } from '@upradata/node-util';
 import { dasherize, keys, filter, isDefined, isUndefined } from '@upradata/util';
 import { fecDateToDate } from '@util';
-import { Compte } from '../accounting/compte';
+import { Compte } from '@accounting';
+
 import {
     ComptaCompte, ComptaDepense, ComptaDepensePiece, ComptaJournal, ComptaSaisieMouvement, ComptaDataFactory, ComptaDataNames, ComptaData, ComptaDepenseType, comptaDepenseTypes
 } from './compta-data.types';

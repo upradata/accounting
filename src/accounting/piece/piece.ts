@@ -1,7 +1,7 @@
 import { Injector, logger } from '@util';
 import { CompteParentAux } from '../compte';
 import { Mouvement, MouvementData, MouvementMetadata } from '../mouvement';
-import { GrandLivre } from '../grand-livre/grand-livre';
+import { GrandLivre } from '../grand-livre';
 
 
 export interface PieceOption {

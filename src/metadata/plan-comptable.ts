@@ -1,4 +1,4 @@
-import { Compte } from '../accounting/compte';
+import { Compte } from '@accounting';
 
 export class PlanComptable {
     public plan: Compte[] = [];
@@ -6,7 +6,7 @@ export class PlanComptable {
     constructor() { }
 
 
-    add(...comptes: { numero: number; libelle: string }[]) {
+    add(...comptes: { numero: number; libelle: string; }[]) {
         for (const { numero, libelle } of comptes)
             this.plan.push(new Compte(numero, libelle));
     }

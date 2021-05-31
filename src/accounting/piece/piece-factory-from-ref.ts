@@ -1,4 +1,4 @@
-import { mapBy } from '@util/util';
+import { mapBy } from '@util';
 import { isUndefined } from '@upradata/util';
 import { ComptaDepensePiece } from '@import';
 import { PieceOption, Piece } from './piece';

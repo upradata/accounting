@@ -1,7 +1,7 @@
 import { Compte } from '../compte';
-import { BalanceMap, BalanceMapFilterOption } from '../balance/balance-map';
+import { BalanceMap, BalanceMapFilterOption, BalanceMapData } from '../balance';
 import { Mouvement } from '../mouvement';
-import { BalanceMapData } from '../balance/balance-map-data';
+
 
 export type Numero = string | number;
 

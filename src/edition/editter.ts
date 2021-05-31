@@ -1,5 +1,5 @@
 import { entries } from '@upradata/util';
-import { yellow } from '@upradata/node-util';
+import { logger } from '@util';
 
 export type EditLogger = (content: string) => Promise<any>;
 
@@ -38,7 +38,7 @@ export class Editter {
             if (content)
                 return loggers.map(logger => logger(content));
 
-            console.warn(yellow`Edition not handle for ${format}`);
+            logger.info(`Edition not handle for ${format}`);
             return undefined;
 
         }).filter(v => !!v);

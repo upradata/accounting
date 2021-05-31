@@ -30,7 +30,7 @@ export abstract class Edit<ExtraOption = {}> {
         const { title } = this.args;
         const tableConfig = this.tableConfig();
 
-        this.textFormatting = new Terminal({ maxWidth: { row: { width: 80 } }, tableConfig });
+        this.textFormatting = new Terminal({ maxWidth: { row: { width: 200 } }, tableConfig });
         this.consoleFormatting = new Terminal({ maxWidth: { row: { width: process.stdout.columns || 80 } }, tableConfig });
 
         this.editorOption.text += this.textFormatting.title(title, { isBig: true });

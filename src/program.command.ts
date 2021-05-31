@@ -1,7 +1,7 @@
-#!/usr/bin/env node
+#!/usr/bin/env node;
 
-import { red, registerPaths } from '@upradata/node-util';
-
+import { registerPaths } from '@upradata/node-util';
+import { logger } from '@util';
 
 try {
     // load and register tsconfig.json paths (mapping)
@@ -11,8 +11,8 @@ try {
     });
 
 } catch (e) {
-    console.error(red`Could not load tsconfig.json paths`);
-    console.error(e);
+    logger.error(`Could not load tsconfig.json paths`);
+    logger.error(e);
     process.exit(1);
 }
 

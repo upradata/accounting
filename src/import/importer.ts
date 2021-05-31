@@ -1,9 +1,8 @@
 import { Arr, map, PartialRecursive, toObject } from '@upradata/util';
 import { Injector, logger } from '@util';
+import { Compte, CompteParentAux } from '@accounting';
+import { PlanComptable, Journaux } from '@metadata';
 import { ComptaDataNames, ComptaData } from './compta-data.types';
-import { Compte, CompteParentAux } from '../accounting/compte';
-import { Journaux } from '../metadata/journaux';
-import { PlanComptable } from '../metadata/plan-comptable';
 import { ImporterOption } from './importer-option';
 import { ImporterFile, ImporterFiles } from './importer-input';
 import { importJsonFromCsv, notComptaDataNames } from './csv-import';

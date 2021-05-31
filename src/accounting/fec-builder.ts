@@ -2,10 +2,9 @@ import { writeFile as fsWriteFile } from 'fs';
 import { promisify } from 'util';
 import { numberToComma, Injector, dateToFecDate, TODAY, logger } from '@util';
 import { colors } from '@upradata/node-util';
+import { PlanComptable, Journaux } from '@metadata';
 import { Mouvement, Lettrage } from './mouvement';
-import { PlanComptable } from '../metadata/plan-comptable';
-import { Journaux } from '../metadata/journaux';
-import { Pieces } from './piece/pieces';
+import { Pieces } from './piece';
 
 
 

@@ -1,7 +1,6 @@
 import { mapBy } from '@util';
 import { isDefined } from '@upradata/util';
 import { ComptaSaisieMouvement } from '@import';
-import { Compte, CompteParentAux } from '../compte';
 import { Piece } from './piece';
 
 

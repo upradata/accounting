@@ -4,9 +4,9 @@ import { formattedNumber, Injector, objectToArray } from '@util';
 import { Edit, EditOption, coloryfyDiff } from '@edition';
 import { JournauxBalanceByMonth, MonthYear } from './journaux-balance-by-month';
 import { Mouvement } from '../mouvement';
-import { BalanceTotalData } from '../balance/balance-total';
+import { BalanceTotalData } from '../balance';
 import { JournauxBalance } from './journaux-balance';
-import { Pieces } from '../piece/pieces';
+import { Pieces } from '../piece';
 
 
 interface AddToEditOption {

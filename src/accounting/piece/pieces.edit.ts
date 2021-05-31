@@ -4,7 +4,7 @@ import { Edit, EditOption } from '@edition';
 import { SortedArray, formattedNumber } from '@util';
 import { Mouvement } from '../mouvement';
 import { Piece, PieceOption } from './piece';
-import { ExtraOption } from '../journal-centraliseur/journal-centraliseur.edit';
+import { ExtraOption } from '../journal-centraliseur';
 
 
 type AddToEditOption = PieceOption & { id: string; mouvement: Mouvement; };

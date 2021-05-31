@@ -1,5 +1,5 @@
 import { Injector } from '@util';
-import { PlanComptable } from '../metadata/plan-comptable';
+import { PlanComptable } from '@metadata';
 
 export class Compte {
     numero: string;

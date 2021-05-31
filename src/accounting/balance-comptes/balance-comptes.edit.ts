@@ -3,8 +3,7 @@ import { objectToArray, formattedNumber } from '@util';
 import { Edit, EditOption, coloryfyDiff } from '@edition';
 import { ComptesBalance } from './comptes-balance';
 import { BalanceComptesCalculator, Split } from './balance-compte-calculator.edit';
-import { BalanceMapData } from '../balance/balance-map-data';
-import { BalanceTotalData } from '../balance/balance-total';
+import { BalanceMapData, BalanceTotalData } from '../balance';
 
 
 export class BalanceDesComptesEdit extends Edit {

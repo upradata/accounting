@@ -1,21 +1,15 @@
 import path from 'path';
 import { PartialRecursive } from '@upradata/util';
 import { logger, InjectDep, dateToFecDate } from '@util';
-import { ComptabiliteMetadata } from '../metadata/accounting-metadata';
-import { PlanComptable } from '../metadata/plan-comptable';
-import { Journaux } from '../metadata/journaux';
-import { Pieces } from './piece/pieces';
-import { Importer } from '../import/importer';
-import { PiecesFromDepense } from './piece/piece-factory-from-depense';
-import { PiecesfromSaisiePieces } from './piece/piece-factory-from-saisie';
+import { Importer, ImporterFile, ImporterOption } from '@import';
+import { ComptabiliteMetadata, PlanComptable, Journaux } from '@metadata';
+import { Pieces, PiecesFromDepense, PiecesfromSaisiePieces } from './piece';
 import { FecBuilderOption, FecBuilder } from './fec-builder';
 import { LettrageProcessor } from './lettrage';
 import { GrandLivre } from './grand-livre/grand-livre';
-import { BalanceDesComptes } from './balance-comptes/balance-des-comptes';
-import { JournalCentraliseur } from './journal-centraliseur/journal-centraliseur';
+import { BalanceDesComptes } from './balance-comptes';
+import { JournalCentraliseur } from './journal-centraliseur';
 import { AccountingInterface } from './accounting.inteface';
-import { ImporterOption } from '../import/importer-option';
-import { ImporterFile } from '../import/importer-input';
 
 
 

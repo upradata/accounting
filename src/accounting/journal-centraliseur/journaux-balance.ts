@@ -1,4 +1,4 @@
-import { BalanceMap } from '../balance/balance-map';
+import { BalanceMap } from '../balance';
 
 export type JournalKey = string; // compte numero
 

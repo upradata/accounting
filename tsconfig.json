@@ -19,9 +19,6 @@
         "incremental": true,
         "baseUrl": ".",
         "paths": {
-            "@util/*": [
-                "src/util/*"
-            ],
             "@util": [
                 "src/util"
             ],
@@ -30,6 +27,15 @@
             ],
             "@edition": [
                 "src/edition"
+            ],
+            "@metadata": [
+                "src/metadata"
+            ],
+            "@accounting": [
+                "src/accounting"
+            ],
+            "@root/*": [
+                "src/*"
             ]
         }
     },
