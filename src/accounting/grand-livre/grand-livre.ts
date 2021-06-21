@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { SortedArray } from '@util';
-import { Editter, EditOption } from '@edition';
+import { Editter, EditExtraOptions } from '@edition';
 import { Mouvement } from '../mouvement';
 import { ComptesBalance } from '../balance-comptes/comptes-balance'; // keep full path to prevent circular dependency
 import { GrandLivreEdit } from './grand-livre.edit';
@@ -34,7 +34,7 @@ export class GrandLivre {
         // arrayToObjOfArrayById(this.mouvements.array, 'compte.numero');
     }
 
-    edit(editter: Editter, option?: EditOption): Promise<void[]> {
+    edit(editter: Editter, option?: EditExtraOptions): Promise<void[]> {
         return new GrandLivreEdit(this.comptesBalance).edit(editter, option);
     }
 

@@ -1,7 +1,7 @@
-import { TableColumnConfig } from '@upradata/node-util';
-import { ObjectOf } from '@upradata/util';
+import { styles } from '@upradata/node-util';
+import { isDefined, pipeline, removeUndefined, set } from '@upradata/util';
 import { formattedNumber, Injector, objectToArray } from '@util';
-import { Edit, EditOption, coloryfyDiff } from '@edition';
+import { Edit, EditExtraOptions, coloryfyDiff, EditDataCellStyle, EditDataCellFormat, EditDataStyledCell } from '@edition';
 import { JournauxBalanceByMonth, MonthYear } from './journaux-balance-by-month';
 import { Mouvement } from '../mouvement';
 import { BalanceTotalData } from '../balance';
@@ -37,34 +37,26 @@ export class JournalCentraliseurEdit extends Edit {
         this.pieces = Injector.app.get(Pieces);
     }
 
-    protected override tableConfig() {
-        const length = this.header().length;
+    protected override doInit() {
+        this.addHeaders(this.headers());
+        this.setTableConfig(this.tableConfig);
+    }
 
-        const columns = {} as TableColumnConfig;
+    private tableConfig(i: number, length: number): EditDataCellStyle {
+
         const nbRight = this.isByJournal || this.isShort ? 3 : 5;
 
-        for (let i = length - nbRight; i < length; ++i)
-            columns[ i ] = { alignment: 'right' };
+        if (i === 0 && this.isByJournal || i === 1)
+            return { alignment: 'center' };
 
-        if (this.isByJournal)
-            columns[ 0 ] = { alignment: 'center' };
-        columns[ 1 ] = { alignment: 'center' };
+        if (i >= length - nbRight)
+            return { alignment: 'right' };
 
-        return { columns };
+        return { alignment: 'left' };
     }
 
-    doInit(option: EditOption & Partial<ExtraOption>) {
-        this.isShort = option.short;
-        this.isByJournal = option.byJournal;
 
-        const header = this.header();
-
-        this.consoleTable = [ header ];
-        this.textTable = [ header ];
-        this.editorOutputs.csv = `${header.join(';')}\n`;
-    }
-
-    private header(): string[] {
+    private headers() {
         if (this.isByJournal)
             return [ 'Journal', 'Débit', 'Crédit', 'Solde' ];
 
@@ -103,65 +95,68 @@ export class JournalCentraliseurEdit extends Edit {
     }
 
 
-    private formatRow(row: Array<number | string>) {
-        const format = (n: number | string) => typeof n === 'string' ? n : n === 0 ? '' : formattedNumber(n);
-        const nbRight = this.isByJournal ? 1 : this.isShort ? 2 : 3;
-
-        return row.map((v, i) => i >= nbRight && i < row.length - 1 ? format(v) : v);
-    }
-
-    private colorifyRow(row: Array<number | string>) {
-        const lastValue = row[ row.length - 1 ] as number;
-        return [ ...row.slice(0, -1), coloryfyDiff(lastValue) ];
-    }
-
     private addToEdit({ journal, mouvement, total, monthYear }: AddToEditOption) {
-        let { debit = '', credit = '', date = '' } = {} as ObjectOf<string | number>;
 
+        const getBareData = () => {
+            if (isDefined(mouvement)) {
+                const { type, montant } = mouvement;
 
-        if (mouvement !== undefined) {
-            const { type, montant } = mouvement;
+                const debit = type === 'debit' ? montant : '';
+                const credit = type === 'credit' ? montant : '';
 
-            debit = type === 'debit' ? montant : '';
-            credit = type === 'credit' ? montant : '';
+                const d = this.pieces.get(mouvement.pieceId).date;
+                const date = d ? d.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '';
 
-            const d = this.pieces.get(mouvement.pieceId).date;
-            date = d ? d.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '';
-        }
+                return { credit, debit, date };
+            }
 
-        const totalDebit = total.debit;
-        const totalCredit = total.credit;
-        const solde = total.diff;
+            return { credit: undefined, debit: undefined, date: undefined };
+        };
 
-        let dataO: ObjectOf<string | number> = undefined;
+        const { debit: totalDebit, credit: totalCredit, diff: solde } = total;
 
-        if (this.isByJournal)
-            dataO = { journal, totalDebit, totalCredit, solde };
-        else {
+        const getData = () => {
+            const data = { journal, totalDebit, totalCredit, solde, month: undefined, date: undefined, debit: undefined, credit: undefined };
+
+            if (this.isByJournal)
+                return data;
+
             const month = this.getMonth(monthYear.month);
 
             if (this.isShort)
-                dataO = { month, journal, totalDebit, totalCredit, solde };
-            else
-                dataO = { month, journal, date, debit, credit, totalDebit, totalCredit, solde };
-        }
+                return { ...data, month };
 
+            return { ...data, ...getBareData(), month, };
+
+        };
+
+        const dataO = removeUndefined(getData());
 
         const row = objectToArray(dataO, [ 'month', 'journal', 'date', 'debit', 'credit', 'totalDebit', 'totalCredit', 'solde' ]);
-        const rowFormatted = this.formatRow(row);
 
-        this.setJson(journal, dataO);
 
-        this.editorOutputs.csv += `${row.join(';')}\n`;
+        const format = (i: number) => (data: EditDataStyledCell): EditDataStyledCell => {
+            const nbRight = this.isByJournal ? 1 : this.isShort ? 2 : 3;
+            set(data, 'a', 1);
+            return { ...data, style: { ...data.style, type: nbRight && i < row.length - 1 ? 'number' : 'text' } };
+            // formattedNumber(data, { zero: '' }) : data;
+        };
 
-        this.editorOutputs.pdf += ''; // Not yet implemented
 
-        this.textTable.push(rowFormatted);
-        this.consoleTable.push(this.colorifyRow(rowFormatted));
+        const colorify = (i: number, length: number) => (data: string | number) => {
+            return i === length - 1 ? coloryfyDiff(data as number) : data;
+        };
+
+
+        this.addData({
+            string: row,
+            json: { key: journal, value: dataO },
+            cellFormat: (s, i, length) => pipeline({ data: s }).pipe(format(i)).pipe(colorify(i, length)).value
+        });
     }
 
 
-    doEdit(option: EditOption) {
+    protected override doEdit(_option: EditExtraOptions) {
 
         if (this.isByJournal)
             return this.editByJournal();

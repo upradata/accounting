@@ -1,5 +1,5 @@
 import { InjectDep } from '@util';
-import { Editter, EditOption } from '@edition';
+import { Editter, EditExtraOptions } from '@edition';
 import { BalanceDesComptesEdit } from './balance-comptes.edit';
 import { Mouvement } from '../mouvement';
 import { GrandLivre } from '../grand-livre';
@@ -21,7 +21,7 @@ export class BalanceDesComptes {
         this.comptesBalance.add(mouvements);
     }
 
-    edit(editter: Editter, option?: EditOption): Promise<void[]> {
+    edit(editter: Editter, option?: EditExtraOptions): Promise<void[]> {
         return new BalanceDesComptesEdit(this.comptesBalance).edit(editter, option);
     }
 

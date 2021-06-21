@@ -1,7 +1,7 @@
 import { TableColumnConfig } from '@upradata/node-util';
-import { ObjectOf } from '@upradata/util';
+import { composeLeft, isUndefined, removeUndefined } from '@upradata/util';
 import { Injector, formattedNumber, objectToArray } from '@util';
-import { Edit, EditOption, coloryfyDiff } from '@edition';
+import { Edit, EditExtraOptions, coloryfyDiff } from '@edition';
 import { Mouvement } from '../mouvement';
 import { Pieces } from '../piece';
 import { BalanceTotalData } from '../balance';
@@ -28,97 +28,81 @@ export class GrandLivreEdit extends Edit {
         this.pieces = Injector.app.get(Pieces);
     }
 
-    doInit(option: EditOption) {
-        this.isShort = option.short;
 
-        const header = this.header();
-
-        this.consoleTable = [ header ];
-        this.textTable = [ header ];
-        this.editorOutputs.csv = `${header.join(';')}\n`;
+    protected override doInit() {
+        this.addHeaders(this.headers());
+        this.setTableConfig((i, length) => ({ alignment: i >= length - 3 ? 'right' : 'left' }));
     }
 
-
-    protected override tableConfig() {
-        const length = this.header().length;
-
-        const columns = {} as TableColumnConfig;
-
-        for (let i = length - 3; i < length; ++i)
-            columns[ i ] = { alignment: 'right' };
-
-        return { columns };
-    }
-
-    private header(): string[] {
+    private headers() {
         if (this.isShort)
             return [ 'Compte', 'Débit', 'Crédit', 'Solde' ];
 
         return [ 'Compte', 'Date', 'Pièce', 'Période', 'Débit', 'Crédit', 'Solde' ];
     }
 
-    private formatRow(row: Array<number | string>) {
-        const middleIndex = this.isShort ? 1 : 4;
-
-        const start = row.slice(0, middleIndex);
-        const middle = row.slice(middleIndex, -1);
-        const end = row[ row.length - 1 ];
-
-        return [ ...start, ...middle.map(n => n === 0 || n === '' ? '' : formattedNumber(n)), end ];
-    }
-
-    private colorifyRow(row: Array<number | string>) {
-        const lastValue = row[ row.length - 1 ] as number;
-        return [ ...row.slice(0, -1), coloryfyDiff(lastValue) ];
-    }
-
 
     private addToEdit({ compte, mouvement, balanceTotal }: AddToEditOption) {
-        let { debit = '', credit = '', date = '', pieceId = '', period = '' } = {} as ObjectOf<string | number>;
-        let solde: string | number = '';
 
-        if (balanceTotal === undefined) {
-            const { type, montant, date: d } = mouvement;
+        const getData = () => {
+            if (isUndefined(balanceTotal)) {
+                const { type, montant, date: d } = mouvement;
 
-            const piece = this.pieces.get(mouvement.pieceId);
-            pieceId += `${mouvement.pieceId}: ${piece.libelle}`;
+                const piece = this.pieces.get(mouvement.pieceId);
+                const pieceId = `${mouvement.pieceId}: ${piece.libelle}`;
 
-            const m = montant === 0 ? '' : montant; // formattedNumber(montant);
+                const m = montant === 0 ? '' : montant; // formattedNumber(montant);
 
-            debit = type === 'debit' ? `${m}` : '';
-            credit = type === 'credit' ? `${m}` : '';
-            date = d ? d.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '';
+                return {
+                    compte,
+                    credit: type === 'credit' ? `${m}` : '',
+                    debit: type === 'debit' ? `${m}` : '',
+                    solde: '',
+                    date: d ? d.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '',
+                    period: piece.journal.toLowerCase() === 'xou' ? 'A-Nouveau' : 'Exercise',
+                    pieceId
+                };
+            }
 
-            period = piece.journal.toLowerCase() === 'xou' ? 'A-Nouveau' : 'Exercise';
-        } else {
-            credit = balanceTotal.credit;
-            debit = balanceTotal.debit;
-            solde = balanceTotal.diff;
-        }
+            return {
+                compte,
+                credit: balanceTotal.credit,
+                debit: balanceTotal.debit,
+                solde: balanceTotal.diff,
+                date: undefined,
+                period: undefined,
+                pieceId: undefined
+            };
+        };
 
-        let dataO: ObjectOf<string | number> = undefined;
 
-        if (this.isShort)
-            dataO = { compte, debit, credit, solde };
-        else
-            dataO = { compte, date, pieceId, period, debit, credit, solde };
-
+        const dataO = removeUndefined(this.isShort ? getData() : { ...getData(), date: undefined, period: undefined, pieceId: undefined });
 
         const row = objectToArray(dataO, [ 'compte', 'date', 'pieceId', 'period', 'debit', 'credit', 'solde' ]);
-        const rowFormatted = this.formatRow(row);
 
-        this.setJson(compte, dataO);
 
-        this.editorOutputs.csv += `${row.join(';')}\n`;
+        const format = (data: string | number, i: number) => {
+            const middleIndex = this.isShort ? 1 : 4;
 
-        this.editorOutputs.pdf += ''; // Not yet implemented
+            if (i <= middleIndex || i > middleIndex + 1)
+                return `${data}`;
 
-        this.textTable.push(rowFormatted);
-        this.consoleTable.push(this.colorifyRow(rowFormatted));
+            formattedNumber(data, { zero: '' });
+        };
+
+        const colorify = (data: string | number, i: number, length: number) => {
+            return i === length - 1 ? coloryfyDiff(data as number) : data;
+        };
+
+
+        this.addData({
+            string: row.map(d => ({ value: d, format: s => composeLeft([ format, colorify ], s) })),
+            json: { key: compte, value: dataO }
+        });
     }
 
 
-    doEdit(option: EditOption) {
+    protected override doEdit(option: EditExtraOptions) {
 
         for (const { key: compte, balanceData } of this.compteBalance) {
             const { mouvements, total } = balanceData;

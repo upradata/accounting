@@ -1,82 +1,81 @@
-import { ObjectOf, PartialRecursive } from '@upradata/util';
-import { Terminal, TableConfig, styles } from '@upradata/node-util';
-import { EditterOption as EditterOutputs, Editter } from './editter';
+import { PartialRecursive, deepCopy } from '@upradata/util';
+import { TableRow } from '@upradata/node-util';
+import { Editter } from './editter';
+import { AddEditData, EditData, EditDataCellStyle } from './edit.types';
 
 
-export interface EditArgs {
-    title: string;
+export interface EditOptions {
+    title?: string;
+    jsonIndent?: number;
 }
 
 
-export interface EditOption {
+export interface EditExtraOptions {
     short?: boolean;
 }
 
 
+
+
 export abstract class Edit<ExtraOption = {}> {
-    protected textFormatting: Terminal;
-    protected consoleFormatting: Terminal;
-    protected editorOutputs: EditterOutputs;
-    protected textTable: Array<string | number>[];
-    protected consoleTable: Array<string | number>[];
-    protected json: ObjectOf<any>;
+    private data: EditData = { string: [], json: {}, headers: [], style: [] };
 
-    constructor(private args: EditArgs) { }
+    constructor(private options: EditOptions) { }
 
-    protected init(option: EditOption & Partial<ExtraOption>) {
-        this.editorOutputs = { pdf: '', csv: '', text: '', console: '', json: '' };
-
+    protected init(option: EditExtraOptions & Partial<ExtraOption>) {
         this.doInit(option);
-
-        const { title } = this.args;
-        const tableConfig = this.tableConfig();
-
-        const { isTTY } = process.stdout;
-        const consoleColumns = process.stdout.columns || 80;
-
-        this.textFormatting = new Terminal({ maxWidth: { row: { width: 200 } }, tableConfig });
-        this.consoleFormatting = new Terminal({ maxWidth: { row: { width: isTTY ? consoleColumns : 200 } }, tableConfig });
-
-        this.editorOutputs.text += this.textFormatting.title(title, { isBig: true });
-        this.editorOutputs.console += this.consoleFormatting.title(title, { color: styles.white.bgMagenta.$, isBig: true });
-
-        if (!this.consoleTable)
-            this.consoleTable = [];
-
-        if (!this.textTable)
-            this.textTable = [];
-
-        if (!this.json)
-            this.json = {};
     }
 
-    protected tableConfig(): PartialRecursive<TableConfig> {
-        return {};
+    addData(data: AddEditData) {
+        this.data.string.push(data.string);
+
+        const { key, value } = data.json;
+        const k = key as string;
+
+        const { json } = this.data;
+
+        json[ k ] = [ ...json[ k ], value ];
+    }
+
+
+    addHeaders(headers: TableRow | TableRow[]) {
+        const isHeaderRows = (v: any): v is TableRow[] => Array.isArray(v?.[ 0 ]);
+
+        this.data.headers = (isHeaderRows(headers) ? headers : [ headers ]).map(row => row.map(cell => `${cell}`));
+    }
+
+    setTableConfig(tableConfig: EditData[ 'style' ]) {
+        this.data.style = tableConfig;
     }
 
     protected end() {
-        // this.editorOption.text += this.textFormatting.table({ data: this.textTable });
-        this.editorOutputs.console += this.consoleFormatting.table({ data: this.consoleTable });
-        this.editorOutputs.json = JSON.stringify(this.json);
+        const { title, jsonIndent = 0 } = this.options;
+        const tableConfig = this.tableConfig();
+
+
+        const rows = this.data.string.map(row => row.map((cell, i) => `${cell.format(cell.value, i, row.length)}`));
+
+        const tableRows = [ ...headerRows, ...rows ];
+
+        return {
+            title,
+            tableRows,
+            json: JSON.stringify(this.data.json, null, jsonIndent),
+            data: deepCopy(this.data),
+            tableConfig
+        };
     }
 
-    edit(editter: Editter, option: EditOption & Partial<ExtraOption> = {}): Promise<void[]> {
+    edit(editter: Editter, option: EditExtraOptions & Partial<ExtraOption> = {}): Promise<void[]> {
         this.init(option);
         this.doEdit(option);
-        this.end();
+        const editOptions = this.end();
 
-        return editter.edit(this.editorOutputs);
+        return editter.edit(editOptions);
 
     }
 
-    protected setJson(key: string, data: any) {
-        const d = this.json[ key ] || [];
-        d.push(data);
-
-        this.json[ key ] = d;
-    }
-
-    abstract doInit(option: EditOption): void;
-    abstract doEdit(option: EditOption): void;
+    protected doInit(_option: EditExtraOptions): void { }
+    protected abstract doEdit(option: EditExtraOptions): void;
 
 }

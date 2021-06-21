@@ -27,10 +27,12 @@ const DiCreateSingletonFromOverride = (DiInjector.prototype as any)[ createSingl
     return DiCreateSingletonFromOverride(provider);
 };
 
+
 interface InjectorOptions {
     providers?: OverrideProvider<any>[];
     bootstrap?: ProviderToken<any>[];
 }
+
 
 export class Injector {
     static app: DiInjector;
@@ -39,7 +41,6 @@ export class Injector {
         Injector.app = new DiInjector(opts as any, parent);
     }
 }
-
 
 
 export function InjectDep(provider: ProviderToken<any>) {

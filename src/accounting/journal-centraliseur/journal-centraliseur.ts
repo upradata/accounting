@@ -1,5 +1,5 @@
 import { InjectDep } from '@util';
-import { Editter, EditOption } from '@edition';
+import { Editter, EditExtraOptions } from '@edition';
 import { GrandLivre } from '../grand-livre/grand-livre';
 import { Mouvement } from '../mouvement';
 import { JournalCentraliseurEdit, ExtraOption } from './journal-centraliseur.edit';
@@ -30,7 +30,7 @@ export class JournalCentraliseur {
         this.balanceByJournal.add(mouvements);
     }
 
-    async edit(editter: Editter, option?: EditOption & ExtraOption): Promise<void[]> {
+    async edit(editter: Editter, option?: EditExtraOptions & ExtraOption): Promise<void[]> {
         return new JournalCentraliseurEdit(this.balanceByJournal).edit(editter, option);
     }
 }

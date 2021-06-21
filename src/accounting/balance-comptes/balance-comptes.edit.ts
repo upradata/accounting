@@ -1,6 +1,7 @@
 import { TableColumnConfig } from '@upradata/node-util';
+import { composeLeft } from '@upradata/util';
 import { objectToArray, formattedNumber } from '@util';
-import { Edit, EditOption, coloryfyDiff } from '@edition';
+import { Edit, EditExtraOptions, coloryfyDiff } from '@edition';
 import { ComptesBalance } from './comptes-balance';
 import { BalanceComptesCalculator, Split } from './balance-compte-calculator.edit';
 import { BalanceMapData, BalanceTotalData } from '../balance';
@@ -14,26 +15,13 @@ export class BalanceDesComptesEdit extends Edit {
         this.balanceCompteCalculator = new BalanceComptesCalculator(balance);
     }
 
-    protected override tableConfig() {
-        const length = this.header()[ 1 ].length;
-
-        const columns = {} as TableColumnConfig;
-
-        for (let i = 1; i < length; ++i)
-            columns[ i ] = { alignment: 'right' };
-
-        return { columns };
+    protected override doInit() {
+        this.addHeaders(this.headers());
+        this.setTableConfig(i => ({ alignment: i === 0 ? 'left' : 'right' }));
     }
 
-    doInit() {
-        const header = this.header();
 
-        this.consoleTable = [ ...header ];
-        this.textTable = [ ...header ];
-        this.editorOutputs.csv = `${header[ 1 ].join(';')}\n`;
-    }
-
-    private header(): string[][] {
+    private headers() {
         /* const firstRow = Array(10).fill('');
 
         firstRow[ 0 ] = 'compte';
@@ -59,18 +47,6 @@ export class BalanceDesComptesEdit extends Edit {
         ];
     }
 
-    private formatRow(row: Array<number | string>) {
-        const start = row[ 0 ];
-        const middle = row.slice(1, -1);
-        const end = row[ row.length - 1 ];
-
-        return [ start, ...middle.map(n => n === 0 ? '' : formattedNumber(n as number)), end ];
-    }
-
-    private colorifyRow(row: Array<number | string>) {
-        const lastValue = row[ row.length - 1 ] as number;
-        return [ ...row.slice(0, -1), coloryfyDiff(lastValue) ];
-    }
 
     private buildRow(balanceSplit: Split<BalanceTotalData>) {
         const row: (string | number)[] = [ balanceSplit.compte ];
@@ -83,20 +59,27 @@ export class BalanceDesComptesEdit extends Edit {
 
     private addToEdit(balanceSplit: Split<BalanceTotalData>) {
 
-        this.setJson(balanceSplit.compte, balanceSplit);
-
         const row = this.buildRow(balanceSplit);
-        const rowFormatted = this.formatRow(row);
 
-        this.editorOutputs.csv += `${row.join(';')}\n`;
+        const format = (data: string | number, i: number, length: number) => {
+            if (i === 0 || i === length - 1)
+                return `${data}`;
 
-        this.editorOutputs.pdf += ''; // Not yet implemented
+            formattedNumber(data, { zero: '' });
+        };
 
-        this.textTable.push(row);
-        this.consoleTable.push(this.colorifyRow(rowFormatted));
+        const colorify = (data: string | number, i: number, length: number) => {
+            return i === length - 1 ? coloryfyDiff(data as number) : data;
+        };
+
+
+        this.addData({
+            string: row.map(d => ({ value: d, format: s => composeLeft([ format, colorify ], s) })),
+            json: { key: balanceSplit.compte, value: balanceSplit }
+        });
     }
 
-    doEdit(option: EditOption) {
+    protected override doEdit(option: EditExtraOptions) {
         const transformF = (b: BalanceMapData) => b.toBalanceTotalData().total;
 
         for (let i = 1; i < 8; ++i) {

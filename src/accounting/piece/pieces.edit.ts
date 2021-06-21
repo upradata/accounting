@@ -1,6 +1,6 @@
-import { ObjectOf } from '@upradata/util';
+import { ObjectOf, values } from '@upradata/util';
 import { TableColumnConfig } from '@upradata/node-util';
-import { Edit, EditOption } from '@edition';
+import { Edit, EditDataCellStyle, EditExtraOptions } from '@edition';
 import { SortedArray, formattedNumber } from '@util';
 import { Mouvement } from '../mouvement';
 import { Piece, PieceOption } from './piece';
@@ -17,39 +17,27 @@ export class PiecesEdit extends Edit {
         super({ title: 'Pièces' });
     }
 
-    protected override tableConfig() {
-        const length = this.header().length;
 
-        const columns = {} as TableColumnConfig;
-
-        columns[ 0 ] = { alignment: 'center' };
-        columns[ 3 ] = { alignment: 'center' };
-
-        for (let i = length - 2; i < length; ++i)
-            columns[ i ] = { alignment: 'right' };
-
-        return { columns };
+    protected override doInit() {
+        this.addHeaders([ 'Id', 'Libelle', 'Date', 'Journal', 'Débit', 'Crédit' ]);
+        this.setTableConfig(this.tableConfig);
     }
 
-    doInit(option: EditOption & Partial<ExtraOption>) {
-        const header = this.header();
 
-        this.consoleTable = [ header ];
-        this.textTable = [ header ];
-        this.editorOutputs.csv = header.join(';') + '\n';
+    private tableConfig(i: number, length: number): EditDataCellStyle {
+
+        if (i === 0 || i === 3)
+            return { alignment: 'center' };
+
+        if (i >= length - 2)
+            return { alignment: 'right' };
+
+        return { alignment: 'left' };
     }
 
-    private header(): string[] {
-        return [ 'Id', 'Libelle', 'Date', 'Journal', 'Débit', 'Crédit' ];
-    }
-
-    private formatRow(row: Array<number | string>) {
-        const format = (n: number | string) => typeof n === 'string' ? n : n === 0 ? '' : formattedNumber(n);
-        return row.map((v, i) => i > 3 ? format(v) : v);
-    }
 
     private addToEdit({ id, libelle, date: d, journal, mouvement }: AddToEditOption) {
-        const isNewPiece = this.currentPieceId === id ? false : true;
+
         this.currentPieceId = id;
 
         const { type, montant } = mouvement;
@@ -60,23 +48,17 @@ export class PiecesEdit extends Edit {
 
         const date = d ? d.toLocaleString('fr-FR', { year: 'numeric', month: 'numeric', day: 'numeric' }) : '';
 
-        const dataO: ObjectOf<string | number> = { id, libelle, date, journal, debit, credit };
+        const dataO = { id, libelle, date, journal, debit, credit };
+        const row = values(dataO);
 
-        const row = Object.values(dataO);
-        const rowFormatted = this.formatRow(row);
-
-        this.setJson(journal, dataO);
-
-        this.editorOutputs.csv += `${row.join(';')}\n`;
-
-        this.editorOutputs.pdf += ''; // Not yet implemented
-
-        this.textTable.push(rowFormatted);
-        this.consoleTable.push(rowFormatted);
+        this.addData({
+            string: row.map(d => ({ value: d, format: (s, i) => i > 3 ? formattedNumber(s, { zero: '' }) : s })),
+            json: { key: journal, value: dataO }
+        });
     }
 
 
-    doEdit(option: EditOption) {
+    protected override doEdit(_option: EditExtraOptions) {
         for (const piece of this.pieces) {
             for (const mouvement of piece.mouvements)
                 this.addToEdit({ ...piece, mouvement });

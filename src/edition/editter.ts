@@ -1,19 +1,8 @@
 import { entries } from '@upradata/util';
 import { logger } from '@util';
+import { EditterLoggers, EditterOption } from './edit.types';
 
-export type EditLogger = (content: string) => Promise<any>;
 
-export class EditterFormats {
-    pdf = undefined;
-    csv = undefined;
-    text = undefined;
-    console = undefined;
-    json = undefined;
-}
-
-export type EditterLoggers = { [ K in keyof EditterFormats ]?: EditLogger[] };
-
-export type EditterOption = { [ K in keyof EditterFormats ]?: string };
 
 
 export class EditterArgs {
@@ -24,19 +13,19 @@ export class Editter {
     loggers: EditterLoggers;
 
     constructor(args: EditterArgs) {
-        this.loggers = args.loggers || { console: [ s => Promise.resolve(console.log(s)) ] };
+        this.loggers = args.loggers || { console: s => Promise.resolve(console.log(s)) };
     }
 
     edit(option: EditterOption): Promise<void[]> {
 
-        const promises: Promise<void>[] = entries(this.loggers).flatMap(([ format, loggers ]) => {
+        const promises: Promise<void>[] = entries(this.loggers).flatMap(([ format, editLogger ]) => {
             const content = option[ format ] as string;
 
-            if (!loggers)
+            if (!editLogger)
                 return undefined;
 
             if (content)
-                return loggers.map(logger => logger(content));
+                return editLogger(content);
 
             logger.info(`Edition not handle for ${format}`);
             return undefined;

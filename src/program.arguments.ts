@@ -3,8 +3,8 @@ import path from 'path';
 import fs from 'fs-extra';
 import { isDefined, assignRecursive, AssignOptions, keys } from '@upradata/util';
 import { logger } from '@util';
-import { ImporterFiles, INPUT_DATA_DEFAULTS } from './import/importer-input';
-import { EditterFormats } from './edition/editter';
+import { ImporterFiles, INPUT_DATA_DEFAULTS } from '@import';
+import { EditterFormats } from '@edition';
 
 
 

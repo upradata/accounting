@@ -122,10 +122,9 @@ export class Run {
         const promises: Promise<any>[] = [];
         const { outputDir } = this.options;
 
-        // let messageConsole = '';
 
         const write = (filename: string, data: string) => fs.writeFile(filename, data, { encoding: 'utf8' })
-            .then(() => /* messageConsole += colors.blue.bold.$ */logger.info(`${filename} generated`));
+            .then(() => logger.info(`${filename} generated`));
 
 
         const editter = (filename: string) => {
@@ -136,7 +135,7 @@ export class Run {
                     case 'console': loggers.console = [ s => Promise.resolve(console.log(s)) ]; break;
                     case 'csv': loggers.csv = [ s => write(path.join(outputDir, `${filename}.csv`), s) ]; break;
                     case 'json': loggers.json = [ s => write(path.join(outputDir, `${filename}.json`), s) ]; break;
-                    default: if (promises.length === 0) /* messageConsole += yellow */logger.error(`Logger "${type}" non implemented`);
+                    default: if (promises.length === 0) logger.error(`Logger "${type}" non implemented`);;
                 }
             }
 
