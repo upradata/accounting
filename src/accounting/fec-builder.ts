@@ -1,11 +1,10 @@
 import { writeFile as fsWriteFile } from 'fs';
 import { promisify } from 'util';
-import { numberToComma, Injector, dateToFecDate, TODAY, logger } from '@util';
 import { colors } from '@upradata/node-util';
-import { PlanComptable, Journaux } from '@metadata';
-import { Mouvement, Lettrage } from './mouvement';
+import { Journaux, PlanComptable } from '@metadata';
+import { dateToFecDate, Injector, logger, numberToComma, TODAY } from '@util';
+import { Lettrage, Mouvement } from './mouvement';
 import { Pieces } from './piece';
-
 
 
 const writeFile = promisify(fsWriteFile);
@@ -58,7 +57,7 @@ export class FecBuilder {
         const letter = lettrage.letter || '';
         const lettrageDate = lettrage.date ? dateToFecDate(date) : '';
 
-        // tslint:disable-next-line: max-line-length
+        // eslint-disable-next-line max-len
         return `${journal};${journalLibelle};${ecritureId};${ecritureDate};${compte.numero};${compteLibelle};${compteAux ? compteAux.numero : ''};${compteAuxLibelle};${pieceId};${dateToFecDate(date)};${libelle};${debit};${credit};${letter};${lettrageDate};${validationDate};;;;;;;IMPORT`.replace(/;/g, this.separator);
 
         // ;;;;;;;IMPORT comes from Memsoft Oxygene. Normally FEC does not need it
@@ -68,7 +67,7 @@ export class FecBuilder {
     generate(mouvements: Mouvement[]) {
         //  this.processLettrage(ecritures);
 
-        // tslint:disable-next-line: max-line-length
+        // eslint-disable-next-line max-len
         this.fec = 'JournalCode;JournalLib;EcritureNum;EcritureDate;CompteNum;CompteLib;CompAuxNum;CompAuxLib;pieceRef;PieceDate;EcritureLib;Debit;Credit;EcritureLet;DateLet;ValidDate;Montantdevise;Idevise;DateRglt;ModeRglt;NatOp;IdClient;IdOrigine\n'.replace(/;/g, this.separator);
 
 

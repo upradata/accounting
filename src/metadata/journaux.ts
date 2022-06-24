@@ -1,5 +1,6 @@
 import { ComptaJournal } from '@import';
 
+
 export class Journaux {
     public journaux: ComptaJournal[] = [];
 

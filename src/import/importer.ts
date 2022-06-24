@@ -5,7 +5,7 @@ import { PlanComptable, Journaux } from '@metadata';
 import { ComptaDataNames, ComptaData } from './compta-data.types';
 import { ImporterOption } from './importer-option';
 import { ImporterFile, ImporterFiles } from './importer-input';
-import { importJsonFromCsv, notComptaDataNames } from './csv-import';
+import { importJsonFromCsv, notMetadataComptaDataNames } from './csv-import';
 
 
 export class Importer {
@@ -65,13 +65,14 @@ export class Importer {
             return map(toObject(datas, 'name', 'value'), (_k, v) => v.data) as any;
         };
 
-        const { planComptable } = await getCsvDatas([ 'planComptable' ]);
         // We need to load before these datas to create the rest as the rest depends on them
+        // And Plan Comptable has to be the first one
+        const { planComptable } = await getCsvDatas([ 'planComptable' ]);
         Injector.app.get(PlanComptable).add(...planComptable);
 
         const { journaux } = await getCsvDatas([ 'journaux' ]);
         Injector.app.get(Journaux).add(...journaux);
 
-        return { planComptable, journaux, ...await getCsvDatas(notComptaDataNames) };
+        return { planComptable, journaux, ...await getCsvDatas(notMetadataComptaDataNames) };
     }
 }

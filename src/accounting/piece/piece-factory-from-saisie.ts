@@ -31,7 +31,7 @@ export class PiecesfromSaisiePieces {
                         });
 
                     } else {
-                        throw new Error(`Un saisie ne peut avoir une colonne crédit et débit en même temps: Mouvement => ${mouvement}`);
+                        throw new Error(`Un saisie ne peut avoir une colonne crédit et débit en même temps: Mouvement => ${JSON.stringify(mouvement)}`);
                     }
 
                 } else {

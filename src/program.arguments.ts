@@ -76,7 +76,7 @@ export class ProgramArguments implements InputArguments<string> {
     editBalance: boolean = undefined;
     editJournal: boolean = undefined;
     editPieces: boolean = undefined;
-    dataDirectory: string = undefined;
+    dataDirectory: string = '.';
     inputOds = INPUT_DATA_DEFAULTS.odsFilename;
     inputCsv?: ImporterFiles<{ filename: string; }> = undefined;
 

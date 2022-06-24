@@ -1,5 +1,5 @@
-import fs from 'fs-extra';
 import path from 'path';
+import fs from 'fs-extra';
 import { odsToXlsx, xlsxToCsv, createTmpDir } from '@upradata/node-util';
 import { PartialRecursive, assignRecursive, filter, makeObject, keys, RequiredProps, entries } from '@upradata/util';
 import { logger } from '@util';
@@ -13,7 +13,7 @@ export class ImporterOption<T = string> {
 
 
     constructor(private option: PartialRecursive<ImporterOptionInput<ImporterFile>>) {
-        this.directory = option.directory;
+        this.directory = option.directory || '.';
         this.odsFilename = option.odsFilename;
     }
 
@@ -84,12 +84,11 @@ export class ImporterOption<T = string> {
 
         const xlsxFile = odsFilename ? await odsToXlsx(this.dir(this.odsFilename), { outputDir: tmpDir }) : undefined;
 
-        await Promise.all(entries(files).map(([ key, file ]) => {
+        await Promise.all(entries(files).map(async ([ key, file ]) => {
             const { sheetName, filename } = file;
 
             if (sheetName) {
-
-                return xlsxToCsv(xlsxFile, { sheetName, outputDir: tmpDir })
+                await xlsxToCsv(xlsxFile, { sheetName, outputDir: tmpDir })
                     .then(csvOutput => this.fileLoaded(key, csvOutput))
                     .catch(e => {
                         logger.error(`Could not load sheet ${sheetName} in ${this.dir(this.odsFilename)} due to following error:`);
@@ -97,9 +96,9 @@ export class ImporterOption<T = string> {
                         logger.info(`Try load file ${this.dir(filename)}`);
                     });
 
-            } else
+            } else {
                 this.fileLoaded(key, this.dir(filename));
-
+            }
         }));
 
         const notLoaded = this.requiredFilesNotLoaded();

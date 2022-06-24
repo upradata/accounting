@@ -1,8 +1,8 @@
 import { map } from '@upradata/util';
 import { ComptaDepenseType } from '@import';
+import { Compte, CompteParentAux } from '../compte';
 import { Piece } from './piece';
 import { PieceFactory } from './piece-factory';
-import { Compte, CompteParentAux } from '../compte';
 
 
 export interface Depense {
@@ -35,7 +35,7 @@ export const generatorFromType = (generators: Generators) => (type: ComptaDepens
         case 'loyer': return generators.loyer;
         case 'greffe': return generators.greffe;
         case 'compte-courant': return generators.compteCourant;
-        case 'vente:website': return generators.venteWebsite;
+        case 'vente-website': return generators.venteWebsite;
         default: throw new Error(`Le mouvement dépense de type "${type}" n'est pas implémenté`);
     }
 };

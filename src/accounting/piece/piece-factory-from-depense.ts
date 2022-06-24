@@ -1,11 +1,15 @@
-import { values } from '@upradata/util';
-import { mapBy, logger } from '@util';
 import { ComptaDepense, ComptaDepensePiece } from '@import';
+import { values } from '@upradata/util';
+import { logger, mapBy } from '@util';
 import { Piece } from './piece';
 import { getPiecesFromPieceRef } from './piece-factory-from-ref';
 import { getPieceFromString } from './piece-factory-from-string';
-import { PREDIFINED_GENERATORS, PREDIFINED_LIBELLE_GENERATORS, generateFromLibelle, generatorFromType } from './pieces-generators';
-
+import {
+    generateFromLibelle,
+    generatorFromType,
+    PREDIFINED_GENERATORS,
+    PREDIFINED_LIBELLE_GENERATORS
+} from './pieces-generators';
 
 
 export class PiecesFromDepense {

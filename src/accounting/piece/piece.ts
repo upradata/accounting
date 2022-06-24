@@ -71,13 +71,11 @@ export class Piece {
     }
 
     private get credits() {
-        // tslint:disable-next-line: no-parameter-reassignment
-        return this.mouvements.filter(e => e.type === 'credit').reduce((sum, e) => sum += e.montant, 0);
+        return this.mouvements.filter(e => e.type === 'credit').reduce((sum, e) => sum + e.montant, 0);
     }
 
     private get debits() {
-        // tslint:disable-next-line: no-parameter-reassignment
-        return this.mouvements.filter(e => e.type === 'debit').reduce((sum, e) => sum += e.montant, 0);
+        return this.mouvements.filter(e => e.type === 'debit').reduce((sum, e) => sum + e.montant, 0);
     }
 
     get isBalanced() {

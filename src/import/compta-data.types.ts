@@ -21,9 +21,10 @@ export type ComptaDepensePieceCSV = ToCsvTypes<ComptaDepensePiece> & { compteLib
 
 class ComptaDepenseTypeHelper {
     'frais-generaux';
-    'loyer'; 'compte-courant';
+    'loyer';
+    'compte-courant';
     'greffe';
-    'vente:website';
+    'vente-website';
 }
 
 
