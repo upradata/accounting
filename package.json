@@ -1,6 +1,6 @@
 {
-    "name": "upradata-fiscalite",
-    "version": "0.0.1",
+    "name": "@upradata/accounting",
+    "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
     "scripts": {
