@@ -1,6 +1,6 @@
-import { SortedArray, mapBy } from '@util';
+import { EditExtraOptions, Editter } from '@edition';
+import { mapBy, SortedArray } from '@util';
 import { Piece } from './piece';
-import { Editter, EditExtraOptions } from '@edition';
 import { PiecesEdit } from './pieces.edit';
 
 
@@ -27,7 +27,7 @@ export class Pieces {
         return mapBy(this.pieces.array, 'journal');
     }
 
-    async edit(editter: Editter, option?: EditExtraOptions): Promise<void[]> {
+    async edit(editter: Editter, option?: EditExtraOptions): Promise<void> {
         return new PiecesEdit(this.pieces).edit(editter, option);
     }
 }

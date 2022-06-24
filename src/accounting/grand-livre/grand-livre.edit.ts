@@ -1,7 +1,6 @@
-import { TableColumnConfig } from '@upradata/node-util';
-import { composeLeft, isUndefined, removeUndefined } from '@upradata/util';
-import { Injector, formattedNumber, objectToArray } from '@util';
-import { Edit, EditExtraOptions, coloryfyDiff } from '@edition';
+import { pipeline, isUndefined, removeUndefined } from '@upradata/util';
+import { Injector, objectToArray } from '@util';
+import { Edit, EditExtraOptions, coloryfyDiff, EditDataStyledCell, updateEditDataStyledCell } from '@edition';
 import { Mouvement } from '../mouvement';
 import { Pieces } from '../piece';
 import { BalanceTotalData } from '../balance';
@@ -29,9 +28,10 @@ export class GrandLivreEdit extends Edit {
     }
 
 
-    protected override doInit() {
+    protected override doInit({ short }: EditExtraOptions) {
+        this.isShort = short;
         this.addHeaders(this.headers());
-        this.setTableConfig((i, length) => ({ alignment: i >= length - 3 ? 'right' : 'left' }));
+        this.setTableFormat((i, length) => ({ alignment: i >= length - 3 ? 'right' : 'left', ...(i === 2 ? { width: 50 } : {}) }));
     }
 
     private headers() {
@@ -69,34 +69,39 @@ export class GrandLivreEdit extends Edit {
                 credit: balanceTotal.credit,
                 debit: balanceTotal.debit,
                 solde: balanceTotal.diff,
-                date: undefined,
-                period: undefined,
-                pieceId: undefined
+                date: '',
+                period: '',
+                pieceId: ''
             };
         };
 
 
-        const dataO = removeUndefined(this.isShort ? getData() : { ...getData(), date: undefined, period: undefined, pieceId: undefined });
+        const dataO = removeUndefined(!this.isShort ? getData() : { ...getData(), date: undefined, period: undefined, pieceId: undefined });
 
         const row = objectToArray(dataO, [ 'compte', 'date', 'pieceId', 'period', 'debit', 'credit', 'solde' ]);
 
 
-        const format = (data: string | number, i: number) => {
+        const format = (i: number) => (data: EditDataStyledCell): EditDataStyledCell => {
             const middleIndex = this.isShort ? 1 : 4;
 
             if (i <= middleIndex || i > middleIndex + 1)
-                return `${data}`;
+                return updateEditDataStyledCell(data, { value: `${data.value}`, style: { type: 'text' } });
 
-            formattedNumber(data, { zero: '' });
+            return updateEditDataStyledCell(data, { style: { type: 'number' } });
         };
 
-        const colorify = (data: string | number, i: number, length: number) => {
-            return i === length - 1 ? coloryfyDiff(data as number) : data;
+        const colorify = (data: EditDataStyledCell): EditDataStyledCell => {
+            if (data.style?.type !== 'number')
+                return data;
+
+            const { value, color } = coloryfyDiff(data.value as number, { zero: '' });
+            return updateEditDataStyledCell(data, { value, style: { ...data.style, color } });
         };
 
 
         this.addData({
-            string: row.map(d => ({ value: d, format: s => composeLeft([ format, colorify ], s) })),
+            string: row,
+            format: (data, i) => pipeline({ value: data }).pipe(format(i)).pipe(colorify).value,
             json: { key: compte, value: dataO }
         });
     }

@@ -1,12 +1,18 @@
-import { styles } from '@upradata/node-util';
-import { isDefined, pipeline, removeUndefined, set } from '@upradata/util';
-import { formattedNumber, Injector, objectToArray } from '@util';
-import { Edit, EditExtraOptions, coloryfyDiff, EditDataCellStyle, EditDataCellFormat, EditDataStyledCell } from '@edition';
-import { JournauxBalanceByMonth, MonthYear } from './journaux-balance-by-month';
-import { Mouvement } from '../mouvement';
+import {
+    coloryfyDiff,
+    Edit,
+    EditDataCellStyle,
+    EditDataStyledCell,
+    EditExtraOptions,
+    updateEditDataStyledCell
+} from '@edition';
+import { isDefined, pipeline, removeUndefined } from '@upradata/util';
+import { Injector, objectToArray } from '@util';
 import { BalanceTotalData } from '../balance';
-import { JournauxBalance } from './journaux-balance';
+import { Mouvement } from '../mouvement';
 import { Pieces } from '../piece';
+import { JournauxBalance } from './journaux-balance';
+import { JournauxBalanceByMonth, MonthYear } from './journaux-balance-by-month';
 
 
 interface AddToEditOption {
@@ -37,24 +43,25 @@ export class JournalCentraliseurEdit extends Edit {
         this.pieces = Injector.app.get(Pieces);
     }
 
-    protected override doInit() {
+    protected override doInit({ short }: EditExtraOptions) {
+        this.isShort = short;
         this.addHeaders(this.headers());
-        this.setTableConfig(this.tableConfig);
+
+        const format = (i: number, length: number): EditDataCellStyle => {
+
+            const nbRight = this.isByJournal || this.isShort ? 3 : 5;
+
+            if (i === 0 && this.isByJournal || i === 1)
+                return { alignment: 'center' };
+
+            if (i >= length - nbRight)
+                return { alignment: 'right' };
+
+            return { alignment: 'left' };
+        };
+
+        this.setTableFormat(format);
     }
-
-    private tableConfig(i: number, length: number): EditDataCellStyle {
-
-        const nbRight = this.isByJournal || this.isShort ? 3 : 5;
-
-        if (i === 0 && this.isByJournal || i === 1)
-            return { alignment: 'center' };
-
-        if (i >= length - nbRight)
-            return { alignment: 'right' };
-
-        return { alignment: 'left' };
-    }
-
 
     private headers() {
         if (this.isByJournal)
@@ -110,7 +117,7 @@ export class JournalCentraliseurEdit extends Edit {
                 return { credit, debit, date };
             }
 
-            return { credit: undefined, debit: undefined, date: undefined };
+            return { credit: '', debit: '', date: '' };
         };
 
         const { debit: totalDebit, credit: totalCredit, diff: solde } = total;
@@ -137,21 +144,23 @@ export class JournalCentraliseurEdit extends Edit {
 
         const format = (i: number) => (data: EditDataStyledCell): EditDataStyledCell => {
             const nbRight = this.isByJournal ? 1 : this.isShort ? 2 : 3;
-            set(data, 'a', 1);
-            return { ...data, style: { ...data.style, type: nbRight && i < row.length - 1 ? 'number' : 'text' } };
-            // formattedNumber(data, { zero: '' }) : data;
+            return updateEditDataStyledCell(data, { style: { type: i >= nbRight && i < row.length - 1 ? 'number' : 'text' } });
         };
 
 
-        const colorify = (i: number, length: number) => (data: string | number) => {
-            return i === length - 1 ? coloryfyDiff(data as number) : data;
+        const colorify = (data: EditDataStyledCell) => {
+            if (data.style?.type !== 'number')
+                return data;
+
+            const { value, color } = coloryfyDiff(data.value as number, { zero: '' });
+            return updateEditDataStyledCell(data, { value, style: { ...data.style, color } });
         };
 
 
         this.addData({
             string: row,
             json: { key: journal, value: dataO },
-            cellFormat: (s, i, length) => pipeline({ data: s }).pipe(format(i)).pipe(colorify(i, length)).value
+            format: (data, i) => pipeline({ value: data }).pipe(format(i)).pipe(colorify).value
         });
     }
 

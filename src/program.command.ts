@@ -1,24 +1,22 @@
 #!/usr/bin/env node
 
-import { registerPaths } from '@upradata/node-util';
+import('@upradata/node-util').then(async ({ registerPaths }) => {
+    try {
+        // load and register tsconfig.json paths (mapping)
+        registerPaths({
+            fromDirectory: __dirname,
+            transform: (path, tsconfig) => path.replace(/^src\//, `${tsconfig.compilerOptions.outDir}/`)
+        });
 
-try {
-    // load and register tsconfig.json paths (mapping)
-    registerPaths({
-        fromDirectory: __dirname,
-        transform: (path, tsconfig) => path.replace(/^src\//, `${tsconfig.compilerOptions.outDir}/`)
-    });
-
-} catch (e) {
-    console.error(`Could not load tsconfig.json paths`);
-    console.error(e);
-    process.exit(1);
-}
+    } catch (e) {
+        console.error(`Could not load tsconfig.json paths`);
+        console.error(e);
+        process.exit(1);
+    }
 
 
-import { parseArgs } from './program.arguments';
-import { Run } from './program.run';
+    const { parseArgs } = await import('./program.arguments');
+    const { Run } = await import('./program.run');
 
-(async function run() {
-    new Run(await parseArgs()).run();
-})();
+    return new Run(await parseArgs()).run();
+});

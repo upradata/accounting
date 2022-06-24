@@ -1,9 +1,9 @@
-import { arrayFromIterable, getRecursive, isDefined, RecordOf, toArray } from '@upradata/util';
+import { arrayFromIterable, getRecursive, isDefined, RecordOf } from '@upradata/util';
 
 
 export class ArrayToObjOfArrayByIdOption<T> {
     key?: (value: T) => string = undefined;
-    filter?: (value: T) => boolean = v => true;
+    filter?: (value: T) => boolean = _v => true;
     transform?: (value: T) => T = v => v;
 }
 
@@ -14,7 +14,7 @@ export const mapBy = function <T extends {}>(array: Iterable<T>, idKey: IdKey<T>
     const { key, filter, transform } = Object.assign(new ArrayToObjOfArrayByIdOption<T>(), options);
 
     const objById = arrayFromIterable(array).reduce((o, value) => {
-        const kValue = getRecursive(value, typeof idKey === 'function' ? idKey(value) : idKey) as string | symbol;
+        const kValue = getRecursive(value as {}, typeof idKey === 'function' ? idKey(value) : idKey) as string | symbol;
         const k = key ? key(value) : kValue as string;
 
         if (filter(value))
@@ -32,13 +32,10 @@ export const commaToNumber = (s: number | string) => s === '' ? undefined : pars
 
 
 
-export function objectToArray<T>(obj: T, props: (keyof T)[], options?: { onlyDefinedValues?: boolean; }) {
-    const opts = Object.assign({ onlyDefinedValues: true }, options);
+export function objectToArray<T>(obj: T, props: (keyof T)[], options: { onlyDefinedValues?: boolean; } = {}) {
+    const { onlyDefinedValues = true } = options;
 
-    return toArray(obj, {
-        filter: k => props.some(p => p === k) && (!opts.onlyDefinedValues || isDefined(obj[ k ])),
-        onlyValues: true
-    });
+    return props.filter(prop => props.includes(prop) && (!onlyDefinedValues || isDefined(obj[ prop ]))).map(prop => obj[ prop ]);
 }
 
 export function isIterable<T>(obj: any): obj is Iterable<T> {

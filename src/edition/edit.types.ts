@@ -1,51 +1,77 @@
-import { TableConfig } from '@upradata/node-util';
-import { Key, PartialRecursive } from '@upradata/util';
+// import { TableConfig } from '@upradata/node-util';
+import { Key, PartialRecursive, assignRecursive, TT$ } from '@upradata/util';
 
 export type EditDataCell = string | number;
 
 export type EditDataRow = EditDataCell[];
 export type EditDataJson = Record<Key, any[]>;
 
+export type HorizontalAlignment = 'left' | 'right' | 'center';
+export type VerticalAlignment = 'top' | 'bottom' | 'center';
+export type Span = {
+    alignment?: { vertical?: VerticalAlignment; horizontal?: HorizontalAlignment; };
+    row: number;
+    col: number;
+    rowSpan?: number;
+    colSpan?: number;
+};
+
+
+export interface EditTableStyle {
+    alignment?: HorizontalAlignment;
+    width?: number;
+    bgColor?: string;
+    color?: string;
+    span?: Span;
+}
 
 export interface EditDataCellStyle {
-    alignment?: 'left' | 'right' | 'center';
+    alignment?: HorizontalAlignment;
     style?: 'normal' | 'accent' | 'warning';
     type?: 'text' | 'number';
-    span?: number;
+    bgColor?: string;
+    color?: string;
+    span?: Span;
 }
 
 
+
 export type EditDataStyledCell = { value: EditDataCell; style?: EditDataCellStyle; };
-export type EditDataCellFormat = (data: EditDataCell, index?: number, length?: number) => EditDataStyledCell;
+export type EditDataCellFormat = (data: EditDataCell, columnIndex: number, nbColumns: number) => EditDataStyledCell;
+
+export const updateEditDataStyledCell = (oldV: EditDataStyledCell, newV: PartialRecursive<EditDataStyledCell>): EditDataStyledCell => assignRecursive(oldV, newV);
 
 
 export interface AddEditData {
     string: EditDataRow;
-    json: { key: Key, value: any; };
-    cellFormat?: EditDataCellFormat;
+    json: { key: Key; value: any; };
+    format?: EditDataCellFormat;
 }
 
 
 export type EditDataTableRow = string[];
+
 export type EditData = {
-    string: EditDataRow[];
+    rows: { row: EditDataCell[]; format: EditDataCellFormat; }[];
     json: EditDataJson;
     headers: EditDataTableRow[];
-    style: (i: number, length: number) => EditDataCellStyle;
+    tableFormat?: (columnIndex: number, nbColumns: number) => EditTableStyle;
 };
 
 
-export interface EditterOption {
+export type EditterOption = Omit<EditData, 'tableFormat'> & {
     title: string;
-    tableRows: EditDataTableRow[];
-    json: string;
-    data: EditData;
-    tableConfig: PartialRecursive<TableConfig>;
-}
+    // headers: EditDataTableRow[];
+    // tableRows: { row: EditDataCell[]; format: EditDataCellFormat; }[];
+    // json: string;
+    // data: EditData;
+    tableFormat: { columns: EditTableStyle[]; };
+    // PartialRecursive<TableConfig>;
+};
 
 
 
-export type EditLogger = (option: EditterOption) => Promise<void>;
+export type EditLogger = (option: EditterOption) => TT$<void>;
 
 export class EditterFormats {
     pdf = 'pdf';

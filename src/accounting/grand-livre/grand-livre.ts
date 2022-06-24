@@ -34,7 +34,7 @@ export class GrandLivre {
         // arrayToObjOfArrayById(this.mouvements.array, 'compte.numero');
     }
 
-    edit(editter: Editter, option?: EditExtraOptions): Promise<void[]> {
+    edit(editter: Editter, option?: EditExtraOptions): Promise<void> {
         return new GrandLivreEdit(this.comptesBalance).edit(editter, option);
     }
 

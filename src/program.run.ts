@@ -1,12 +1,15 @@
-import fs from 'fs-extra';
 import path from 'path';
+import fs from 'fs-extra';
 import Ajv from 'ajv';
-import { entries, ObjectOf } from '@upradata/util';
+import { entries, filter, ObjectOf } from '@upradata/util';
 import { logger, Injector } from '@util';
 import { ComptabiliteMetadata, ComptabiliteMetadataOption, PlanComptable, Journaux, } from '@metadata';
 import { GrandLivre, BalanceDesComptes, JournalCentraliseur, Pieces, AccountingInterface } from '@accounting';
 import { Editter, EditterLoggers } from '@edition';
 import { ProgramArguments } from './program.arguments';
+import { consoleEditter } from './edition/editters/editter.console';
+import { csvEditter } from './edition/editters/editter.csv';
+import { jsonEditter } from './edition/editters/editter.json';
 
 
 export class Run {
@@ -82,7 +85,7 @@ export class Run {
         this.accounting = Injector.app.get(Accounting);
     }
 
-    async run() {
+    async run(): Promise<void> {
 
         try {
             await this.init();
@@ -105,7 +108,7 @@ export class Run {
             if (edit)
                 promises.push(this.edit());
 
-            return Promise.all(promises);
+            await Promise.all(promises);
 
         } catch (e) {
             logger.error(e.message);
@@ -115,31 +118,28 @@ export class Run {
 
     generateFec(): Promise<any> {
         const { fec, fecOnlyNonImported, outputDir } = this.options;
-        return this.accounting.generateFec({ separator: ';', onlyNonImported: fecOnlyNonImported, outputFilename: typeof fec === 'string' ? fec : undefined, outputDir });
+        return this.accounting.generateFec({
+            separator: ';',
+            onlyNonImported: fecOnlyNonImported,
+            outputFilename: typeof fec === 'string' ? fec : undefined,
+            outputDir
+        });
     }
 
     edit(): Promise<any> {
         const promises: Promise<any>[] = [];
-        const { outputDir } = this.options;
+        const { outputDir, jsonIndent } = this.options;
 
+        const editter = (what: string) => {
+            const loggers: EditterLoggers = {
+                console: consoleEditter,
+                csv: csvEditter({ what, outputDir }),
+                json: jsonEditter({ what, outputDir, indent: jsonIndent }),
+                html: undefined,
+                pdf: undefined
+            };
 
-        const write = (filename: string, data: string) => fs.writeFile(filename, data, { encoding: 'utf8' })
-            .then(() => logger.info(`${filename} generated`));
-
-
-        const editter = (filename: string) => {
-            const loggers: EditterLoggers = {};
-
-            for (const type of this.options.editType) {
-                switch (type) {
-                    case 'console': loggers.console = [ s => Promise.resolve(console.log(s)) ]; break;
-                    case 'csv': loggers.csv = [ s => write(path.join(outputDir, `${filename}.csv`), s) ]; break;
-                    case 'json': loggers.json = [ s => write(path.join(outputDir, `${filename}.json`), s) ]; break;
-                    default: if (promises.length === 0) logger.error(`Logger "${type}" non implemented`);;
-                }
-            }
-
-            return new Editter({ loggers });
+            return new Editter({ loggers: filter(loggers, k => this.options.editters.includes(k)) });
         };
 
         const option = { short: this.options.editShort };

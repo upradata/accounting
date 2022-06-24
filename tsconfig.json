@@ -18,6 +18,7 @@
         "esModuleInterop": true,
         "incremental": true,
         "baseUrl": ".",
+        "skipLibCheck": true,
         "paths": {
             "@util": [
                 "src/util"

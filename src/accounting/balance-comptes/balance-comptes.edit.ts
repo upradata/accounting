@@ -1,10 +1,9 @@
-import { TableColumnConfig } from '@upradata/node-util';
-import { composeLeft } from '@upradata/util';
-import { objectToArray, formattedNumber } from '@util';
-import { Edit, EditExtraOptions, coloryfyDiff } from '@edition';
-import { ComptesBalance } from './comptes-balance';
-import { BalanceComptesCalculator, Split } from './balance-compte-calculator.edit';
+import { pipeline } from '@upradata/util';
+import { coloryfyDiff, Edit, EditDataStyledCell, EditExtraOptions, updateEditDataStyledCell } from '@edition';
+import { objectToArray } from '@util';
 import { BalanceMapData, BalanceTotalData } from '../balance';
+import { BalanceComptesCalculator, Split } from './balance-compte-calculator.edit';
+import { ComptesBalance } from './comptes-balance';
 
 
 export class BalanceDesComptesEdit extends Edit {
@@ -17,7 +16,7 @@ export class BalanceDesComptesEdit extends Edit {
 
     protected override doInit() {
         this.addHeaders(this.headers());
-        this.setTableConfig(i => ({ alignment: i === 0 ? 'left' : 'right' }));
+        this.setTableFormat(i => ({ alignment: i === 0 ? 'left' : 'right' }));
     }
 
 
@@ -61,20 +60,26 @@ export class BalanceDesComptesEdit extends Edit {
 
         const row = this.buildRow(balanceSplit);
 
-        const format = (data: string | number, i: number, length: number) => {
+        const format = (i: number, length: number) => (data: EditDataStyledCell): EditDataStyledCell => {
             if (i === 0 || i === length - 1)
-                return `${data}`;
+                return updateEditDataStyledCell(data, { value: `${data.value}`, style: { type: 'text' } });
 
-            formattedNumber(data, { zero: '' });
+
+            return updateEditDataStyledCell(data, { style: { type: 'number' } });
         };
 
-        const colorify = (data: string | number, i: number, length: number) => {
-            return i === length - 1 ? coloryfyDiff(data as number) : data;
+        const colorify = (data: EditDataStyledCell): EditDataStyledCell => {
+            if (data.style?.type !== 'number')
+                return data;
+
+            const { value, color } = coloryfyDiff(data.value as number, { zero: '' });
+            return updateEditDataStyledCell(data, { value, style: { ...data.style, color } });
         };
 
 
         this.addData({
-            string: row.map(d => ({ value: d, format: s => composeLeft([ format, colorify ], s) })),
+            string: row,
+            format: (data, i, length) => pipeline({ value: data }).pipe(format(i, length)).pipe(colorify).value,
             json: { key: balanceSplit.compte, value: balanceSplit }
         });
     }

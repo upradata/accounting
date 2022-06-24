@@ -109,7 +109,7 @@ export class Styler<LevelNames extends Key> implements Format {
             .map(t => ({ ...t, info, level }));
 
 
-        transforms.forEach(t => info[ t.infoProp ] = this.stylize(t));
+        transforms.forEach(t => { info[ t.infoProp ] = this.stylize(t); });
         return info;
     }
 }

@@ -123,8 +123,9 @@ export const importJsonFromCsv = async <N extends ComptaDataNames>(file: string,
     return csvToJson(file, {
         headers,
         delimiter,
-        includeColumns
+        includeColumns,
+        skipEmptyRows: true
     }).catch(e => {
-        throw new Error(`An error occured while converting csv file ${file}: ${e.message}`);
+        throw new Error(`An error occured while converting the file ${file} to json: ${e.message}`);
     }) as any;
 };

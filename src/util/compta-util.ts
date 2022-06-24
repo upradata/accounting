@@ -35,12 +35,12 @@ export const TODAY = {
 export const numberFixedDecimal = (n: number, nbDecimal: number) => parseFloat(n.toFixed(nbDecimal));
 
 
-export const formattedNumber = (num: number | string, options?: { zero?: string; }) => {
+export const formattedNumber = (num: number | string, options: { zero?: string; } = {}) => {
     const { zero = `0${' '.repeat(3)}` /* 0.xx */ } = options;
 
     const n = +num;
 
-    if (isNaN(n))
+    if (Number.isNaN(n))
         return '';
 
     if (n === 0)

@@ -1,17 +1,14 @@
-import { ObjectOf, values } from '@upradata/util';
-import { TableColumnConfig } from '@upradata/node-util';
+import { values } from '@upradata/util';
 import { Edit, EditDataCellStyle, EditExtraOptions } from '@edition';
-import { SortedArray, formattedNumber } from '@util';
+import { formattedNumber, SortedArray } from '@util';
 import { Mouvement } from '../mouvement';
 import { Piece, PieceOption } from './piece';
-import { ExtraOption } from '../journal-centraliseur';
 
 
 type AddToEditOption = PieceOption & { id: string; mouvement: Mouvement; };
 
 
 export class PiecesEdit extends Edit {
-    private currentPieceId: string = '';
 
     constructor(private pieces: SortedArray<Piece>) {
         super({ title: 'Pièces' });
@@ -20,26 +17,23 @@ export class PiecesEdit extends Edit {
 
     protected override doInit() {
         this.addHeaders([ 'Id', 'Libelle', 'Date', 'Journal', 'Débit', 'Crédit' ]);
-        this.setTableConfig(this.tableConfig);
-    }
 
+        const format = (i: number, length: number): EditDataCellStyle => {
 
-    private tableConfig(i: number, length: number): EditDataCellStyle {
+            if (i === 0 || i === 3)
+                return { alignment: 'center' };
 
-        if (i === 0 || i === 3)
-            return { alignment: 'center' };
+            if (i >= length - 2)
+                return { alignment: 'right' };
 
-        if (i >= length - 2)
-            return { alignment: 'right' };
+            return { alignment: 'left' };
+        };
 
-        return { alignment: 'left' };
+        this.setTableFormat(format);
     }
 
 
     private addToEdit({ id, libelle, date: d, journal, mouvement }: AddToEditOption) {
-
-        this.currentPieceId = id;
-
         const { type, montant } = mouvement;
 
         const debit = type === 'debit' ? montant : '';
@@ -52,7 +46,8 @@ export class PiecesEdit extends Edit {
         const row = values(dataO);
 
         this.addData({
-            string: row.map(d => ({ value: d, format: (s, i) => i > 3 ? formattedNumber(s, { zero: '' }) : s })),
+            string: row,
+            format: (data, i) => ({ value: i > 3 ? formattedNumber(data, { zero: '' }) : data, style: { type: i > 3 ? 'number' : 'text' } }),
             json: { key: journal, value: dataO }
         });
     }

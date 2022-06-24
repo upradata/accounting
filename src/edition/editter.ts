@@ -1,5 +1,5 @@
 import { entries } from '@upradata/util';
-import { logger } from '@util';
+// import { logger } from '@util';
 import { EditterLoggers, EditterOption } from './edit.types';
 
 
@@ -16,24 +16,20 @@ export class Editter {
         this.loggers = args.loggers || { console: s => Promise.resolve(console.log(s)) };
     }
 
-    edit(option: EditterOption): Promise<void[]> {
+    async edit(option: EditterOption): Promise<void> {
 
-        const promises: Promise<void>[] = entries(this.loggers).flatMap(([ format, editLogger ]) => {
-            const content = option[ format ] as string;
+        await Promise.all(entries(this.loggers).map(([ _format, editLogger ]) => {
+            // const content = option[ format ];
 
             if (!editLogger)
                 return undefined;
 
-            if (content)
-                return editLogger(content);
+            return editLogger(option);
 
-            logger.info(`Edition not handle for ${format}`);
-            return undefined;
+            // logger.info(`Edition not handle for ${format}`);
+            // return undefined;
 
-        }).filter(v => !!v);
-
-
-        return Promise.all(promises);
+        })); // .filter(v => !!v);
     }
 
 }

@@ -21,7 +21,7 @@ export class BalanceDesComptes {
         this.comptesBalance.add(mouvements);
     }
 
-    edit(editter: Editter, option?: EditExtraOptions): Promise<void[]> {
+    edit(editter: Editter, option?: EditExtraOptions): Promise<void> {
         return new BalanceDesComptesEdit(this.comptesBalance).edit(editter, option);
     }
 

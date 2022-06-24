@@ -30,7 +30,7 @@ export class JournalCentraliseur {
         this.balanceByJournal.add(mouvements);
     }
 
-    async edit(editter: Editter, option?: EditExtraOptions & ExtraOption): Promise<void[]> {
+    async edit(editter: Editter, option?: EditExtraOptions & ExtraOption): Promise<void> {
         return new JournalCentraliseurEdit(this.balanceByJournal).edit(editter, option);
     }
 }
