@@ -1,13 +1,11 @@
-import { writeFile as fsWriteFile } from 'fs';
-import { promisify } from 'util';
+import fs from 'fs-extra';
 import { colors } from '@upradata/node-util';
 import { Journaux, PlanComptable } from '@metadata';
 import { dateToFecDate, Injector, logger, numberToComma, TODAY } from '@util';
 import { Lettrage, Mouvement } from './mouvement';
 import { Pieces } from './piece';
+import path from 'path';
 
-
-const writeFile = promisify(fsWriteFile);
 
 export class FecBuilderOption {
     separator?: string = ';';
@@ -87,12 +85,15 @@ export class FecBuilder {
         return this.fec;
     }
 
-    writeFile(filename: string) {
-        return writeFile(filename, this.fec, { encoding: 'utf8' })
-            .then(() => { logger.info(`FEC file generated: ${filename}`, { style: colors.bold.transform }); })
-            .catch(e => {
-                logger.error(`Erro while writing FEC file in ${filename}`);
-                logger.error(e);
-            });
+    async writeFile(filePath: string) {
+        const { name: stem, ext, dir } = path.parse(filePath);
+
+        await Promise.all([
+            { filePath: path.join(dir, `${stem}.unix${ext}`), content: this.fec },
+            { filePath: path.join(dir, `${stem}.windows${ext}`), content: this.fec.replace(/\n/gm, '\r\n') }
+        ].map(async ({ filePath, content }) => {
+            await fs.writeFile(filePath, content, { encoding: 'utf8' });
+            logger.info(`FEC file generated: ${filePath}`, { style: colors.bold.transform });
+        }));
     }
 }

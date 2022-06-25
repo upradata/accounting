@@ -52,3 +52,8 @@ export const formattedNumber = (num: number | string, options: { zero?: string; 
         maximumFractionDigits: 2
     }).format(n);
 };
+
+
+export const numberWithLeadingZeros = (n: number | string, size: number) => {
+    return `${n}`.padStart(size, '0');
+};

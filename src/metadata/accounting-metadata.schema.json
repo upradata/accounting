@@ -1,41 +1,116 @@
 {
+    "definitions": {},
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "http://upradata.com/schemas/accounting-metadata.json",
-    "definitions": {
-        "AccountingMetadata": {
+    "title": "Accounting Metadata",
+    "type": "object",
+    "required": [
+        "companyName",
+        "siren",
+        "siret",
+        "activityId",
+        "address",
+        "exercise"
+    ],
+    "properties": {
+        "companyName": {
+            "$id": "#root/companyName",
+            "title": "Companyname",
+            "type": "string",
+            "examples": [
+                "Upra-Data"
+            ],
+            "pattern": "^.*$"
+        },
+        "siren": {
+            "$id": "#root/siren",
+            "title": "Siren",
+            "type": "integer",
+            "examples": [
+                801265372
+            ]
+        },
+        "siret": {
+            "$id": "#root/siret",
+            "title": "Siret",
+            "type": "integer",
+            "examples": [
+                80126537200012
+            ]
+        },
+        "activityId": {
+            "$id": "#root/activityId",
+            "title": "Activityid",
+            "type": "string",
+            "default": "",
+            "examples": [
+                "6201Z"
+            ],
+            "pattern": "^.*$"
+        },
+        "address": {
+            "$id": "#root/address",
+            "title": "Address",
+            "type": "string",
+            "examples": [
+                "75, rue de Lourmel, 75015 Paris"
+            ],
+            "pattern": "^.*$"
+        },
+        "exercise": {
+            "$id": "#root/exercise",
+            "title": "Exercise",
             "type": "object",
+            "required": [
+                "period",
+                "start"
+            ],
             "properties": {
-                "exercisePeriod": {
+                "period": {
+                    "$id": "#root/exercise/period",
+                    "title": "Period",
                     "type": "integer",
                     "minimum": 1,
-                    "maximum": 18
+                    "maximum": 18,
+                    "examples": [
+                        12
+                    ],
+                    "default": 12
                 },
-                "siren": {
-                    "type": "number"
-                },
-                "siret": {
-                    "type": "number"
-                },
-                "companyName": {
-                    "type": "string"
-                },
-                "activityId": {
-                    "type": "string"
-                },
-                "address": {
-                    "type": "string"
+                "start": {
+                    "$id": "#root/exercise/start",
+                    "title": "Start",
+                    "type": "object",
+                    "required": [
+                        "month",
+                        "day"
+                    ],
+                    "properties": {
+                        "month": {
+                            "$id": "#root/exercise/start/month",
+                            "title": "Month",
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 12,
+                            "examples": [
+                                1
+                            ],
+                            "default": 1
+                        },
+                        "day": {
+                            "$id": "#root/exercise/start/day",
+                            "title": "Day",
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 31,
+                            "examples": [
+                                1
+                            ],
+                            "default": 1
+                        }
+                    }
                 }
-            },
-            "required": [
-                "exercisePeriod",
-                "siren",
-                "siret",
-                "companyName",
-                "activityId",
-                "address"
-            ],
-            "additionalProperties": false
+            }
         }
-    },
-    "$ref": "#/definitions/AccountingMetadata"
+    }
 }

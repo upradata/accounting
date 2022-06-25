@@ -3,14 +3,14 @@ import fs from 'fs-extra';
 import Ajv from 'ajv';
 import { entries, filter, ObjectOf } from '@upradata/util';
 import { logger, Injector } from '@util';
-import { ComptabiliteMetadata, ComptabiliteMetadataOption, PlanComptable, Journaux, } from '@metadata';
+import { ComptabiliteMetadata, PlanComptable, Journaux, MetadataJson, ExercisePeriodOption, } from '@metadata';
 import { GrandLivre, BalanceDesComptes, JournalCentraliseur, Pieces, AccountingInterface } from '@accounting';
 import { Editter, EditterLoggers } from '@edition';
 import { ProgramArguments } from './program.arguments';
 import { consoleEditter } from './edition/editters/editter.console';
 import { csvEditter } from './edition/editters/editter.csv';
 import { jsonEditter } from './edition/editters/editter.json';
-
+import metadataSchema from './metadata/accounting-metadata.schema.json';
 
 export class Run {
     private accounting: AccountingInterface;
@@ -19,9 +19,10 @@ export class Run {
 
     constructor(public options: ProgramArguments) {
         const metadataSchemaPath = path.join(__dirname, './metadata/accounting-metadata.schema.json');
+
         this.metadataSchema = {
             path: metadataSchemaPath,
-            schema: require(metadataSchemaPath)
+            schema: metadataSchema
         };
     }
 
@@ -29,7 +30,7 @@ export class Run {
     async loadMetadata(): Promise<ComptabiliteMetadata> {
         const metadataFile = this.options.metadata || path.join(__dirname, '../metadata.json');
         const metadataJson = await fs.readFile(metadataFile, { encoding: 'utf8' });
-        const metadata = JSON.parse(metadataJson) as ComptabiliteMetadataOption<string>;
+        const metadata = JSON.parse(metadataJson) as MetadataJson;
 
         const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
         const validate = ajv.compile(this.metadataSchema.schema);
@@ -38,7 +39,7 @@ export class Run {
         if (!valid) {
             const message = validate.errors.map(e => {
                 const params = entries(e.params).map(([ k, v ]) => `${k} -> ${v}`).join(', ');
-                return `${e.instancePath} \n${params}: ${e.message}`;
+                return `${e.instancePath}\n${params}: ${e.message}`;
             });
 
 
@@ -48,10 +49,15 @@ export class Run {
             );
         }
 
-        const start = this.options.exerciseStart;
-        const startDate = new Date(parseFloat(start.slice(4, 8)), parseFloat(start.slice(2, 4)), parseFloat(start.slice(0, 2)));
+        const exercisePeriod = (): ExercisePeriodOption => {
+            const start = this.options.exerciseStart;
+            if (!start)
+                return undefined;
 
-        return new ComptabiliteMetadata({ ...metadata, exercisePeriod: { start: startDate, periodMonth: parseFloat(metadata.exercisePeriod) } });
+            return { start, periodMonth: metadata.exercise.period };
+        };
+
+        return new ComptabiliteMetadata({ ...metadata, exercisePeriod: exercisePeriod() });
     }
 
     async init() {

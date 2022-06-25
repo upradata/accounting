@@ -48,7 +48,7 @@ export class Accounting implements Partial<AccountingInterface> {
         const output = path.join(outputDir, outputFilename);
 
         return fecBuilder.writeFile(output).catch((e: Error) => {
-            logger.error(`Writting in ${output} error: ${e.message}`);
+            logger.error(`Erro while writing FEC file in ${output}: ${e.message}`);
             logger.error(e);
         });
     }

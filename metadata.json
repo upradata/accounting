@@ -4,5 +4,11 @@
     "siret": 80126537200012,
     "activityId": "6201Z",
     "address": "75, rue de Lourmel, 75015 Paris",
-    "exercisePeriod": 12
+    "exercise": {
+        "period": 12,
+        "start": {
+            "month": 2,
+            "day": 1
+        }
+    }
 }

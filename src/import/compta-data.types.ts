@@ -1,4 +1,4 @@
-import { keys } from '@upradata/util';
+import { TupleValues } from '@upradata/util';
 import { Compte, CompteParentAux } from '@accounting';
 
 type ToCsvTypes<T> = {
@@ -19,17 +19,21 @@ export interface ComptaDepensePiece {
 
 export type ComptaDepensePieceCSV = ToCsvTypes<ComptaDepensePiece> & { compteLibelle: string; };
 
-class ComptaDepenseTypeHelper {
-    'frais-generaux';
-    'loyer';
-    'compte-courant';
-    'greffe';
-    'vente-website';
-}
+
+export const comptaDepenseTypes = [
+    'frais-generaux',
+    'loyer',
+    'compte-courant',
+    'greffe',
+    'vente-website',
+    'attribution-resultat-benefice',
+    'attribution-resultat-perte',
+    'remboursement-tva'
+] as const;
 
 
-export type ComptaDepenseType = keyof ComptaDepenseTypeHelper;
-export const comptaDepenseTypes = keys(new ComptaDepenseTypeHelper());
+export type ComptaDepenseType = TupleValues<typeof comptaDepenseTypes>;
+
 
 export interface ComptaDepense {
     id: string;
