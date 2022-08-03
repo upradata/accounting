@@ -1,5 +1,7 @@
+import { RootService } from '@upradata/dependency-injection';
 import { Compte } from '@accounting/compte'; // keep full path to prevent circular dependency
 
+@RootService()
 export class PlanComptable {
     public plan: Compte[] = [];
 

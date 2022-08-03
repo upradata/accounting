@@ -1,6 +1,8 @@
+import { RootService } from '@upradata/dependency-injection';
 import { ComptaJournal } from '@import';
 
 
+@RootService()
 export class Journaux {
     public journaux: ComptaJournal[] = [];
 

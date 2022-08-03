@@ -1,5 +1,6 @@
+import { AppInjector } from '@upradata/dependency-injection';
 import { pipeline, isUndefined, removeUndefined } from '@upradata/util';
-import { Injector, objectToArray } from '@util';
+import { objectToArray } from '@util';
 import { Edit, EditExtraOptions, coloryfyDiff, EditDataStyledCell, updateEditDataStyledCell } from '@edition';
 import { Mouvement } from '../mouvement';
 import { Pieces } from '../piece';
@@ -24,7 +25,7 @@ export class GrandLivreEdit extends Edit {
 
     constructor(private compteBalance: ComptesBalance) {
         super({ title: 'Grand Livre Des Ecritures' });
-        this.pieces = Injector.app.get(Pieces);
+        this.pieces = AppInjector.root.get(Pieces);
     }
 
 

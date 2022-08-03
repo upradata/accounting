@@ -1,11 +1,12 @@
 import { EventEmitter } from 'events';
+import { RootService } from '@upradata/dependency-injection';
 import { SortedArray } from '@util';
 import { Editter, EditExtraOptions } from '@edition';
 import { Mouvement } from '../mouvement';
 import { ComptesBalance } from '../balance-comptes/comptes-balance'; // keep full path to prevent circular dependency
 import { GrandLivreEdit } from './grand-livre.edit';
 
-
+@RootService()
 export class GrandLivre {
     public mouvements: SortedArray<Mouvement>; // ordered on date
     public comptesBalance = new ComptesBalance();

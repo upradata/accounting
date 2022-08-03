@@ -1,16 +1,16 @@
-import { InjectDep } from '@util';
+import { Inject, RootService } from '@upradata/dependency-injection';
 import { Editter, EditExtraOptions } from '@edition';
 import { GrandLivre } from '../grand-livre/grand-livre';
 import { Mouvement } from '../mouvement';
 import { JournalCentraliseurEdit, ExtraOption } from './journal-centraliseur.edit';
 import { JournauxBalanceByMonth } from './journaux-balance-by-month';
 
-
+@RootService()
 export class JournalCentraliseur {
     public balanceByJournal = new JournauxBalanceByMonth();
 
 
-    constructor(@InjectDep(GrandLivre) grandLivre: GrandLivre) {
+    constructor(@Inject(GrandLivre) grandLivre: GrandLivre) {
         grandLivre.onNewMouvement(mouvements => this.add(...mouvements));
     }
 

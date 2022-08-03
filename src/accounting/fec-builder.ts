@@ -1,7 +1,8 @@
 import fs from 'fs-extra';
+import { AppInjector } from '@upradata/dependency-injection';
 import { colors } from '@upradata/node-util';
 import { Journaux, PlanComptable } from '@metadata';
-import { dateToFecDate, Injector, logger, numberToComma, TODAY } from '@util';
+import { dateToFecDate, logger, numberToComma, TODAY } from '@util';
 import { Lettrage, Mouvement } from './mouvement';
 import { Pieces } from './piece';
 import path from 'path';
@@ -28,9 +29,9 @@ export class FecBuilder {
     private onlyNonImported: boolean;
 
     constructor(option: FecBuilderOption = {}) {
-        this.pieces = Injector.app.get(Pieces);
-        this.planComptable = Injector.app.get(PlanComptable);
-        this.journaux = Injector.app.get(Journaux);
+        this.pieces = AppInjector.root.get(Pieces);
+        this.planComptable = AppInjector.root.get(PlanComptable);
+        this.journaux = AppInjector.root.get(Journaux);
 
         Object.assign(this, new FecBuilderOption(), option);
     }

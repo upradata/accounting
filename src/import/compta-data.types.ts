@@ -1,23 +1,28 @@
 import { TupleValues } from '@upradata/util';
 import { Compte, CompteParentAux } from '@accounting';
 
-type ToCsvTypes<T> = {
+/* type ToCsvTypes<T> = {
     [ K in keyof T ]: T[ K ] extends boolean ? string | boolean :
     T[ K ] extends number ? string | number :
     string
 };
-
+ */
 
 export interface ComptaDepensePiece {
     id: string;
     journal: string;
-    compte: Compte;
-    compteAux: Compte;
     debit: number;
     credit: number;
+    compteInfo: CompteParentAux;
 }
 
-export type ComptaDepensePieceCSV = ToCsvTypes<ComptaDepensePiece> & { compteLibelle: string; };
+export type ComptaDepensePieceCSV = /* ToCsvTypes< */Omit<ComptaDepensePiece, 'compteInfo'>/* > */ & {
+    compte: Compte;
+    compteLibelle: string;
+    compteAux?: Compte;
+    compteAuxLibelle?: string;
+
+};
 
 
 export const comptaDepenseTypes = [
@@ -50,7 +55,7 @@ export interface ComptaDepense {
     isImported: boolean;
 }
 
-export type ComptaDepenseCSV = ToCsvTypes<ComptaDepense>;
+export type ComptaDepenseCSV = /* ToCsvTypes< */ComptaDepense/* > */;
 
 
 export interface ComptaSaisieMouvement {
@@ -58,8 +63,6 @@ export interface ComptaSaisieMouvement {
     libelle: string;
     journal: string;
     date: Date;
-    compte: Compte;
-    compteAux?: Compte;
     debit: number;
     credit: number;
     isImported: boolean;
@@ -67,7 +70,53 @@ export interface ComptaSaisieMouvement {
 }
 
 
-export type ComptaSaisieMouvementCSV = ToCsvTypes<Omit<ComptaSaisieMouvement, 'compteInfo'>> & { compteLibelle: string; };
+export type ComptaSaisieMouvementCSV = /* ToCsvTypes< */Omit<ComptaSaisieMouvement, 'compteInfo'>/* > */ & {
+    compte: Compte;
+    compteLibelle: string;
+    compteAux?: Compte;
+    compteAuxLibelle?: string;
+};
+
+
+export const comptacritureComptaGeneratorTypes = [
+    'helper',
+    'generator',
+] as const;
+
+
+export type ComptacritureComptaGeneratorTypes = TupleValues<typeof comptacritureComptaGeneratorTypes>;
+
+export type ComptaEcritureComptaGeneratorRefArgsObject = { object: string; spread?: string; };
+export type ComptaEcritureComptaGeneratorRef = {
+    functionName: string; /* args: (string | number | ComptaEcritureComptaGeneratorRefArgsObject)[] */
+    getArgs: (...argNames: string[]) => (...args: any[]) => {};
+};
+
+export const isComptaEcritureComptaGeneratorRefArgsObject = (value: any): value is ComptaEcritureComptaGeneratorRefArgsObject => {
+    const v = (value as ComptaEcritureComptaGeneratorRefArgsObject);
+    return v && !!v.object;
+};
+
+type Variable = string;
+
+export interface ComptaEcritureComptaGenerator {
+    function: { functionName: string; argNames: (string | string[])[]; }; // f(a, { b, c }) => argNames: [ 'a', [ 'b', 'c' ] ]
+    type: ComptacritureComptaGeneratorTypes;
+    journal?: string | Variable;
+    condition?: boolean | Variable;
+    compte?: Compte | string | Variable;
+    compteAux?: Compte | string | Variable;
+    debit?: number | Variable;
+    credit?: number | Variable;
+    ref?: ComptaEcritureComptaGeneratorRef;
+}
+
+
+export type ComptaEcritureComptaGeneratorsCSV = /* ToCsvTypes< */Omit<ComptaEcritureComptaGenerator, 'compteInfo'>/* > */ & {
+    compteLibelle?: string;
+    compteAuxLibelle?: string;
+};
+
 
 
 export interface ComptaCompte {
@@ -76,7 +125,7 @@ export interface ComptaCompte {
     libelle: string;
 }
 
-export type ComptaCompteCSV = ToCsvTypes<ComptaCompte>;
+export type ComptaCompteCSV = /* ToCsvTypes< */ComptaCompte/* > */;
 
 
 export interface ComptaJournal {
@@ -87,7 +136,7 @@ export interface ComptaJournal {
     compteTresorerie?: Compte;
 }
 
-export type ComptaJournalCSV = ToCsvTypes<ComptaJournal>;
+export type ComptaJournalCSV = /* ToCsvTypes< */ComptaJournal/* > */;
 
 
 export interface ComptaPlanComptable {
@@ -96,7 +145,7 @@ export interface ComptaPlanComptable {
     libelle: string;
 }
 
-export type ComptaPlanComptableCSV = ToCsvTypes<ComptaPlanComptable>;
+export type ComptaPlanComptableCSV = /* ToCsvTypes< */ComptaPlanComptable/* > */;
 
 
 export class ComptaDataFactory<CSV extends boolean = true> {
@@ -106,17 +155,18 @@ export class ComptaDataFactory<CSV extends boolean = true> {
     journaux: CSV extends true ? ComptaJournalCSV : ComptaJournal;
     planComptable: CSV extends true ? ComptaPlanComptableCSV : ComptaPlanComptable;
     balanceReouverture: CSV extends true ? ComptaSaisieMouvementCSV : ComptaSaisieMouvement;
+    ecritureComptaGenerators: CSV extends true ? ComptaEcritureComptaGeneratorsCSV : ComptaEcritureComptaGenerator;
 }
 
 
 export type ComptaDataNames = keyof ComptaDataFactory;
 
 export type ComptaDataCSV = {
-    [ K in keyof ComptaDataFactory ]: Array<ComptaDataFactory<true>[ K ]>
+    [ K in ComptaDataNames ]: Array<ComptaDataFactory<true>[ K ]>
 };
 
 export type ComptaData = {
-    [ K in keyof ComptaDataFactory ]: Array<ComptaDataFactory<false>[ K ]>
+    [ K in ComptaDataNames ]: Array<ComptaDataFactory<false>[ K ]>
 };
 
 

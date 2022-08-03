@@ -42,7 +42,8 @@
     "local": {
         "dependencies": {
             "@upradata/node-util": "link:/home/milottit/Libraries/Upra-Data/node-util@16.0.7",
-            "@upradata/util": "link:/home/milottit/Libraries/Upra-Data/util@15.0.0"
+            "@upradata/util": "link:/home/milottit/Libraries/Upra-Data/util@15.0.0",
+            "@upradata/dependency-injection": "link:/home/milottit/Libraries/Upra-Data/dependency-injection@2.0.3"
         }
     }
 }

@@ -19,8 +19,8 @@ command
     .option('-m, --metadata <path>', 'Metadata of the accounting.', fromThisRoot('metadata.json'))
     .option('-o, --output-dir <path>', 'Output directory for the edition.', '.')
     .option('-f, --fec [path | bool]', 'Generate fec.', cliParsers.try(cliParsers.boolean), true)
-    .option('-F, --fec-only-non-imported', 'Generate fec (only non imported data in accounting software).', false)
-    .option('-e, --edit', 'Edit accounting: Balance Des Comptes, Journal Centraliseur, Grand Livre et Pièces.', true)
+    .option('-F, --fec-only-non-imported [bool]', 'Generate fec (only non imported data in accounting software).', cliParsers.boolean, false)
+    .option('-e, --edit [bool]', 'Edit accounting: Balance Des Comptes, Journal Centraliseur, Grand Livre et Pièces.', cliParsers.boolean, true)
     .option({
         flags: '--editters <...type>',
         description: `Editter logger types [ ${keys(EditterFormats).join(', ')} ].
@@ -31,11 +31,11 @@ command
         defaultValue: 'csv' as any
     })
     .option('--json-indent <nb>', 'Json indentation for the json editter.', cliParsers.int, 4)
-    .option('--edit-short', 'Edit accounting condensed mode.', true)
-    .option('--edit-grand-livre', 'Edit Grand Livre.')
-    .option('--edit-balance', 'Edit Balance Des Comptes.')
-    .option('--edit-journal', 'Edit Journal Centraliseur.')
-    .option('--edit-pieces', 'Edit Pièces.')
+    .option('--edit-short [bool]', 'Edit accounting condensed mode.', cliParsers.boolean, true)
+    .option('--edit-grand-livre [bool]', 'Edit Grand Livre.', cliParsers.boolean)
+    .option('--edit-balance [bool]', 'Edit Balance Des Comptes.', cliParsers.boolean)
+    .option('--edit-journal [bool]', 'Edit Journal Centraliseur.', cliParsers.boolean)
+    .option('--edit-pieces [bool]', 'Edit Pièces.', cliParsers.boolean)
     .option('-d, --data-directory <path>', 'Directory for input data.', INPUT_DATA_DEFAULTS.directory)
     .option('-o, --input-ods [path]', 'ODS file containing accounting data.', INPUT_DATA_DEFAULTS.odsFilename)
     .option('-l, --input-csv <input-csv-path>', 'CSV file(s) containing accounting data (comma separated list).',

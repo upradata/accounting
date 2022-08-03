@@ -37,11 +37,11 @@ export class ComptesBalance extends BalanceMap<CompteKey> {
     }
 
     get(compteNumero: Numero): BalanceMapData {
-        return this.getBalanceDataOfKey(compteNumero + '');
+        return this.getBalanceDataOfKey(`${compteNumero}`);
     }
 
     getBalanceDataOfClass(classNumero: Numero, filterOption: BalanceFilterOption = {}): BalanceMapData {
-        const { filter = (numero, mouvement) => true, newKey = (numero, mouvement) => numero } = filterOption;
+        const { filter = (_numero, _mouvement) => true, newKey = (numero, _mouvement) => numero } = filterOption;
 
         const classNumeroFull = Compte.pad(classNumero);
 

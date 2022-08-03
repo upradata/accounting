@@ -10,7 +10,7 @@ import { LoggerSettings, DEFAULT_INFO_PROPS as INFO_PROPS, Info, LevelNames, Log
 disableTTYStylesIfNotSupported();
 
 
-const stylize = (s: string, options: { prop?: Key, info?: Info; color?: TerminalStyles, level: LevelNames; }) => {
+const stylize = (s: string, options: { prop?: Key; info?: Info; color?: TerminalStyles; level: LevelNames; }) => {
     const { prop, info, color, level } = options;
 
     const getData = () => {
@@ -66,7 +66,7 @@ const loggerSettings: LoggerSettings = {
         error: 'compta-error.log',
         warn: 'compta-info.log'
     }
-};
+} as const;
 
 
 export const logger: Logger = winston.createLogger({

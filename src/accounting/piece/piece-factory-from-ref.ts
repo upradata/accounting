@@ -1,8 +1,6 @@
 import { mapBy } from '@util';
-import { isUndefined } from '@upradata/util';
 import { ComptaDepensePiece } from '@import';
 import { PieceOption, Piece } from './piece';
-import { CompteParentAux } from '../compte';
 
 
 
@@ -21,20 +19,18 @@ export function getPiecesFromPieceRef({ comptaDepensePieces, pieceRef, pieceOpti
     const comptaPiecesByIdFiltered = Object.values(piecesById).filter(ecritures => piecesRegex.test(ecritures[ 0 ].id));
     // all possible pieces
 
-    if (!comptaPiecesByIdFiltered) return [];
+    if (!comptaPiecesByIdFiltered)
+        return [];
 
     const pieces: Piece[] = [];
 
     for (const comptaPiece of comptaPiecesByIdFiltered) {
-        let piece: Piece = undefined;
+        const piece: Piece = new Piece({ ...pieceOption, journal: comptaPiece[ 0 ].journal });
 
-        for (const { compte, compteAux, credit, debit, journal } of comptaPiece) {
-            if (isUndefined(piece))
-                piece = new Piece({ ...pieceOption, journal });
-
+        for (const { compteInfo, credit, debit } of comptaPiece) {
             piece.addMouvement({
                 montant: credit || debit, type: credit ? 'credit' : 'debit',
-                compteInfo: new CompteParentAux({ compte, compteAux })
+                compteInfo
             });
         }
 

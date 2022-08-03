@@ -1,8 +1,9 @@
 import path from 'path';
+import { Inject } from '@upradata/dependency-injection';
 import { PartialRecursive } from '@upradata/util';
-import { logger, InjectDep, dateToFecDate } from '@util';
+import { logger, dateToFecDate } from '@util';
 import { Importer, ImporterFile, ImporterOption } from '@import';
-import { ComptabiliteMetadata, PlanComptable, Journaux } from '@metadata';
+import { ComptabiliteMetadata, PlanComptable, Journaux, EcritureComptaGenerators } from '@metadata';
 import { Pieces, PiecesFromDepense, PiecesfromSaisiePieces } from './piece';
 import { FecBuilderOption, FecBuilder } from './fec-builder';
 import { LettrageProcessor } from './lettrage';
@@ -17,19 +18,23 @@ export class Accounting implements Partial<AccountingInterface> {
     public metadata: ComptabiliteMetadata;
 
     constructor(
-        @InjectDep(GrandLivre) public grandLivre?: GrandLivre,
-        @InjectDep(BalanceDesComptes) public balanceDesComptes?: BalanceDesComptes,
-        @InjectDep(JournalCentraliseur) public journalCentraliseur?: JournalCentraliseur,
-        @InjectDep(PlanComptable) public planComptable?: PlanComptable,
-        @InjectDep(Journaux) public journaux?: Journaux,
-        @InjectDep(Pieces) public pieces?: Pieces,
-        @InjectDep(ComptabiliteMetadata) public comptabiliteMetadata?: ComptabiliteMetadata) { }
+        @Inject(GrandLivre) public grandLivre?: GrandLivre,
+        @Inject(BalanceDesComptes) public balanceDesComptes?: BalanceDesComptes,
+        @Inject(JournalCentraliseur) public journalCentraliseur?: JournalCentraliseur,
+        @Inject(PlanComptable) public planComptable?: PlanComptable,
+        @Inject(Journaux) public journaux?: Journaux,
+        @Inject(Pieces) public pieces?: Pieces,
+        @Inject(EcritureComptaGenerators) public ecritureComptaGenerators?: EcritureComptaGenerators,
+        @Inject(ComptabiliteMetadata) public comptabiliteMetadata?: ComptabiliteMetadata) { }
 
 
     importComptaData(option?: PartialRecursive<ImporterOption<ImporterFile>>) {
         const importer = new Importer(option);
 
         return importer.importAll().then(data => {
+            if (data.ecritureComptaGenerators)
+                this.ecritureComptaGenerators.add(data.ecritureComptaGenerators);
+
             this.pieces.add(...new PiecesFromDepense(data.depensesPieces).getPieces(data.depenses));
             this.pieces.add(...PiecesfromSaisiePieces.getPieces(data.saisiePieces));
             this.pieces.add(...PiecesfromSaisiePieces.getPieces(data.balanceReouverture));

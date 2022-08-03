@@ -29,7 +29,8 @@ export const INPUT_DATA_DEFAULTS: ImporterOptionInput<ImporterFile> = {
         saisiePieces: { sheetName: 'SaisiePieces', filename: dir('saisie-pieces.csv') },
         planComptable: { sheetName: 'PlanComptable', filename: dir('plan-comptable.csv'), required: true },
         journaux: { sheetName: 'Journaux', filename: dir('journaux.csv'), required: true },
-        balanceReouverture: { sheetName: 'BalanceReouverture', filename: dir('balance-reouverture.csv') }
+        balanceReouverture: { sheetName: 'BalanceReouverture', filename: dir('balance-reouverture.csv') },
+        ecritureComptaGenerators: { sheetName: 'EcritureComptaGenerators', filename: dir('ecriture-compta-generators.csv') },
     },
     odsFilename: 'comptabilite.ods',
     directory: defaultDataDirectory

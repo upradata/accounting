@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { odsToXlsx, xlsxToCsv, createTmpDir } from '@upradata/node-util';
-import { PartialRecursive, assignRecursive, filter, makeObject, keys, RequiredProps, entries } from '@upradata/util';
+import { PartialRecursive, assignRecursive, filter, map, keys, RequiredProps, entries } from '@upradata/util';
 import { logger } from '@util';
 import { ImporterFiles, ImporterOptionInput, ImporterFile, INPUT_DATA_DEFAULTS as defaults } from './importer-input';
 
@@ -38,7 +38,7 @@ export class ImporterOption<T = string> {
 
         const files = await fs.readdir(this.directory);
 
-        const defaultFiles = makeObject(defaults.files, (_k, importer) => ({ filename: path.basename(importer.filename) }));
+        const defaultFiles = map(defaults.files, (_k, importer) => ({ filename: path.basename(importer.filename) }));
         const filepaths: Partial<ImporterFiles<ImporterFile>> = filter(defaultFiles, (_k, defaultFile) => files.some(file => defaultFile.filename === file));
 
         return filepaths;
@@ -58,7 +58,7 @@ export class ImporterOption<T = string> {
             inputFiles = assignRecursive(this.getRequiredFiles(), inputFiles);
 
 
-        const files = makeObject(inputFiles, (key, file) => {
+        const files = map(inputFiles, (key, file) => {
             const { sheetName, filename } = file as ImporterFile;
             const defaultSheetName = defaults.files[ key ].sheetName;
 
@@ -85,15 +85,19 @@ export class ImporterOption<T = string> {
         const xlsxFile = odsFilename ? await odsToXlsx(this.dir(this.odsFilename), { outputDir: tmpDir }) : undefined;
 
         await Promise.all(entries(files).map(async ([ key, file ]) => {
-            const { sheetName, filename } = file;
+            const { sheetName, filename, required } = file;
 
             if (sheetName) {
                 await xlsxToCsv(xlsxFile, { sheetName, outputDir: tmpDir })
                     .then(csvOutput => this.fileLoaded(key, csvOutput))
                     .catch(e => {
-                        logger.error(`Could not load sheet ${sheetName} in ${this.dir(this.odsFilename)} due to following error:`);
-                        logger.error(e);
-                        logger.info(`Try load file ${this.dir(filename)}`);
+                        if (e.stderr && new RegExp(`Sheet.*${sheetName}.*not found`).test(e.stderr as string) && !required) {
+                            logger.warn((e.stderr as string).trim());
+                        } else {
+                            logger.error(`Could not load sheet ${sheetName} in ${this.dir(this.odsFilename)} due to following error:`);
+                            logger.error(e);
+                            logger.warn(`Try load file ${this.dir(filename)}`);
+                        }
                     });
 
             } else {

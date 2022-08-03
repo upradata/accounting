@@ -1,3 +1,5 @@
+import { AppInjector } from '@upradata/dependency-injection';
+import { isDefined, pipeline, removeUndefined } from '@upradata/util';
 import {
     coloryfyDiff,
     Edit,
@@ -6,8 +8,7 @@ import {
     EditExtraOptions,
     updateEditDataStyledCell
 } from '@edition';
-import { isDefined, pipeline, removeUndefined } from '@upradata/util';
-import { Injector, objectToArray } from '@util';
+import { objectToArray } from '@util';
 import { BalanceTotalData } from '../balance';
 import { Mouvement } from '../mouvement';
 import { Pieces } from '../piece';
@@ -40,7 +41,7 @@ export class JournalCentraliseurEdit extends Edit {
 
     constructor(private journauxBalanceByMonth: JournauxBalanceByMonth) {
         super({ title: 'Journal Centraliseur' });
-        this.pieces = Injector.app.get(Pieces);
+        this.pieces = AppInjector.root.get(Pieces);
     }
 
     protected override doInit({ short }: EditExtraOptions) {

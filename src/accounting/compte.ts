@@ -1,4 +1,4 @@
-import { Injector } from '@util';
+import { AppInjector } from '@upradata/dependency-injection';
 import { PlanComptable } from '@metadata';
 
 export class Compte {
@@ -8,7 +8,7 @@ export class Compte {
 
     // planComptable has? just to put libelle before. But it exists always
     constructor(numero: string | number, libelle?: string) {
-        const planComptable = Injector.app.get(PlanComptable);
+        const planComptable = AppInjector.root.get(PlanComptable);
 
         this.numero = Compte.pad(numero);
         this.libelle = libelle || planComptable.getFromNumero(this.numero).libelle;

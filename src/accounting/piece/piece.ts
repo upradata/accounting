@@ -1,4 +1,5 @@
-import { Injector, logger } from '@util';
+import { AppInjector } from '@upradata/dependency-injection';
+import { logger } from '@util';
 import { CompteParentAux } from '../compte';
 import { Mouvement, MouvementData, MouvementMetadata } from '../mouvement';
 import { GrandLivre } from '../grand-livre';
@@ -37,7 +38,7 @@ export class Piece {
 
         this.id = `piece-${this.journal}-${this.nextId()}`;
 
-        this.grandLivre = Injector.app.get(GrandLivre);
+        this.grandLivre = AppInjector.root.get(GrandLivre);
     }
 
     nextId() {

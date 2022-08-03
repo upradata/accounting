@@ -1,5 +1,7 @@
-import { ComptaDepense, ComptaDepensePiece } from '@import';
 import { values } from '@upradata/util';
+import { AppInjector } from '@upradata/dependency-injection';
+import { ComptaDepense, ComptaDepensePiece } from '@import';
+import { EcritureComptaGenerators } from '@metadata';
 import { logger, mapBy } from '@util';
 import { Piece } from './piece';
 import { getPiecesFromPieceRef } from './piece-factory-from-ref';
@@ -10,6 +12,7 @@ import {
     PREDIFINED_GENERATORS,
     PREDIFINED_LIBELLE_GENERATORS
 } from './pieces-generators';
+
 
 
 export class PiecesFromDepense {
@@ -30,6 +33,11 @@ export class PiecesFromDepense {
 
             if (type) {
                 try {
+                    const { generators } = AppInjector.root.get(EcritureComptaGenerators);
+
+                    if (generators[ type ])
+                        return generators[ type ]({ libelle, ttc, ht, tva, date, isImported });
+
                     return generatorFromType(PREDIFINED_GENERATORS)(type)({ libelle, ttc, ht, tva, date, isImported });
                 } catch (e) {
                     logger.error(e);

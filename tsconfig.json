@@ -23,14 +23,26 @@
             "@util": [
                 "src/util"
             ],
+            "@util/*": [
+                "src/util/*"
+            ],
             "@import": [
                 "src/import"
+            ],
+            "@import/*": [
+                "src/import/*"
             ],
             "@edition": [
                 "src/edition"
             ],
+            "@edition/*": [
+                "src/edition/*"
+            ],
             "@metadata": [
                 "src/metadata"
+            ],
+            "@metadata/*": [
+                "src/metadata/*"
             ],
             "@accounting": [
                 "src/accounting"

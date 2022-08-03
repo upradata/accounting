@@ -1,9 +1,10 @@
+import { RootService } from '@upradata/dependency-injection';
 import { EditExtraOptions, Editter } from '@edition';
 import { mapBy, SortedArray } from '@util';
 import { Piece } from './piece';
 import { PiecesEdit } from './pieces.edit';
 
-
+@RootService()
 export class Pieces {
     public pieces: SortedArray<Piece>;
 

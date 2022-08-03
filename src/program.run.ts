@@ -1,8 +1,9 @@
 import path from 'path';
 import fs from 'fs-extra';
 import Ajv from 'ajv';
+import { AppInjector } from '@upradata/dependency-injection';
 import { entries, filter, ObjectOf } from '@upradata/util';
-import { logger, Injector } from '@util';
+import { logger } from '@util';
 import { ComptabiliteMetadata, PlanComptable, Journaux, MetadataJson, ExercisePeriodOption, } from '@metadata';
 import { GrandLivre, BalanceDesComptes, JournalCentraliseur, Pieces, AccountingInterface } from '@accounting';
 import { Editter, EditterLoggers } from '@edition';
@@ -63,32 +64,18 @@ export class Run {
     async init() {
         this.metadata = await this.loadMetadata();
 
-        // const grandLivre = new GrandLivre();
-        /* const services = {
-            grandLivre: { provide: GrandLivre, useValue: grandLivre },
-            balanceDesComptes: {
-                provide: BalanceDesComptes, useFactory: (grandLivre: GrandLivre) => new BalanceDesComptes(grandLivre), deps: [ GrandLivre ]
-            },
-            journalCentraliseur: {
-                provide: JournalCentraliseur, useFactory: (grandLivre: GrandLivre) => new JournalCentraliseur(grandLivre), deps: [ GrandLivre ]
-            }
-            // { provide: JournalCentraliseur, useValue: new JournalCentraliseur(grandLivre) }
-        }; */
-
-
-        Injector.init({
+        AppInjector.init({
             providers: [
                 {
                     provide: ComptabiliteMetadata,
                     useValue: this.metadata
                 },
-                //  ...Object.values(services)
             ],
             bootstrap: [ GrandLivre, BalanceDesComptes, JournalCentraliseur, PlanComptable, Journaux, Pieces ]
         });
 
         const { Accounting } = require('./accounting/accounting'); // if we import it before Injector.init, we have cyclic dependencies
-        this.accounting = Injector.app.get(Accounting);
+        this.accounting = AppInjector.root.get(Accounting);
     }
 
     async run(): Promise<void> {

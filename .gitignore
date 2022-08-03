@@ -1,7 +1,7 @@
 node_modules
 .~*.csv#
 .directory
-Output
+Output*
 *.log
 coverage
 dist
