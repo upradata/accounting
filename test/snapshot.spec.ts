@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { fromRoot } from '@upradata/node-util/lib';
+import { fromRoot } from '@upradata/node-util';
 import * as comptaUtil from '../src/util/compta-util';
 import { Run } from '../src/program.run';
-import { ConsoleArguments, ProgramArguments } from '../src/program.arguments';
+import { cliParserDate, ConsoleArguments, ProgramArguments } from '../src/program.arguments';
 
 jest.setTimeout(30000);
 
@@ -29,29 +29,35 @@ describe(
 
         afterAll(() => fs.remove(outputDir));
 
-        const commonConfig: ConsoleArguments = {
-            exerciseStart: '01022018',
+        const commonConfig = (odsFilename: string): ConsoleArguments => ({
+            exerciseStart: cliParserDate('01022018'),
             metadata: fromRoot('./metadata.json'),
             dataDirectory,
+            inputOds: odsFilename,
             outputDir
-        };
+        });
+
 
         const configs = [
             {
+                title: 'Build Fec with No Ecriture Generators',
+                instance: new Run(new ProgramArguments({ ...commonConfig('comptabilite.no-ecriture-generators.ods'), fec: true }))
+            },
+            {
                 title: 'Build Fec',
-                instance: new Run(new ProgramArguments({ ...commonConfig, fec: true }))
+                instance: new Run(new ProgramArguments({ ...commonConfig('comptabilite.ods'), fec: true }))
             },
             {
                 title: 'Build Fec Only Non Imported',
-                instance: new Run(new ProgramArguments({ ...commonConfig, fec: true, fecOnlyNonImported: true }))
+                instance: new Run(new ProgramArguments({ ...commonConfig('comptabilite.ods'), fec: true, fecOnlyNonImported: true }))
             },
             {
                 title: 'Edit Short',
-                instance: new Run(new ProgramArguments({ ...commonConfig, edit: true, editters: [ 'csv', 'json' ], editShort: true }))
+                instance: new Run(new ProgramArguments({ ...commonConfig('comptabilite.ods'), edit: true, editters: [ 'csv', 'json' ], editShort: true }))
             },
             {
                 title: 'Edit Long',
-                instance: new Run(new ProgramArguments({ ...commonConfig, edit: true, editters: [ 'csv', 'json' ] }))
+                instance: new Run(new ProgramArguments({ ...commonConfig('comptabilite.ods'), edit: true, editters: [ 'csv', 'json' ] }))
             },
         ];
 

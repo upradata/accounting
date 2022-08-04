@@ -4,13 +4,13 @@ import { PartialRecursive } from '@upradata/util';
 import { logger, dateToFecDate } from '@util';
 import { Importer, ImporterFile, ImporterOption } from '@import';
 import { ComptabiliteMetadata, PlanComptable, Journaux, EcritureComptaGenerators } from '@metadata';
-import { Pieces, PiecesFromDepense, PiecesfromSaisiePieces } from './piece';
+import { Pieces, PiecesFromEcrituresSimples, PiecesfromSaisiePieces } from './piece';
 import { FecBuilderOption, FecBuilder } from './fec-builder';
 import { LettrageProcessor } from './lettrage';
 import { GrandLivre } from './grand-livre';
 import { BalanceDesComptes } from './balance-comptes';
 import { JournalCentraliseur } from './journal-centraliseur';
-import { AccountingInterface } from './accounting.inteface';
+import { AccountingInterface } from './accounting.interface';
 
 
 
@@ -35,7 +35,7 @@ export class Accounting implements Partial<AccountingInterface> {
             if (data.ecritureComptaGenerators)
                 this.ecritureComptaGenerators.add(data.ecritureComptaGenerators);
 
-            this.pieces.add(...new PiecesFromDepense(data.depensesPieces).getPieces(data.depenses));
+            this.pieces.add(...new PiecesFromEcrituresSimples(data.ecritureSimplePieces).getPieces(data.ecritureSimples));
             this.pieces.add(...PiecesfromSaisiePieces.getPieces(data.saisiePieces));
             this.pieces.add(...PiecesfromSaisiePieces.getPieces(data.balanceReouverture));
         });

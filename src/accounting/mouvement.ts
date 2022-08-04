@@ -1,6 +1,6 @@
 import { assignRecursive, AssignOptions } from '@upradata/util';
 import { MouvementType, commaToNumber } from '@util';
-import { CompteParentAux } from './compte';
+import { CompteParentAux } from '@metadata/plan-comptable';
 
 
 export interface Lettrage {

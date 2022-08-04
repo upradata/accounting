@@ -1,11 +1,11 @@
-import { CompteParentAux } from '../compte';
+import { CompteParentAux } from '@metadata/plan-comptable';
 import { Piece } from './piece';
 
 export class AchatOption {
     libelle: string;
     ttc: number;
-    ht: number;
-    tva: number;
+    ht?: number;
+    tva?: number;
     date: Date;
     journal?: string = '60';
     crediteur: CompteParentAux;

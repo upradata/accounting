@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { odsToXlsx, xlsxToCsv, createTmpDir } from '@upradata/node-util';
-import { PartialRecursive, assignRecursive, filter, map, keys, RequiredProps, entries } from '@upradata/util';
+import { PartialRecursive, assignRecursive, filter, map, keys, RequiredProps, entries, ensureArray } from '@upradata/util';
 import { logger } from '@util';
 import { ImporterFiles, ImporterOptionInput, ImporterFile, INPUT_DATA_DEFAULTS as defaults } from './importer-input';
 
@@ -13,8 +13,8 @@ export class ImporterOption<T = string> {
 
 
     constructor(private option: PartialRecursive<ImporterOptionInput<ImporterFile>>) {
-        this.directory = option.directory || '.';
-        this.odsFilename = option.odsFilename;
+        this.directory = option.directory || defaults.directory;
+        this.odsFilename = option.odsFilename || defaults.odsFilename;
     }
 
     isFileName(file: string) {
@@ -38,68 +38,130 @@ export class ImporterOption<T = string> {
 
         const files = await fs.readdir(this.directory);
 
-        const defaultFiles = map(defaults.files, (_k, importer) => ({ filename: path.basename(importer.filename) }));
-        const filepaths: Partial<ImporterFiles<ImporterFile>> = filter(defaultFiles, (_k, defaultFile) => files.some(file => defaultFile.filename === file));
+        // const defaultFiles = map(defaults.files, (_, v) => ({ filename: v.filename }));
+        const filesData: Partial<ImporterFiles<ImporterFile>> = filter(defaults.files, (_k, defaultFile) => files.some(file => defaultFile.filename === file));
 
-        return filepaths;
+        const odsFilename = files.includes(this.odsFilename) ?
+            this.odsFilename :
+            files.filter(f => path.extname(f) === '.ods').reduce<string>((f, odsFile) => {
+                if (!odsFile)
+                    return f;
+
+                return odsFile === defaults.odsFilename ? odsFile : f;
+            }, undefined);
+
+
+        return { files: filesData, odsFilename };
+
+        /* const filenames = Object.values(map(defaults.files, (_, v) => v.filename));
+        const files = await fs.readdir(this.directory);
+
+        return {
+            files: files.filter(filename => filenames.includes(filename)),
+            odsFilename: files.includes(this.odsFilename) ?
+                this.odsFilename :
+                files.filter(f => path.extname(f) === '.ods').reduce<string>((f, odsFile) => {
+                    if (!odsFile)
+                        return f;
+
+                    return odsFile === defaults.odsFilename ? odsFile : f;
+                }, undefined)
+        }; */
     }
 
     async getFiles() {
-        const filesInDirectory = await this.getFilesInDataDirectory();
+        const { files, odsFilename } = await this.getFilesInDataDirectory();
 
-        /* if (this.isOnlyDataDirectory())
-            return filesInDirectory; */
-
-        let inputFiles = assignRecursive(filesInDirectory, this.option.files) as Partial<ImporterFiles<ImporterFile>>;
+        let inputFiles = assignRecursive(files, this.option.files) as Partial<ImporterFiles<ImporterFile>>;
 
         if (Object.values(inputFiles).length === 0)
             inputFiles = defaults.files;
         else
             inputFiles = assignRecursive(this.getRequiredFiles(), inputFiles);
 
+        // const isFileInDir = !!filesInDirectory.filepaths[ filename ];
 
-        const files = map(inputFiles, (key, file) => {
-            const { sheetName, filename } = file as ImporterFile;
+        const inputs = map(inputFiles, (key, file) => {
+            const { sheetName, filename } = file;
+
             const defaultSheetName = defaults.files[ key ].sheetName;
-
-            const sheet = sheetName || !filename ? defaultSheetName : undefined;
+            const sheet = sheetName || !filename ? ensureArray(defaultSheetName)[ 0 ] : undefined;
             // filename => higher priority (if no sheetName and filename is specified, we use it, otherwisen we use the defaultSheetName)
 
-            if (this.option.odsFilename && sheet)
-                return { sheetName: sheet, filename: filename || defaultSheetName };
+            if (!filename && odsFilename && sheet)
+                return { ...file, sheetName: sheet /* filename : filename || defaultSheetName */ };
 
-            return { filename: filename || defaultSheetName };
+            return file;
+            // { filename /* : filename || defaultSheetName */ };
 
         }) as Partial<ImporterFiles<ImporterFile>>;
 
 
-        return files;
+        return { files: inputs, odsFilename };
     }
 
     async init() {
-        const { odsFilename } = this.option;
         const tmpDir = await createTmpDir.async({ prefix: '@mt-accounting-' });
 
-        const files = await this.getFiles();
+        const { files, odsFilename } = await this.getFiles();
 
-        const xlsxFile = odsFilename ? await odsToXlsx(this.dir(this.odsFilename), { outputDir: tmpDir }) : undefined;
+        const xlsxFile = (() => {
+            let xlsx: string = undefined;
+
+            return {
+                get: async () => {
+                    if (!xlsx)
+                        xlsx = await odsToXlsx(this.dir(odsFilename), { outputDir: tmpDir });
+                    return xlsx;
+                }
+            };
+        })();
 
         await Promise.all(entries(files).map(async ([ key, file ]) => {
             const { sheetName, filename, required } = file;
 
-            if (sheetName) {
-                await xlsxToCsv(xlsxFile, { sheetName, outputDir: tmpDir })
-                    .then(csvOutput => this.fileLoaded(key, csvOutput))
-                    .catch(e => {
-                        if (e.stderr && new RegExp(`Sheet.*${sheetName}.*not found`).test(e.stderr as string) && !required) {
+            const loadSheetName = async (sheetNames: string[]) => {
+                type Err = (Error | { stderr: string; });
+                type ErrorData = { error: Err; sheetName: string; };
+
+                const isStdErr = (e: Err): e is { stderr: string; } => !!(e as any).stderr;
+
+                const load = async (i: number = 0, errors: ErrorData[] = []): Promise<{ type: 'success' | 'error'; errors?: ErrorData[]; }> => {
+                    const sheetName = sheetNames[ i ];
+
+                    return xlsxToCsv(await xlsxFile.get(), { sheetName, outputDir: tmpDir })
+                        .then(csvOutput => {
+                            this.fileLoaded(key, csvOutput);
+                            return { type: 'success' as const };
+                        })
+                        .catch(e => {
+                            const newErrors = [ ...errors, { error: e, sheetName } ];
+
+                            if (e && i === sheetNames.length - 1)
+                                return { type: 'error' as const, errors: newErrors };
+
+                            return load(i + 1, newErrors);
+                        });
+                };
+
+                const { type, errors } = await load();
+
+                if (type === 'error') {
+                    for (const { error: e, sheetName } of errors) {
+                        if (isStdErr(e) && new RegExp(`Sheet.*${sheetName}.*not found`).test(e.stderr as string) && !required) {
                             logger.warn((e.stderr as string).trim());
                         } else {
                             logger.error(`Could not load sheet ${sheetName} in ${this.dir(this.odsFilename)} due to following error:`);
-                            logger.error(e);
-                            logger.warn(`Try load file ${this.dir(filename)}`);
+                            logger.error(new Error(isStdErr(e) ? e.stderr : e.message));
+                            // logger.warn(`Try load file ${this.dir(filename)}`);
                         }
-                    });
+                    }
+                }
+            };
 
+
+            if (sheetName) {
+                await loadSheetName(ensureArray(sheetName));
             } else {
                 this.fileLoaded(key, this.dir(filename));
             }

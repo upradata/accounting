@@ -1,8 +1,8 @@
-import { Inject, RootService } from '@upradata/dependency-injection';
-import { Editter, EditExtraOptions } from '@edition';
-import { BalanceDesComptesEdit } from './balance-comptes.edit';
+import { AppInjector, RootService } from '@upradata/dependency-injection';
+import { EditExtraOptions, Editter } from '@edition';
+import { EventManager } from '@util';
 import { Mouvement } from '../mouvement';
-import { GrandLivre } from '../grand-livre';
+import { BalanceDesComptesEdit } from './balance-comptes.edit';
 import { ComptesBalance } from './comptes-balance';
 
 
@@ -12,12 +12,12 @@ export class BalanceDesComptes {
     private comptesBalance = new ComptesBalance();
 
 
-    constructor(@Inject(GrandLivre) grandLivre: GrandLivre) {
-        grandLivre.onNewMouvement(mouvements => this.add(...mouvements));
+    constructor() {
+        AppInjector.root.get(EventManager).listen('new-mouvement', mouvement => this.add(mouvement));
     }
 
 
-    add(...mouvements: Mouvement[]) {
+    private add(...mouvements: Mouvement[]) {
         this.comptesBalance.add(mouvements);
     }
 

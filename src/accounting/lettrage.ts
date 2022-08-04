@@ -23,7 +23,7 @@ export class LettrageProcessor {
 
     private nextLetter(l: string) {
 
-        const index = LettrageProcessor.index;
+        const { index } = LettrageProcessor;
 
         index[ l ] = index[ l ] || { i: -1, letter: 0 };
 
@@ -42,7 +42,7 @@ export class LettrageProcessor {
     public process(): Mouvement[] {
         const mouvementsNonLettrable: Mouvement[] = [];
 
-        for (const { byCompte, type, letter } of [
+        for (const { byCompte, /* type, */ letter } of [
             { byCompte: this.fournisseursByCompte, type: 'fournisseur', letter: 'C' }, // credit banque
             { byCompte: this.clientsByCompte, type: 'client', letter: 'D' } // debit banque
         ]) {
@@ -58,6 +58,7 @@ export class LettrageProcessor {
 
                         // lettrage
                         const mouvementD = mouvementsByType.debit[ index ];
+                        // eslint-disable-next-line no-multi-assign
                         mouvementC.lettrage = mouvementD.lettrage = { letter: this.nextLetter(letter), date: TODAY.date };
 
                         mouvementsByType.debit.splice(index, 1); // delete (they might be few same montant)

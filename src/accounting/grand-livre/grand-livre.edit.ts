@@ -1,11 +1,11 @@
 import { AppInjector } from '@upradata/dependency-injection';
 import { pipeline, isUndefined, removeUndefined } from '@upradata/util';
-import { objectToArray } from '@util';
 import { Edit, EditExtraOptions, coloryfyDiff, EditDataStyledCell, updateEditDataStyledCell } from '@edition';
+import { objectToArray } from '@util';
 import { Mouvement } from '../mouvement';
-import { Pieces } from '../piece';
 import { BalanceTotalData } from '../balance';
 import { ComptesBalance } from '../balance-comptes';
+import { Pieces } from '../piece/pieces';
 
 
 interface AddToEditOption {

@@ -1,6 +1,6 @@
-import { mapBy } from '@util';
 import { isDefined } from '@upradata/util';
-import { ComptaSaisieMouvement } from '@import';
+import { mapBy } from '@util';
+import { ComptaSaisieMouvement } from '@import/compta-data.types';
 import { Piece } from './piece';
 
 

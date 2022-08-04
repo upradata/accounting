@@ -1,3 +1,4 @@
+import path from 'path';
 import fs from 'fs-extra';
 import { AppInjector } from '@upradata/dependency-injection';
 import { colors } from '@upradata/node-util';
@@ -5,7 +6,6 @@ import { Journaux, PlanComptable } from '@metadata';
 import { dateToFecDate, logger, numberToComma, TODAY } from '@util';
 import { Lettrage, Mouvement } from './mouvement';
 import { Pieces } from './piece';
-import path from 'path';
 
 
 export class FecBuilderOption {
@@ -93,6 +93,7 @@ export class FecBuilder {
             { filePath: path.join(dir, `${stem}.unix${ext}`), content: this.fec },
             { filePath: path.join(dir, `${stem}.windows${ext}`), content: this.fec.replace(/\n/gm, '\r\n') }
         ].map(async ({ filePath, content }) => {
+            await fs.ensureDir(path.dirname(filePath));
             await fs.writeFile(filePath, content, { encoding: 'utf8' });
             logger.info(`FEC file generated: ${filePath}`, { style: colors.bold.transform });
         }));

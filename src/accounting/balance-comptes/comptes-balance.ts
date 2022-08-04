@@ -1,4 +1,4 @@
-import { Compte } from '../compte';
+import { Compte } from '@metadata/plan-comptable';
 import { BalanceMap, BalanceMapFilterOption, BalanceMapData } from '../balance';
 import { Mouvement } from '../mouvement';
 

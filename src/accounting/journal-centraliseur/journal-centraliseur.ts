@@ -1,6 +1,6 @@
-import { Inject, RootService } from '@upradata/dependency-injection';
+import { AppInjector, RootService } from '@upradata/dependency-injection';
 import { Editter, EditExtraOptions } from '@edition';
-import { GrandLivre } from '../grand-livre/grand-livre';
+import { EventManager } from '@util';
 import { Mouvement } from '../mouvement';
 import { JournalCentraliseurEdit, ExtraOption } from './journal-centraliseur.edit';
 import { JournauxBalanceByMonth } from './journaux-balance-by-month';
@@ -10,8 +10,8 @@ export class JournalCentraliseur {
     public balanceByJournal = new JournauxBalanceByMonth();
 
 
-    constructor(@Inject(GrandLivre) grandLivre: GrandLivre) {
-        grandLivre.onNewMouvement(mouvements => this.add(...mouvements));
+    constructor() {
+        AppInjector.root.get(EventManager).listen('new-mouvement', mouvement => this.add(mouvement));
     }
 
     /* getJournauxBalanceOfMonth(dateOrMonthIndex: Date | number): JournauxBalance {
@@ -26,7 +26,7 @@ export class JournalCentraliseur {
     }
  */
 
-    add(...mouvements: Mouvement[]) {
+    private add(...mouvements: Mouvement[]) {
         this.balanceByJournal.add(mouvements);
     }
 

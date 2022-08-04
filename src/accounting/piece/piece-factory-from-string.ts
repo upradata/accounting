@@ -1,8 +1,9 @@
-import { logger } from '@util';
 import { entries } from '@upradata/util';
+import { CompteParentAux } from '@metadata/plan-comptable';
+import { logger } from '@util';
 import { PieceOption, Piece } from './piece';
 import { MouvementData } from '../mouvement';
-import { CompteParentAux } from '../compte';
+
 
 
 export function getPieceFromString(credit: string, debit: string, pieceOption: PieceOption): Piece | undefined {

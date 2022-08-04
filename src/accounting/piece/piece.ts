@@ -1,8 +1,8 @@
 import { AppInjector } from '@upradata/dependency-injection';
 import { logger } from '@util';
-import { CompteParentAux } from '../compte';
+import { CompteParentAux } from '@metadata/plan-comptable';
+import { EventManager } from '@util/event-manager';
 import { Mouvement, MouvementData, MouvementMetadata } from '../mouvement';
-import { GrandLivre } from '../grand-livre';
 
 
 export interface PieceOption {
@@ -28,7 +28,6 @@ export class Piece {
     isImported: boolean;
     private isClosed: boolean = false;
     mouvements: Mouvement[] = [];
-    grandLivre: GrandLivre;
 
     static idByJournal = {} as { [ k: string ]: number; };
 
@@ -37,8 +36,6 @@ export class Piece {
             this[ k ] = option[ k ];
 
         this.id = `piece-${this.journal}-${this.nextId()}`;
-
-        this.grandLivre = AppInjector.root.get(GrandLivre);
     }
 
     nextId() {
@@ -52,9 +49,11 @@ export class Piece {
         if (this.isClosed)
             throw new Error('Piece is closed');
 
+        const eventManager = AppInjector.root.get(EventManager);
+
         const mouvements = mouvementDataList.map(m => {
             const mouvement = new Mouvement({ pieceId: `${this.id}`, metadata: this as MouvementMetadata, data: m });
-            this.grandLivre.add(mouvement);
+            eventManager.emit('new-mouvement', mouvement);
 
             return mouvement;
         });
@@ -98,7 +97,7 @@ export class Piece {
             this.close();
             return true;
         } catch (e) {
-            logger.error(`${e.message}`);
+            // logger.error(`${e.message}`);
             logger.error(e);
 
             return false;

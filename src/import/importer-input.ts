@@ -1,11 +1,10 @@
 
-import { fromDirIfRel } from '@upradata/node-util';
 import { ComptaDataMap } from './compta-data.types';
 
 
 export interface ImporterFile {
     filename?: string;
-    sheetName?: string;
+    sheetName?: string | string[]; // for backward compatibility, the sheetName changed and we want to try all alternatives before emitting an error
     required?: boolean;
 }
 
@@ -19,19 +18,16 @@ export interface ImporterOptionInput<T = string> {
 export type ImporterFiles<T = ImporterFile> = ComptaDataMap<T>;
 
 
-const defaultDataDirectory = '.';
-const dir = fromDirIfRel(defaultDataDirectory);
-
 export const INPUT_DATA_DEFAULTS: ImporterOptionInput<ImporterFile> = {
     files: {
-        depenses: { sheetName: 'Depenses', filename: dir('depenses.csv') },
-        depensesPieces: { sheetName: 'DepensePieces', filename: dir('depenses-pieces.csv') },
-        saisiePieces: { sheetName: 'SaisiePieces', filename: dir('saisie-pieces.csv') },
-        planComptable: { sheetName: 'PlanComptable', filename: dir('plan-comptable.csv'), required: true },
-        journaux: { sheetName: 'Journaux', filename: dir('journaux.csv'), required: true },
-        balanceReouverture: { sheetName: 'BalanceReouverture', filename: dir('balance-reouverture.csv') },
-        ecritureComptaGenerators: { sheetName: 'EcritureComptaGenerators', filename: dir('ecriture-compta-generators.csv') },
+        ecritureSimples: { sheetName: [ 'EcrituresSimples', 'Depenses' ], filename: 'ecritures-simples.csv' },
+        ecritureSimplePieces: { sheetName: [ 'EcritureSimplePieces', 'DepensePieces' ], filename: 'ecriture-simple-pieces.csv' },
+        saisiePieces: { sheetName: 'SaisiePieces', filename: 'saisie-pieces.csv' },
+        planComptable: { sheetName: 'PlanComptable', filename: 'plan-comptable.csv', required: true },
+        journaux: { sheetName: 'Journaux', filename: 'journaux.csv', required: true },
+        balanceReouverture: { sheetName: 'BalanceReouverture', filename: 'balance-reouverture.csv' },
+        ecritureComptaGenerators: { sheetName: 'EcrituresComptaGenerators', filename: 'ecriture-compta-generators.csv' },
     },
     odsFilename: 'comptabilite.ods',
-    directory: defaultDataDirectory
+    directory: process.cwd()
 };

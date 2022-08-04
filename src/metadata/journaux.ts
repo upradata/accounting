@@ -1,5 +1,5 @@
 import { RootService } from '@upradata/dependency-injection';
-import { ComptaJournal } from '@import';
+import { ComptaJournal } from '@import/compta-data.types';
 
 
 @RootService()

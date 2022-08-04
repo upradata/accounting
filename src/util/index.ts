@@ -1,4 +1,5 @@
 export * from './compta-util';
+export * from './event-manager';
 export * from './logger';
 export * from './sorted-array';
 export * from './sorted-map';

@@ -1,21 +1,21 @@
 import { mapBy } from '@util';
-import { ComptaDepensePiece } from '@import';
+import { ComptaEcritureSimplePiece } from '@import/compta-data.types';
 import { PieceOption, Piece } from './piece';
 
 
 
 export interface PiecesFromPieceRefOption {
-    comptaDepensePieces: ComptaDepensePiece[];
+    comptaEcritureSimplesPieces: ComptaEcritureSimplePiece[];
     pieceRef: string;
     pieceOption: Omit<PieceOption, 'journal'>;
 }
 
-export function getPiecesFromPieceRef({ comptaDepensePieces, pieceRef, pieceOption }: PiecesFromPieceRefOption): Piece[] {
-    // Example: in Depenses sheet, pieceRef = piece-reductuion-capital
-    // In DepensePieces, there can ba few pieces => piece-reductuion-capital#1, piece-reductuion-capital#2, ... with few ecritures
+export function getPiecesFromPieceRef({ comptaEcritureSimplesPieces, pieceRef, pieceOption }: PiecesFromPieceRefOption): Piece[] {
+    // Example: in EcrituresSimples sheet, pieceRef = piece-reductuion-capital
+    // In EcrituresSimplesPieces, there can ba few pieces => piece-reductuion-capital#1, piece-reductuion-capital#2, ... with few ecritures
     const piecesRegex = new RegExp(`^${pieceRef}#\\d+`);
 
-    const piecesById = mapBy(comptaDepensePieces, 'id');
+    const piecesById = mapBy(comptaEcritureSimplesPieces, 'id');
     const comptaPiecesByIdFiltered = Object.values(piecesById).filter(ecritures => piecesRegex.test(ecritures[ 0 ].id));
     // all possible pieces
 

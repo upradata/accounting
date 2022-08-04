@@ -1,5 +1,5 @@
 import { TupleValues } from '@upradata/util';
-import { Compte, CompteParentAux } from '@accounting';
+import { Compte, CompteParentAux } from '@metadata/plan-comptable';
 
 /* type ToCsvTypes<T> = {
     [ K in keyof T ]: T[ K ] extends boolean ? string | boolean :
@@ -8,24 +8,24 @@ import { Compte, CompteParentAux } from '@accounting';
 };
  */
 
-export interface ComptaDepensePiece {
+export interface ComptaEcritureSimplePiece {
     id: string;
     journal: string;
     debit: number;
     credit: number;
     compteInfo: CompteParentAux;
+    ref?: ComptaEcritureComptaGeneratorRef;
 }
 
-export type ComptaDepensePieceCSV = /* ToCsvTypes< */Omit<ComptaDepensePiece, 'compteInfo'>/* > */ & {
+export type ComptaEcritureSimplePieceCSV = /* ToCsvTypes< */Omit<ComptaEcritureSimplePiece, 'compteInfo'>/* > */ & {
     compte: Compte;
     compteLibelle: string;
     compteAux?: Compte;
     compteAuxLibelle?: string;
-
 };
 
 
-export const comptaDepenseTypes = [
+export const comptaEcritureSimpleTypes = [
     'frais-generaux',
     'loyer',
     'compte-courant',
@@ -37,25 +37,27 @@ export const comptaDepenseTypes = [
 ] as const;
 
 
-export type ComptaDepenseType = TupleValues<typeof comptaDepenseTypes>;
+export type ComptaEcritureSimpleType = TupleValues<typeof comptaEcritureSimpleTypes>;
 
-
-export interface ComptaDepense {
-    id: string;
+export interface EcritureSimpleData {
     libelle: string;
     ttc: number;
-    ht: number;
-    tva: number;
+    ht?: number;
+    tva?: number;
     date: Date;
-    type: ComptaDepenseType;
-    journal: string;
-    creditMouvement: string;
-    debitMouvement: string;
-    pieceRef: string;
+    journal?: string;
     isImported: boolean;
 }
 
-export type ComptaDepenseCSV = /* ToCsvTypes< */ComptaDepense/* > */;
+export type ComptaEcritureSimple = EcritureSimpleData & {
+    id: string;
+    type: ComptaEcritureSimpleType;
+    creditMouvement?: string;
+    debitMouvement?: string;
+    pieceRef?: string;
+};
+
+export type ComptaEcritureSimpleCSV = /* ToCsvTypes< */ComptaEcritureSimple/* > */;
 
 
 export interface ComptaSaisieMouvement {
@@ -67,6 +69,7 @@ export interface ComptaSaisieMouvement {
     credit: number;
     isImported: boolean;
     compteInfo: CompteParentAux;
+    ref?: ComptaEcritureComptaGeneratorRef;
 }
 
 
@@ -80,7 +83,7 @@ export type ComptaSaisieMouvementCSV = /* ToCsvTypes< */Omit<ComptaSaisieMouveme
 
 export const comptacritureComptaGeneratorTypes = [
     'helper',
-    'generator',
+    'ecriture-simple',
 ] as const;
 
 
@@ -97,15 +100,14 @@ export const isComptaEcritureComptaGeneratorRefArgsObject = (value: any): value 
     return v && !!v.object;
 };
 
-type Variable = string;
 
-export interface ComptaEcritureComptaGenerator {
+export interface ComptaEcritureComptaGenerator<Variable = string> {
     function: { functionName: string; argNames: (string | string[])[]; }; // f(a, { b, c }) => argNames: [ 'a', [ 'b', 'c' ] ]
     type: ComptacritureComptaGeneratorTypes;
     journal?: string | Variable;
     condition?: boolean | Variable;
-    compte?: Compte | string | Variable;
-    compteAux?: Compte | string | Variable;
+    compte?: Compte | Variable;
+    compteAux?: Compte | Variable;
     debit?: number | Variable;
     credit?: number | Variable;
     ref?: ComptaEcritureComptaGeneratorRef;
@@ -149,8 +151,8 @@ export type ComptaPlanComptableCSV = /* ToCsvTypes< */ComptaPlanComptable/* > */
 
 
 export class ComptaDataFactory<CSV extends boolean = true> {
-    depenses: CSV extends true ? ComptaDepenseCSV : ComptaDepense;
-    depensesPieces: CSV extends true ? ComptaDepensePieceCSV : ComptaDepensePiece;
+    ecritureSimples: CSV extends true ? ComptaEcritureSimpleCSV : ComptaEcritureSimple;
+    ecritureSimplePieces: CSV extends true ? ComptaEcritureSimplePieceCSV : ComptaEcritureSimplePiece;
     saisiePieces: CSV extends true ? ComptaSaisieMouvementCSV : ComptaSaisieMouvement;
     journaux: CSV extends true ? ComptaJournalCSV : ComptaJournal;
     planComptable: CSV extends true ? ComptaPlanComptableCSV : ComptaPlanComptable;

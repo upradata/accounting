@@ -7,16 +7,16 @@ import {
     ParsersOptions
 } from '@upradata/node-util';
 import { dasherize, keys, Merge } from '@upradata/util';
-import { Compte } from '@accounting';
-import { Journaux, PlanComptable } from '@metadata';
+import { Compte, PlanComptable } from '@metadata/plan-comptable';
+import { Journaux } from '@metadata/journaux';
 import { fecDateToDate, logger } from '@util';
 import {
     comptacritureComptaGeneratorTypes,
     ComptaData,
     ComptaDataFactory,
     ComptaDataNames,
-    ComptaDepenseType,
-    comptaDepenseTypes,
+    ComptaEcritureSimpleType,
+    comptaEcritureSimpleTypes,
     ComptaEcritureComptaGenerator,
 } from './compta-data.types';
 
@@ -79,41 +79,9 @@ const functionSignatureCall = makeParser((cellData: string | undefined) => {
 
     const [ , functionName, fnArgs ] = cellData.match(/(\S+)\s*\((.*)\)/);
 
-    // for now, only one param of object
-    /*  const fnArgs = args.includes('{') ? [ args ] : cellParsers.arrayString(args);
-
-     const functionArgs = fnArgs.map(arg => {
-         const a = arg.trim();
-
-         if (a.startsWith('{')) {
-             const [ , fields ] = a.match(/{(.*)}/);
-
-             const objFields = fields.split(',').map(field => field.trim()).reduce((o, field) => {
-                 const key = field.startsWith('...') ? 'dots' : 'normal';
-
-                 return {
-                     ...o,
-                     [ key ]: [ ...(o[ key ] || []), field.replace('...', '') ]
-                 };
-             }, { normal: [] as string[], dots: [] as string[] });
-
-             if (objFields.dots.length > 1)
-                 throw new Error(`Only one 3 dots field supported in object`);
-
-             return {
-                 object: `{${objFields.normal.join(',')}}`,// .replaceAll(/([a-zA-Z-_]+?)\s*:/g, '"$1":'),
-                 spread: objFields.dots[ 0 ] // only one supported
-             } as ComptaEcritureComptaGeneratorRefArgsObject;
-         }
-
-         if (/^(?:[0-9]+|(?:\.?[0-9]+)|(?:[0-9]+\.[0-9]+))$/.test(a))
-             return parseFloat(a);
-
-         return a;
-     }); */
-
     return {
-        functionName, /* args: functionArgs,  */
+        functionName,
+        // eslint-disable-next-line no-new-func
         getArgs: (...argNames: string[]) => Function(...[ ...argNames, `return ${fnArgs}` ])
     } as ComptaEcritureComptaGenerator[ 'ref' ];
 });
@@ -176,13 +144,13 @@ const commonParsers: ParsersOptions<AllOptions & { default?: string; }> = {
 
 
 const IDS = {
-    depense: 0,
+    ecritureSimple: 0,
 };
 
 const defaultParsers: CsvParsersOptions = {
-    depenses: {
+    ecritureSimples: {
         ...commonParsers,
-        id: { emptyCell: `depense-${++IDS.depense}`, parser: cellParsers.string() },
+        id: { emptyCell: `ecritureSimple-${++IDS.ecritureSimple}`, parser: cellParsers.string() },
         libelle: { emptyCell: 'Saisie Comptable En Ligne', parser: cellParsers.string() },
         type: {
             parser: cellParsers.compose((cellData: string | undefined) => {
@@ -195,25 +163,26 @@ const defaultParsers: CsvParsersOptions = {
                 // normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones.
                 const stringWithNoAccent = string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-                const type = dasherize(stringWithNoAccent) as ComptaDepenseType;
+                const type = dasherize(stringWithNoAccent) as ComptaEcritureSimpleType;
                 return type;
-            }, cellParsers.choices({ values: comptaDepenseTypes }))
+            }, cellParsers.choices({ values: comptaEcritureSimpleTypes }))
         },
         creditMouvement: { emptyCell: '', parser: cellParsers.string() },
         debitMouvement: { emptyCell: '', parser: cellParsers.string() },
         pieceRef: { parser: cellParsers.string() },
         journal: { parser: journalParser() }
     },
-    depensesPieces: {
+    ecritureSimplePieces: {
         ...commonParsers,
         id: { parser: cellParsers.ensureNotEmpty({ what: 'id', onError: onParserError }) },
         journal: { parser: cellParsers.compose(cellParsers.ensureNotEmpty({ what: 'journal', onError: onParserError }), journalParser()) },
-
+        ref: { parser: functionSignatureCall }
     },
     saisiePieces: {
         ...commonParsers,
         libelle: { emptyCell: `Saisie Pièce`, parser: cellParsers.string() },
         journal: { parser: cellParsers.compose(cellParsers.ensureNotEmpty({ what: 'journal', onError: onParserError }), journalParser()) },
+        ref: { parser: functionSignatureCall }
     },
     balanceReouverture: {
         ...commonParsers,
@@ -237,20 +206,12 @@ const defaultParsers: CsvParsersOptions = {
         function: { parser: cellParsers.compose(functionSignatureDef, applyLastNonEmptyValue<string>()) },
         type: { parser: cellParsers.choices({ values: comptacritureComptaGeneratorTypes }) },
         journal: { parser: journalParser({ emitError: false }) },
-        condition: {
-            parser:/*  cellParsers.string()  */(cellData: string) => {
-                if (cellData === '' || typeof cellData !== 'string')
-                    return undefined;
-
-                const s = cellData.trim();
-                return s.replace(/^(\s*)'(.*)'(\s*)$/, '$1$2$3');
-            }
-        },
+        condition: { parser: cellParsers.string() },
         credit: { parser: cellParsers.firstToSucceed(cellParsers.number, cellParsers.string()) },
         debit: { parser: cellParsers.firstToSucceed(cellParsers.number, cellParsers.string()) },
         compte: { parser: cellParsers.firstToSucceed(planComptableParser('compte', { canBeEmpty: true, emitError: false }), cellParsers.string()) },
         compteAux: { parser: cellParsers.firstToSucceed(planComptableParser('compteAux', { canBeEmpty: true, emitError: false }), cellParsers.string()) },
-        ref: { parser: functionSignatureCall/*  cellParsers.compose(functionSignatureCall, applyLastNonEmptyValue<ComptaEcritureComptaGenerator[ 'ref' ]>()) */ }
+        ref: { parser: functionSignatureCall }
     },
 };
 
@@ -266,14 +227,14 @@ type Headers = {
 };
 
 export const comptaDataHeaders: Headers = {
-    depenses: {
+    ecritureSimples: {
         headers: [ 'id', 'libelle', 'ttc', 'ht', 'tva', 'date', 'type', 'journal', 'debitMouvement', 'creditMouvement', 'pieceRef', 'isImported' ],
     },
-    depensesPieces: {
-        headers: [ 'id', 'journal', 'compte', 'compteLibelle', 'compteAux', 'compteAuxLibelle', 'debit', 'credit' ],
+    ecritureSimplePieces: {
+        headers: [ 'id', 'journal', 'compte', 'compteLibelle', 'compteAux', 'compteAuxLibelle', 'debit', 'credit', 'ref' ],
     },
     saisiePieces: {
-        headers: [ 'id', 'libelle', 'journal', 'date', 'compte', 'compteLibelle', 'compteAux', 'compteAuxLibelle', 'debit', 'credit', 'isImported' ],
+        headers: [ 'id', 'libelle', 'journal', 'date', 'compte', 'compteLibelle', 'compteAux', 'compteAuxLibelle', 'debit', 'credit', 'ref', 'isImported' ],
         isMetadata: false
     },
     balanceReouverture: {
@@ -307,14 +268,14 @@ export const importJsonFromCsv = async <N extends ComptaDataNames>(file: string,
     const getHeaders = async (): Promise<readonly string[]> => {
         const csvHeaders = comptaDataHeaders[ name ].headers as readonly string[];
 
-        if (name === 'depenses') {
-            // The property "type" has been added later in the Excel Sheet "Depenses".
+        if (name === 'ecritureSimples') {
+            // The property "type" has been added later in the Excel Sheet "EcrituresSimples".
             // So we remove "type" from the headers for previous versions
             const headers = await getCsvHeaders(file, { delimiter });
-            const typeHeader: keyof ComptaDataFactory[ 'depenses' ] = 'type';
+            const typeHeader: keyof ComptaDataFactory[ 'ecritureSimples' ] = 'type';
 
             if (!headers.some(h => h.toLowerCase().trim() === typeHeader))
-                return (csvHeaders as Headers[ 'depenses' ][ 'headers' ]).filter(h => h !== typeHeader);
+                return (csvHeaders as Headers[ 'ecritureSimples' ][ 'headers' ]).filter(h => h !== typeHeader);
         }
 
         return csvHeaders;

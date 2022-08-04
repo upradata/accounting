@@ -1,27 +1,19 @@
 import { map } from '@upradata/util';
-import { ComptaDepenseType } from '@import';
-import { Compte, CompteParentAux } from '../compte';
+import { ComptaEcritureSimpleType, EcritureSimpleData } from '@import/compta-data.types';
+import { Compte, CompteParentAux } from '@metadata/plan-comptable';
 import { Piece } from './piece';
 import { PieceFactory } from './piece-factory';
 
 
-export interface Depense {
-    libelle: string;
-    date: Date;
-    ttc: number;
-    ht: number;
-    tva: number;
-    isImported: boolean;
-}
 
-export type PieceFromLibelleGenerator = (depense: Depense) => Piece[];
+export type PieceFromLibelleGenerator = (ecritureSimple: EcritureSimpleData) => Piece[];
 
 
 
-export const generateFromLibelle = (generators: LibelleGenerators) => (depense: Depense): Piece[] => {
+export const generateFromLibelle = (generators: LibelleGenerators) => (ecritureSimple: EcritureSimpleData): Piece[] => {
     // return the first generator able to generate the pieces
     for (const generator of Object.values(generators)) {
-        const pieces = generator(depense);
+        const pieces = generator(ecritureSimple);
         if (pieces) return pieces;
     }
 
@@ -29,7 +21,7 @@ export const generateFromLibelle = (generators: LibelleGenerators) => (depense: 
 };
 
 
-export const generatorFromType = (generators: Generators) => (type: ComptaDepenseType) => {
+export const generatorFromType = (generators: Generators) => (type: ComptaEcritureSimpleType) => {
     switch (type) {
         case 'frais-generaux': return generators.fraisGeneraux;
         case 'loyer': return generators.loyer;
@@ -47,64 +39,64 @@ const makeGenerator = (generator: PieceFromLibelleGenerator) => generator;
 
 export const PREDIFINED_GENERATORS = {
 
-    loyer: makeGenerator((depense: Depense) => {
+    loyer: makeGenerator((ecritureSimple: EcritureSimpleData) => {
         // 60 Opérations Diverses
         // 6132: Locations immobilieres (compte de charges)
         // 4011: Fournisseurs SDM (compte fournisseur)
         const crediteur = new CompteParentAux({ compte: 401, compteAux: 4011 });
 
         return [
-            PieceFactory.achat({ crediteur, debiteur: { compte: new Compte(6132) }, ...depense }),
-            PieceFactory.banque({ montant: depense.ttc, compteInfo: crediteur, type: 'achat', ...depense })
+            PieceFactory.achat({ crediteur, debiteur: { compte: new Compte(6132) }, ...ecritureSimple }),
+            PieceFactory.banque({ montant: ecritureSimple.ttc, compteInfo: crediteur, type: 'achat', ...ecritureSimple })
         ];
     }),
 
-    fraisGeneraux: makeGenerator((depense: Depense): Piece[] => {
+    fraisGeneraux: makeGenerator((ecritureSimple: EcritureSimpleData): Piece[] => {
         // 60 Opérations Diverses
         // 6064: Fournitures administratives (compte de charges)
         // 4012: Fournisseur Frais Généraux (compte fournisseur)
         const crediteur = new CompteParentAux({ compte: 401, compteAux: 4012 });
 
         return [
-            PieceFactory.achat({ crediteur, debiteur: new CompteParentAux({ compte: 6064 }), ...depense }),
-            PieceFactory.banque({ montant: depense.ttc, compteInfo: crediteur, type: 'achat', ...depense })
+            PieceFactory.achat({ crediteur, debiteur: new CompteParentAux({ compte: 6064 }), ...ecritureSimple }),
+            PieceFactory.banque({ montant: ecritureSimple.ttc, compteInfo: crediteur, type: 'achat', ...ecritureSimple })
         ];
     }),
 
-    greffe: makeGenerator((depense: Depense): Piece[] => {
+    greffe: makeGenerator((ecritureSimple: EcritureSimpleData): Piece[] => {
         // 60 Opérations Diverses
         // 6227: Frais d'actes et de contentieux (compte de charges)
         // 4013: Frais Greffe (compte fournisseur)
         const crediteur = new CompteParentAux({ compte: 401, compteAux: 4013 });
 
         return [
-            PieceFactory.achat({ crediteur, debiteur: new CompteParentAux({ compte: 6227 }), ...depense }),
-            PieceFactory.banque({ montant: depense.ttc, compteInfo: crediteur, type: 'achat', ...depense })
+            PieceFactory.achat({ crediteur, debiteur: new CompteParentAux({ compte: 6227 }), ...ecritureSimple }),
+            PieceFactory.banque({ montant: ecritureSimple.ttc, compteInfo: crediteur, type: 'achat', ...ecritureSimple })
         ];
     }),
 
-    compteCourant: makeGenerator((depense: Depense): Piece[] => {
+    compteCourant: makeGenerator((ecritureSimple: EcritureSimpleData): Piece[] => {
         // 4551 Associés - Comptes courants : Principal
         // 45511 Compte courant associé Thomas Milotti
         // 77881 Produit exceptionel Abandon Compte Thomas Milottti
 
         return [
-            PieceFactory.banque({ montant: depense.ttc, compteInfo: new CompteParentAux({ compte: 4551, compteAux: 45511 }), type: 'vente', ...depense }),
-            new Piece({ journal: '90', ...depense }).addMouvementPartieDouble({
-                montant: depense.ttc, crediteur: new CompteParentAux({ compte: 77881 }), debiteur: new CompteParentAux({ compte: 4551, compteAux: 45511 })
+            PieceFactory.banque({ montant: ecritureSimple.ttc, compteInfo: new CompteParentAux({ compte: 4551, compteAux: 45511 }), type: 'vente', ...ecritureSimple }),
+            new Piece({ journal: '90', ...ecritureSimple }).addMouvementPartieDouble({
+                montant: ecritureSimple.ttc, crediteur: new CompteParentAux({ compte: 77881 }), debiteur: new CompteParentAux({ compte: 4551, compteAux: 45511 })
             })
         ];
     }),
 
-    venteWebsite: makeGenerator((depense: Depense): Piece[] => {
+    venteWebsite: makeGenerator((ecritureSimple: EcritureSimpleData): Piece[] => {
         // 60 Opérations Diverses
         // 707: Vente de marchandise TVA1 (compte de produits) (70701 exonéré de TVA)
         // 4111: Compte Client Website (compte client)
         const debiteur = new CompteParentAux({ compte: 4111 });
 
         return [
-            PieceFactory.achat({ crediteur: new CompteParentAux({ compte: 707 }), debiteur, ...depense }),
-            PieceFactory.banque({ montant: depense.ttc, compteInfo: debiteur, type: 'vente', ...depense })
+            PieceFactory.achat({ crediteur: new CompteParentAux({ compte: 707 }), debiteur, ...ecritureSimple }),
+            PieceFactory.banque({ montant: ecritureSimple.ttc, compteInfo: debiteur, type: 'vente', ...ecritureSimple })
         ];
     })
 } as const;
@@ -125,7 +117,7 @@ export const libelleRegexes: LibelleGeneratorsTest = {
 };
 
 
-export const PREDIFINED_LIBELLE_GENERATORS: LibelleGenerators = map(libelleRegexes, (k, libelleTest) => makeGenerator((depense: Depense) => {
-    if (libelleTest(depense.libelle))
-        return PREDIFINED_GENERATORS[ k ](depense);
+export const PREDIFINED_LIBELLE_GENERATORS: LibelleGenerators = map(libelleRegexes, (k, libelleTest) => makeGenerator((ecritureSimple: EcritureSimpleData) => {
+    if (libelleTest(ecritureSimple.libelle))
+        return PREDIFINED_GENERATORS[ k ](ecritureSimple);
 }));

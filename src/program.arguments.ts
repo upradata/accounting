@@ -9,13 +9,17 @@ const fromThisRoot = fromDir(lookupRoot.sync(__dirname));
 
 const command = createCli({ packageJson: fromThisRoot('package.json') });
 
+export const cliParserDate = (value: string) => {
+    // value DDMMYYYY
+    const zeros = numberWithLeadingZeros;
+    return new Date(`${parseInt(value.slice(4, 8))}-${zeros(parseInt(value.slice(2, 4)), 2)}-${zeros(parseInt(value.slice(0, 2)), 2)}`);
+};
+
+
 command
     .description('Accounting. Generates FEC, Balances Comptes, Grand Livre, Journal Centralisateur and Pièces.')
     .option('-s, --exercise-start <date>', `Start date of the exercise in DDMMYYYY format
-    (By default, the exercise start is taken from metadata.json and the current year).`, value => {
-        const zeros = numberWithLeadingZeros;
-        return new Date(`${parseInt(value.slice(4, 8))}-${zeros(parseInt(value.slice(2, 4)), 2)}-${zeros(parseInt(value.slice(0, 2)), 2)}`);
-    })
+    (By default, the exercise start is taken from metadata.json and the current year).`, cliParserDate)
     .option('-m, --metadata <path>', 'Metadata of the accounting.', fromThisRoot('metadata.json'))
     .option('-o, --output-dir <path>', 'Output directory for the edition.', '.')
     .option('-f, --fec [path | bool]', 'Generate fec.', cliParsers.try(cliParsers.boolean), true)

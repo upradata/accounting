@@ -1,9 +1,8 @@
-import { RecordOf, toObject, getRecursive, map, removeUndefined, keys, ValueOf } from '@upradata/util';
-import { Compte, CompteParentAux, Piece } from '@accounting';
-import { ComptaEcritureComptaGenerator, ComptaEcritureComptaGeneratorRef } from '@import';
-import { mapBy } from '@util';
-import { cp } from 'fs';
-
+import { RecordOf, toObject, map, removeUndefined, ValueOf } from '@upradata/util';
+import { Piece } from '@accounting/piece/piece';
+import { ComptaEcritureComptaGenerator, ComptaEcritureComptaGeneratorRef, EcritureSimpleData } from '@import/compta-data.types';
+import { logger, mapBy } from '@util';
+import { CompteParentAux } from './plan-comptable';
 
 export class EcritureComptaGenerators {
     generators: RecordOf<(...args: unknown[]) => Piece[]> = {};
@@ -16,91 +15,100 @@ export class EcritureComptaGenerators {
     add(ecrituresGenerators: ComptaEcritureComptaGenerator[]) {
         const generatorsById = {
             helpers: mapBy(ecrituresGenerators.filter(e => e.type === 'helper'), 'function.functionName'),
-            generators: mapBy(ecrituresGenerators.filter(e => e.type === 'generator'), 'function.functionName'),
+            ecrituresSimples: mapBy(ecrituresGenerators.filter(e => e.type === 'ecriture-simple'), 'function.functionName'),
         };
 
 
-        type Args = Omit<ComptaEcritureComptaGenerator, 'ref' | 'function' | 'type'>;
-        type Params = {
-            [ K in keyof Args ]: { key: K; value: Args[ K ]; }
-        };
+        type EcritureData = Omit<ComptaEcritureComptaGenerator, 'ref' | 'function' | 'type'>;
+        type EcritureDataEvaluated = Omit<ComptaEcritureComptaGenerator<never>, 'ref' | 'function' | 'type'>;
+        type MouvementData = Omit<EcritureDataEvaluated, 'condition'>;
+
+        type Variable = { key: string; value: unknown; };
 
 
-        const getParams = (argNames: (string | string[])[], args: unknown[]) => {
-            const parameters = args.flatMap((arg, i) => {
+        const ecritureDataEvaluation = (argNames: (string | string[])[], args: unknown[]) => {
+            const vars = args.flatMap((arg, i) => {
                 if (typeof arg === 'object') {
                     const names = argNames[ i ];
                     return Array.isArray(names) ? names.map(n => ({ key: n, value: arg[ n ] })) : { key: names, value: arg };
                 }
 
                 return { key: argNames[ i ] as string, value: arg };
-            }) as ValueOf<Params>[];
+            }) as Variable[];
 
-            const keys = parameters.map(p => p.key);
-            const values = parameters.map(p => p.value);
-
-            const params = map(toObject(parameters, 'key'), (_, v) => v.value);
-
-            const isExpression = (expression: string) => keys.some(k => expression.includes(k));
-            // keys.some(k => k === key.split('.')[ 0 ].replace(/^!/, ''));
-
-            const getArgValue = <T extends ValueOf<M & { condition: boolean; }>>(key: string): undefined | T => {
-                return isExpression(key) ? Function(...[ ...keys, `return ${key}` ])(...values) : undefined;
+            const variables = {
+                keys: vars.map(p => p.key),
+                values: vars.map(p => p.value),
+                object: map(toObject(vars, 'key'), (_, v) => v.value)
             };
 
-            const getArgValues = (vars: Args) => map(
-                vars,
-                (_, v) => typeof v === 'string' && isExpression(v) ? getArgValue(v) : v
-            ) as M & { condition: boolean; };
+            const isExpression = (expression: string) => variables.keys.some(k => expression.includes(k));
+
+            type V = ValueOf<EcritureDataEvaluated>;
+            const evaluateEcritureField = <T extends V = V>(expression: string): undefined | T => {
+                // eslint-disable-next-line no-new-func
+                return isExpression(expression) ? Function(...[ ...variables.keys, `return ${expression}` ])(...variables.values) : undefined;
+            };
+
+            const evaluateEcriture = (ecriture: EcritureData) => map(
+                ecriture,
+                (_, v) => typeof v === 'string' && isExpression(v) ? evaluateEcritureField(v) : v
+            ) as EcritureDataEvaluated;
 
 
             return {
-                params,
-                values,
-                keys,
-                isVar: isExpression,
-                getArgValue,
-                getArgValues
+                variables,
+                isExpression,
+                evaluateEcritureField,
+                evaluateEcriture
             };
         };
 
-        type P = ReturnType<typeof getParams>;
-
-        type M = {
-            journal: string; credit: number; debit: number; compte: number | Compte; compteAux: number | Compte;
-        };
+        type EcritureEval = ReturnType<typeof ecritureDataEvaluation>;
 
         const helpers = Object.entries(generatorsById.helpers).reduce((o, [ id, ecritures ]) => {
             return {
                 ...o,
                 [ id ]: (...args: unknown[]) => {
-                    return ecritures.flatMap(({ function: fn, ref, type, ...vars }) => {
+                    const ecrituresEvaluated = ecritures.reduce<{ ecritures: EcritureDataEvaluated[]; error?: Error; }>(
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        (data, { function: fn, ref, type, ...ecritureData }) => {
+                            if (data.error)
+                                return data;
 
-                        const { /* functionName, */ argNames } = fn;
+                            const { argNames } = fn;
 
-                        const params = getParams(argNames, args);
+                            const ecritureEval = ecritureDataEvaluation(argNames, args);
 
-                        const { journal, condition, credit, debit, compte, compteAux } = params.getArgValues(vars);
+                            const { condition, ...ecritureEvaluated } = ecritureEval.evaluateEcriture(ecritureData);
 
-                        if (condition === false)
-                            return undefined;
+                            if (condition === false)
+                                return data;
 
+                            try {
+                                const ecrituresEvaluated = ref ? [
+                                    ...callRef(ref, ecritureEval).map(m => ({ ...m, ...ecritureEvaluated })),
+                                    ecritureEvaluated
+                                ] : [ ecritureEvaluated ];
 
-                        try {
-                            const mouvement: M = { journal, compte, compteAux, credit, debit };
-                            return ref ? [ ...callRef(ref, params).map(m => ({ ...m, ...mouvement })), mouvement ] : [ mouvement ];
-                        } catch (e) {
-                            console.error(e);
-                        }
+                                data.ecritures.push(...ecrituresEvaluated);
+                            } catch (e) {
+                                return { ecritures: [], error: e };
+                            }
 
-                        return undefined;
-                    }).filter(v => !!v);
+                            return data;
+                        }, { ecritures: [] });
+
+                    if (ecrituresEvaluated.error)
+                        throw ecrituresEvaluated.error;
+
+                    return ecrituresEvaluated.ecritures;
                 }
             };
-        }, {} as RecordOf<(...args: unknown[]) => M[]>);
+        }, {} as RecordOf<(...args: unknown[]) => MouvementData[]>);
 
 
-        const callRef = (ref: ComptaEcritureComptaGeneratorRef, params: P): M[] => {
+        const callRef = (ref: ComptaEcritureComptaGeneratorRef, ecritureEval: EcritureEval): EcritureDataEvaluated[] => {
             const { functionName, getArgs } = ref;
 
             const fn = helpers[ functionName ];
@@ -108,49 +116,52 @@ export class EcritureComptaGenerators {
             if (!fn)
                 throw new Error(`function "${functionName}" not found while building EcritureComptaGenerators`);
 
-            return fn(getArgs(...params.keys)(...params.values));
+            return fn(getArgs(...ecritureEval.variables.keys)(...ecritureEval.variables.values));
         };
 
 
 
-        const piecesGeneratorsById = Object.entries(generatorsById.generators).reduce((o, [ id, ecritures ]) => {
+        const piecesGeneratorsById = Object.entries(generatorsById.ecrituresSimples).reduce((o, [ id, ecritures ]) => {
             return {
                 ...o,
                 [ id ]: (...args: unknown[]) => {
-                    const pieces = ecritures.reduce((pieces, { function: fn, ref, type, ...vars }) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const pieces = ecritures.reduce((pieces, { function: fn, ref, type, ...ecritureData }) => {
 
-                        const { /* functionName, */ argNames } = fn;
+                        const { argNames } = fn;
 
-                        const params = getParams(argNames, args);
-                        const depense = args[ 0 ] as { libelle: string; ttc: number; ht: number; tva: number; date: Date; isImported: boolean; journal?: string; };
+                        const ecritureEval = ecritureDataEvaluation(argNames, args);
+                        const ecritureSimple = args[ 0 ] as EcritureSimpleData;
 
-                        const mm = params.getArgValues(vars);
+                        const ecritureEvaluated = ecritureEval.evaluateEcriture(ecritureData);
 
-                        if (mm.condition === false)
-                            return undefined;
+                        if (ecritureEvaluated.condition === false)
+                            return pieces;
 
                         try {
 
-                            const mouvement: Partial<M> = removeUndefined(mm);
-                            const mouvements = ref ? [ ...callRef(ref, params).map(m => ({ ...m, ...mouvement })), mouvement ] : [ mouvement ];
-                            const { journal } = mouvements[ 0 ];
+                            const ecriture: Partial<EcritureDataEvaluated> = removeUndefined(ecritureEvaluated);
+                            const ecrituresEvaluated = ref ? [ ...callRef(ref, ecritureEval).map(e => ({ ...e, ...ecriture })), ecriture ] : [ ecriture ];
+                            const { journal } = ecrituresEvaluated[ 0 ];
 
                             if (!pieces[ journal ]) {
                                 pieces[ journal ] = new Piece({
                                     journal,
-                                    libelle: /* paramArgs.libelle as string */ depense.libelle, // || mouvements[ 0 ]?.libelle,
-                                    date: depense.date, // getRecursive(paramArgs, 'depense.date') || params.date?.value as Date,
-                                    isImported: depense.isImported,
+                                    libelle: ecritureSimple.libelle,
+                                    date: ecritureSimple.date,
+                                    isImported: ecritureSimple.isImported,
                                 });
                             }
 
-                            pieces[ journal ].addMouvement(...mouvements.filter(m => Object.values(m).length > 0).map(m => ({
+                            const mouvements = ecrituresEvaluated.filter(m => Object.values(m).length > 0).map(m => ({
                                 montant: m.credit || m.debit,
                                 compteInfo: new CompteParentAux({ compte: m.compte, compteAux: m.compteAux }),
                                 type: m.credit ? 'credit' as const : 'debit' as const
-                            })));
+                            }));
+
+                            pieces[ journal ].addMouvement(...mouvements);
                         } catch (e) {
-                            console.error(e);
+                            logger.error(e);
                         }
 
                         return pieces;

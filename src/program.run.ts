@@ -1,17 +1,21 @@
 import path from 'path';
-import fs from 'fs-extra';
 import Ajv from 'ajv';
+import fs from 'fs-extra';
 import { AppInjector } from '@upradata/dependency-injection';
 import { entries, filter, ObjectOf } from '@upradata/util';
-import { logger } from '@util';
-import { ComptabiliteMetadata, PlanComptable, Journaux, MetadataJson, ExercisePeriodOption, } from '@metadata';
-import { GrandLivre, BalanceDesComptes, JournalCentraliseur, Pieces, AccountingInterface } from '@accounting';
-import { Editter, EditterLoggers } from '@edition';
-import { ProgramArguments } from './program.arguments';
+import { Accounting } from './accounting/accounting';
+import { AccountingInterface } from './accounting/accounting.interface';
+import { EditterLoggers } from './edition/edit.types';
+import { Editter } from './edition/editter';
 import { consoleEditter } from './edition/editters/editter.console';
 import { csvEditter } from './edition/editters/editter.csv';
 import { jsonEditter } from './edition/editters/editter.json';
+import { ComptabiliteMetadata, MetadataJson } from './metadata/accounting-metadata';
 import metadataSchema from './metadata/accounting-metadata.schema.json';
+import { ExercisePeriodOption } from './metadata/exercise-period';
+import { ProgramArguments } from './program.arguments';
+import { logger } from './util/logger';
+
 
 export class Run {
     private accounting: AccountingInterface;
@@ -70,12 +74,10 @@ export class Run {
                     provide: ComptabiliteMetadata,
                     useValue: this.metadata
                 },
-            ],
-            bootstrap: [ GrandLivre, BalanceDesComptes, JournalCentraliseur, PlanComptable, Journaux, Pieces ]
+            ]
         });
 
-        const { Accounting } = require('./accounting/accounting'); // if we import it before Injector.init, we have cyclic dependencies
-        this.accounting = AppInjector.root.get(Accounting);
+        this.accounting = AppInjector.root.get(Accounting) as Required<Accounting>;
     }
 
     async run(): Promise<void> {
@@ -104,7 +106,7 @@ export class Run {
             await Promise.all(promises);
 
         } catch (e) {
-            logger.error(e.message);
+            // logger.error(e.message);
             logger.error(e);
         }
     }

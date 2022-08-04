@@ -1,4 +1,4 @@
-export * from './piece-factory-from-depense';
+export * from './piece-factory-from-ecritures-simples';
 export * from './piece-factory-from-ref';
 export * from './piece-factory-from-saisie';
 export * from './piece-factory-from-string';
