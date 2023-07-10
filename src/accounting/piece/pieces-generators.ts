@@ -40,7 +40,6 @@ const makeGenerator = (generator: PieceFromLibelleGenerator) => generator;
 export const PREDIFINED_GENERATORS = {
 
     loyer: makeGenerator((ecritureSimple: EcritureSimpleData) => {
-        // 60 Opérations Diverses
         // 6132: Locations immobilieres (compte de charges)
         // 4011: Fournisseurs SDM (compte fournisseur)
         const crediteur = new CompteParentAux({ compte: 401, compteAux: 4011 });
@@ -52,7 +51,6 @@ export const PREDIFINED_GENERATORS = {
     }),
 
     fraisGeneraux: makeGenerator((ecritureSimple: EcritureSimpleData): Piece[] => {
-        // 60 Opérations Diverses
         // 6064: Fournitures administratives (compte de charges)
         // 4012: Fournisseur Frais Généraux (compte fournisseur)
         const crediteur = new CompteParentAux({ compte: 401, compteAux: 4012 });
@@ -64,7 +62,6 @@ export const PREDIFINED_GENERATORS = {
     }),
 
     greffe: makeGenerator((ecritureSimple: EcritureSimpleData): Piece[] => {
-        // 60 Opérations Diverses
         // 6227: Frais d'actes et de contentieux (compte de charges)
         // 4013: Frais Greffe (compte fournisseur)
         const crediteur = new CompteParentAux({ compte: 401, compteAux: 4013 });
@@ -89,13 +86,12 @@ export const PREDIFINED_GENERATORS = {
     }),
 
     venteWebsite: makeGenerator((ecritureSimple: EcritureSimpleData): Piece[] => {
-        // 60 Opérations Diverses
         // 707: Vente de marchandise TVA1 (compte de produits) (70701 exonéré de TVA)
         // 4111: Compte Client Website (compte client)
         const debiteur = new CompteParentAux({ compte: 4111 });
 
         return [
-            PieceFactory.achat({ crediteur: new CompteParentAux({ compte: 707 }), debiteur, ...ecritureSimple }),
+            PieceFactory.vente({ crediteur: new CompteParentAux({ compte: 707 }), debiteur, ...ecritureSimple }),
             PieceFactory.banque({ montant: ecritureSimple.ttc, compteInfo: debiteur, type: 'vente', ...ecritureSimple })
         ];
     })

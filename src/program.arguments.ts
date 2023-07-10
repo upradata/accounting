@@ -36,6 +36,7 @@ command
     })
     .option('--json-indent <nb>', 'Json indentation for the json editter.', cliParsers.int, 4)
     .option('--edit-short [bool]', 'Edit accounting condensed mode.', cliParsers.boolean, true)
+    .option('--edit-long [bool]', 'Edit accounting verbose mode.', cliParsers.boolean, false)
     .option('--edit-grand-livre [bool]', 'Edit Grand Livre.', cliParsers.boolean)
     .option('--edit-balance [bool]', 'Edit Balance Des Comptes.', cliParsers.boolean)
     .option('--edit-journal [bool]', 'Edit Journal Centraliseur.', cliParsers.boolean)
@@ -72,7 +73,9 @@ export class InputArguments<StringOrBoolArg extends string | boolean> {
     inputCsv?: ImporterFiles<{ filename: string; }>;
 }
 
-export type ConsoleArguments = InputArguments<string | boolean>;
+export type ConsoleArguments = InputArguments<string | boolean> & {
+    editLong?: boolean;
+};
 
 
 export class ProgramArguments extends InputArguments<string> {
@@ -87,6 +90,9 @@ export class ProgramArguments extends InputArguments<string> {
 
             if (!this.editters)
                 this.editters = [ 'console', 'csv' ];
+
+            if (consoleArgs.editLong)
+                this.editShort = false;
         }
 
         const editKeys = [ 'editGrandLivre', 'editBalance', 'editJournal', 'editPieces' ];

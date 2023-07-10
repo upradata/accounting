@@ -32,7 +32,7 @@ export class GrandLivreEdit extends Edit {
     protected override doInit({ short }: EditExtraOptions) {
         this.isShort = short;
         this.addHeaders(this.headers());
-        this.setTableFormat((i, length) => ({ alignment: i >= length - 3 ? 'right' : 'left', ...(i === 2 ? { width: 50 } : {}) }));
+        this.setTableFormat((i, length) => ({ alignment: i >= length - 3 ? 'right' : 'left' /*, ...(i === 2 ? { width: 50 } : {}) */ }));
     }
 
     private headers() {
@@ -83,17 +83,23 @@ export class GrandLivreEdit extends Edit {
 
 
         const format = (i: number) => (data: EditDataStyledCell): EditDataStyledCell => {
-            const middleIndex = this.isShort ? 1 : 4;
+            const nbRight = this.isShort ? 1 : 4;
+            return updateEditDataStyledCell(data, { style: { type: i >= nbRight /* && i < row.length - 1 */ ? 'number' : 'text' } });
+
+            /* const middleIndex = this.isShort ? 1 : 4;
 
             if (i <= middleIndex || i > middleIndex + 1)
                 return updateEditDataStyledCell(data, { value: `${data.value}`, style: { type: 'text' } });
 
-            return updateEditDataStyledCell(data, { style: { type: 'number' } });
+            return updateEditDataStyledCell(data, { style: { type: 'number' } }); */
         };
 
-        const colorify = (data: EditDataStyledCell): EditDataStyledCell => {
+        const colorify = (i: number, length: number, data: EditDataStyledCell): EditDataStyledCell => {
             if (data.style?.type !== 'number')
                 return data;
+
+            if (i !== length - 1)
+                return { ...data, value: data.value === 0 ? '' : data.value };
 
             const { value, color } = coloryfyDiff(data.value as number, { zero: '' });
             return updateEditDataStyledCell(data, { value, style: { ...data.style, color } });
@@ -102,7 +108,7 @@ export class GrandLivreEdit extends Edit {
 
         this.addData({
             string: row,
-            format: (data, i) => pipeline({ value: data }).pipe(format(i)).pipe(colorify).value,
+            format: (data, i, length) => pipeline({ value: data }).pipe(format(i)).pipe(data => colorify(i, length, data)).value,
             json: { key: compte, value: dataO }
         });
     }
@@ -113,7 +119,7 @@ export class GrandLivreEdit extends Edit {
         for (const { key: compte, balanceData } of this.compteBalance) {
             const { mouvements, total } = balanceData;
 
-            if (!option.short) {
+            if (!this.isShort) {
                 for (const mouvement of mouvements) {
                     this.addToEdit({ compte, mouvement });
                 }

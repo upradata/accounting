@@ -1,4 +1,3 @@
-
 import { ComptaDataMap } from './compta-data.types';
 
 

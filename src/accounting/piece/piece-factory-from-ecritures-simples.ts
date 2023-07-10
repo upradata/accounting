@@ -28,15 +28,12 @@ export class PiecesFromEcrituresSimples {
             if (pieceRef)
                 return getPiecesFromPieceRef({ comptaEcritureSimplesPieces: this.ecrituresSimplesPieces, pieceRef, pieceOption: ecritureSimpleData });
 
-            if (creditMouvement || debitMouvement)
-                return getPieceFromString(creditMouvement, debitMouvement, ecritureSimpleData as Required<EcritureSimpleData>);
-
             if (type) {
                 try {
                     const { generators } = AppInjector.root.get(EcritureComptaGenerators);
 
                     if (generators[ type ])
-                        return generators[ type ](ecritureSimpleData);
+                        return generators[ type ]({ ...ecritureSimpleData, credit: creditMouvement, debit: debitMouvement });
 
                     return generatorFromType(PREDIFINED_GENERATORS)(type)(ecritureSimpleData);
                 } catch (e) {
@@ -44,6 +41,9 @@ export class PiecesFromEcrituresSimples {
                     logger.info(`Let's try to generate from the "libelle"`);
                 }
             }
+
+            if (creditMouvement || debitMouvement)
+                return getPieceFromString(creditMouvement, debitMouvement, ecritureSimpleData as Required<EcritureSimpleData>);
 
             const pieces = generateFromLibelle(PREDIFINED_LIBELLE_GENERATORS)(ecritureSimpleData);
 

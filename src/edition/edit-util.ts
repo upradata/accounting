@@ -7,11 +7,11 @@ export interface CreditDebit<T = number> {
 }
 
 
-export function coloryfyDiff(diff: number, symbols: Partial<CreditDebit<string> & { zero: string; }> = {}): { value: string; color: string; } {
-    const { credit = 'C', debit = 'D', zero = 'N' } = symbols;
+export function coloryfyDiff(diff: number, symbols: Partial<CreditDebit<string> & { zero: string; zeroIsEmpty: boolean; }> = {}): { value: string; color?: string; } {
+    const { credit = 'C', debit = 'D', zero = 'N', zeroIsEmpty = false } = symbols;
 
     if (Math.abs(diff) < 0.01)
-        return { value: `0.00 ${zero}`, color: 'yellow' };
+        return zeroIsEmpty ? { value: '' } : { value: `0.00 ${zero}`, color: 'yellow' };
 
     const d = formattedNumber((diff > 0 ? diff : -diff)); // .toFixed(2);
     return diff > 0 ? { value: `${d} ${credit}`, color: 'green' } : { value: `${d} ${debit}`, color: 'red' };

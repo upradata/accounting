@@ -19,9 +19,9 @@ export class EcritureComptaGenerators {
         };
 
 
-        type EcritureData = Omit<ComptaEcritureComptaGenerator, 'ref' | 'function' | 'type'>;
-        type EcritureDataEvaluated = Omit<ComptaEcritureComptaGenerator<never>, 'ref' | 'function' | 'type'>;
-        type MouvementData = Omit<EcritureDataEvaluated, 'condition'>;
+        type EcritureData = Omit<ComptaEcritureComptaGenerator, /* 'ref' |  */'function' | 'type'>;
+        type EcritureDataEvaluated = Omit<ComptaEcritureComptaGenerator<never>, /* 'ref' | */ 'function' | 'type'>;
+        type MouvementData = Omit<EcritureDataEvaluated, 'ref' | 'condition'>;
 
         type Variable = { key: string; value: unknown; };
 
@@ -86,10 +86,8 @@ export class EcritureComptaGenerators {
                                 return data;
 
                             try {
-                                const ecrituresEvaluated = ref ? [
-                                    ...callRef(ref, ecritureEval).map(m => ({ ...m, ...ecritureEvaluated })),
-                                    ecritureEvaluated
-                                ] : [ ecritureEvaluated ];
+                                const ecriture: Partial<EcritureDataEvaluated> = removeUndefined(ecritureEvaluated);
+                                const ecrituresEvaluated = ref ? callRef(ref, ecritureEval).map(e => ({ ...e, ...ecriture })) : [ ecriture ];
 
                                 data.ecritures.push(...ecrituresEvaluated);
                             } catch (e) {
@@ -108,19 +106,6 @@ export class EcritureComptaGenerators {
         }, {} as RecordOf<(...args: unknown[]) => MouvementData[]>);
 
 
-        const callRef = (ref: ComptaEcritureComptaGeneratorRef, ecritureEval: EcritureEval): EcritureDataEvaluated[] => {
-            const { functionName, getArgs } = ref;
-
-            const fn = helpers[ functionName ];
-
-            if (!fn)
-                throw new Error(`function "${functionName}" not found while building EcritureComptaGenerators`);
-
-            return fn(getArgs(...ecritureEval.variables.keys)(...ecritureEval.variables.values));
-        };
-
-
-
         const piecesGeneratorsById = Object.entries(generatorsById.ecrituresSimples).reduce((o, [ id, ecritures ]) => {
             return {
                 ...o,
@@ -133,15 +118,16 @@ export class EcritureComptaGenerators {
                         const ecritureEval = ecritureDataEvaluation(argNames, args);
                         const ecritureSimple = args[ 0 ] as EcritureSimpleData;
 
-                        const ecritureEvaluated = ecritureEval.evaluateEcriture(ecritureData);
+                        const { condition, ...ecritureEvaluated } = ecritureEval.evaluateEcriture(ecritureData);
 
-                        if (ecritureEvaluated.condition === false)
+                        if (condition === false)
                             return pieces;
 
                         try {
 
                             const ecriture: Partial<EcritureDataEvaluated> = removeUndefined(ecritureEvaluated);
-                            const ecrituresEvaluated = ref ? [ ...callRef(ref, ecritureEval).map(e => ({ ...e, ...ecriture })), ecriture ] : [ ecriture ];
+                            const ecrituresEvaluated = ref ? callRef(ref, ecritureEval).map(e => ({ ...e, ...ecriture })) : [ ecriture ];
+
                             const { journal } = ecrituresEvaluated[ 0 ];
 
                             if (!pieces[ journal ]) {
@@ -176,9 +162,26 @@ export class EcritureComptaGenerators {
         }, {} as RecordOf<(...args: unknown[]) => Piece[]>);
 
 
+        const callRef = (ref: ComptaEcritureComptaGeneratorRef, ecritureEval: EcritureEval): EcritureDataEvaluated[] => {
+            const { functionName, getArgs } = ref;
+
+            const fn = allFunctions[ functionName ];
+
+            if (!fn)
+                throw new Error(`function "${functionName}" not found while building EcritureComptaGenerators`);
+
+            return fn(getArgs(...ecritureEval.variables.keys)(...ecritureEval.variables.values)).flat(Infinity);
+        };
+
+
         this.generators = {
             ...this.generators,
             ...piecesGeneratorsById
+        };
+
+        const allFunctions = {
+            ...helpers,
+            ...this.generators
         };
     }
 }

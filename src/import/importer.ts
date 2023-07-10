@@ -41,7 +41,7 @@ export class Importer {
         console.log(); // jump 1 line for clarity
 
         const isDataWithCompte = (rows: any): rows is ValueOf<ComptaData> extends (infer T)[] ? (T & { compte: Compte; compteAux?: Compte; })[] : never => {
-            return rows && Object.keys(rows[ 0 ]).some(k => k.startsWith('compte'));
+            return rows[ 0 ] && Object.keys(rows[ 0 ]).some(k => k.startsWith('compte'));
         };
 
         return map(datas, (name, rows) => {

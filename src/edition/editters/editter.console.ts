@@ -1,4 +1,4 @@
-import { Terminal, styles } from '@upradata/node-util';
+import { Terminal, styles, TerminalStyles } from '@upradata/node-util';
 import { EditLogger } from '../edit.types';
 
 export const consoleEditter: EditLogger = data => {
@@ -15,7 +15,15 @@ export const consoleEditter: EditLogger = data => {
 
     const rows = [
         ...headers,
-        ...tableRows.map(({ row, format }) => row.map((data, i) => `${format(data, i, row.length).value}`))
+        ...tableRows.map(({ row, format }) => row.map((data, i) => {
+            const { value, style } = format(data, i, row.length);
+
+            if (!style)
+                return value;
+
+            const s: TerminalStyles = [ style.color, style.bgColor ].reduce<TerminalStyles>((s, color) => color ? s[ color ] || s : s, styles.none);
+            return s.$`${value}`;
+        }))
     ];
 
     consoleFormatting.logTable({ data: rows }, tableConfig);

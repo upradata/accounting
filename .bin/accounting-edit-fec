@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# Example accounting-program --exercise-start 01022019 --data-directory . -F --edit --edit-short --edit-type console --edit-type csv --output-dir Output
-# Do not forget to run unix2dos Output/801265372FEC20200301.txt to import it on Windows in Oxygene
-
-accounting-program --exercise-start $1 --data-directory $2 --fec-only-non-imported --edit --edit-short --edit-type console --edit-type csv --output-dir $3

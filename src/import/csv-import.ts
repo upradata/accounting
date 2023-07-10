@@ -163,9 +163,9 @@ const defaultParsers: CsvParsersOptions = {
                 // normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones.
                 const stringWithNoAccent = string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-                const type = dasherize(stringWithNoAccent) as ComptaEcritureSimpleType;
+                const type = dasherize(stringWithNoAccent); // as ComptaEcritureSimpleType;
                 return type;
-            }, cellParsers.choices({ values: comptaEcritureSimpleTypes }))
+            }, cellParsers.string() /* cellParsers.choices({ values: comptaEcritureSimpleTypes }) */)
         },
         creditMouvement: { emptyCell: '', parser: cellParsers.string() },
         debitMouvement: { emptyCell: '', parser: cellParsers.string() },

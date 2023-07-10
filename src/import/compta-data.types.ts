@@ -31,8 +31,8 @@ export const comptaEcritureSimpleTypes = [
     'compte-courant',
     'greffe',
     'vente-website',
-    'attribution-resultat-benefice',
-    'attribution-resultat-perte',
+    'affectation-resultat-benefice',
+    'affectation-resultat-perte',
     'remboursement-tva'
 ] as const;
 
@@ -101,15 +101,15 @@ export const isComptaEcritureComptaGeneratorRefArgsObject = (value: any): value 
 };
 
 
-export interface ComptaEcritureComptaGenerator<Variable = string> {
+export interface ComptaEcritureComptaGenerator<Expression = string> {
     function: { functionName: string; argNames: (string | string[])[]; }; // f(a, { b, c }) => argNames: [ 'a', [ 'b', 'c' ] ]
     type: ComptacritureComptaGeneratorTypes;
-    journal?: string | Variable;
-    condition?: boolean | Variable;
-    compte?: Compte | Variable;
-    compteAux?: Compte | Variable;
-    debit?: number | Variable;
-    credit?: number | Variable;
+    journal?: string | Expression;
+    condition?: boolean | Expression;
+    compte?: Compte | Expression;
+    compteAux?: Compte | Expression;
+    debit?: number | Expression;
+    credit?: number | Expression;
     ref?: ComptaEcritureComptaGeneratorRef;
 }
 

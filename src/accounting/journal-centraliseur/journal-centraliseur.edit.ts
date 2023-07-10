@@ -39,8 +39,9 @@ export class JournalCentraliseurEdit extends Edit {
     private pieces: Pieces;
 
 
-    constructor(private journauxBalanceByMonth: JournauxBalanceByMonth) {
-        super({ title: 'Journal Centraliseur' });
+    constructor(private journauxBalanceByMonth: JournauxBalanceByMonth, options: ExtraOption) {
+        super({ title: `Journal Centraliseur${options.byJournal ? ' Summary' : ''}` });
+        this.isByJournal = options.byJournal;
         this.pieces = AppInjector.root.get(Pieces);
     }
 
@@ -145,13 +146,16 @@ export class JournalCentraliseurEdit extends Edit {
 
         const format = (i: number) => (data: EditDataStyledCell): EditDataStyledCell => {
             const nbRight = this.isByJournal ? 1 : this.isShort ? 2 : 3;
-            return updateEditDataStyledCell(data, { style: { type: i >= nbRight && i < row.length - 1 ? 'number' : 'text' } });
+            return updateEditDataStyledCell(data, { style: { type: i >= nbRight /* && i < row.length - 1 */ ? 'number' : 'text' } });
         };
 
 
-        const colorify = (data: EditDataStyledCell) => {
+        const colorify = (i: number, length: number, data: EditDataStyledCell) => {
             if (data.style?.type !== 'number')
                 return data;
+
+            if (i !== length - 1)
+                return { ...data, value: data.value === 0 ? '' : data.value };
 
             const { value, color } = coloryfyDiff(data.value as number, { zero: '' });
             return updateEditDataStyledCell(data, { value, style: { ...data.style, color } });
@@ -161,7 +165,7 @@ export class JournalCentraliseurEdit extends Edit {
         this.addData({
             string: row,
             json: { key: journal, value: dataO },
-            format: (data, i) => pipeline({ value: data }).pipe(format(i)).pipe(colorify).value
+            format: (data, i, length) => pipeline({ value: data }).pipe(format(i)).pipe(data => colorify(i, length, data)).value,
         });
     }
 

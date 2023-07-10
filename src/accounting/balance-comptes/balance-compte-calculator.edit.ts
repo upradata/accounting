@@ -83,7 +83,7 @@ export class BalanceComptesCalculator {
     balancesClassTotalSplit(classNumero: number): BalanceComptesSplit {
 
         return new BalanceComptesSplit({
-            compte: classNumero + '',
+            compte: `${classNumero}`,
             reouverture: this.balance.getBalanceDataOfClass(classNumero, { filter: filter(m => lower(m.journal) === 'xou'), newKey }),
             exercise: this.balance.getBalanceDataOfClass(classNumero, { filter: filter(m => lower(m.journal) !== 'xou'), newKey }),
             global: this.balance.getBalanceDataOfClass(classNumero, { newKey })

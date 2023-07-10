@@ -60,17 +60,16 @@ export class BalanceDesComptesEdit extends Edit {
 
         const row = this.buildRow(balanceSplit);
 
-        const format = (i: number, length: number) => (data: EditDataStyledCell): EditDataStyledCell => {
-            if (i === 0 || i === length - 1)
-                return updateEditDataStyledCell(data, { value: `${data.value}`, style: { type: 'text' } });
-
-
-            return updateEditDataStyledCell(data, { style: { type: 'number' } });
+        const format = (i: number) => (data: EditDataStyledCell): EditDataStyledCell => {
+            return updateEditDataStyledCell(data, { style: { type: i === 0 ? 'text' : 'number' } });
         };
 
-        const colorify = (data: EditDataStyledCell): EditDataStyledCell => {
+        const colorify = (i: number, data: EditDataStyledCell): EditDataStyledCell => {
             if (data.style?.type !== 'number')
                 return data;
+
+            if ((i - 1) % 3 !== 2)
+                return { ...data, value: data.value === 0 ? '' : data.value };
 
             const { value, color } = coloryfyDiff(data.value as number, { zero: '' });
             return updateEditDataStyledCell(data, { value, style: { ...data.style, color } });
@@ -79,7 +78,7 @@ export class BalanceDesComptesEdit extends Edit {
 
         this.addData({
             string: row,
-            format: (data, i, length) => pipeline({ value: data }).pipe(format(i, length)).pipe(colorify).value,
+            format: (data, i, _length) => pipeline({ value: data }).pipe(format(i)).pipe(data => colorify(i, data)).value,
             json: { key: balanceSplit.compte, value: balanceSplit }
         });
     }

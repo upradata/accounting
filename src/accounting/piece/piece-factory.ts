@@ -7,19 +7,21 @@ export class AchatOption {
     ht?: number;
     tva?: number;
     date: Date;
-    journal?: string = '60';
+    journal?: string = '60'; // journal Achat
     crediteur: CompteParentAux;
     debiteur: CompteParentAux;
     isImported: boolean;
 }
 
-export type VenteOption = AchatOption;
+export class VenteOption extends AchatOption {
+    journal?: string = '70'; // journal Vente
+};
 
 export class BanqueOption {
     montant: number;
     libelle: string;
     date: Date;
-    journal?: string = 'BQ';
+    journal?: string = 'BQ'; // journal Banque
     compteInfo: CompteParentAux;
     type: 'achat' | 'vente';
     isImported: boolean;
@@ -36,6 +38,7 @@ export class PieceFactory {
 
         // compte fournisseur
         piece.addMouvement({ montant: ttc, type: 'credit', compteInfo: crediteur });
+        
         if (tva) {
             // 4456611: TVA déductible Achats Taux 1/Factures
             piece.addMouvement({ montant: tva, type: 'debit', compteInfo: new CompteParentAux({ compte: 4456611 }) });
@@ -57,6 +60,7 @@ export class PieceFactory {
 
         // compte client
         piece.addMouvement({ montant: ttc, type: 'debit', compteInfo: debiteur });
+
         if (tva) {
             // 445711: TVA collectée Ventes Taux 1/Factures
             piece.addMouvement({ montant: tva, type: 'credit', compteInfo: new CompteParentAux({ compte: 445711 }) });
