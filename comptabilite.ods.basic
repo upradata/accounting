@@ -1,0 +1,194 @@
+' https://wiki.documentfoundation.org/Development/DispatchCommands#Calc_slots_.28scslots.29 => All dispatch commands
+' libreoffice sdk https://api.libreoffice.org/docs/idl/ref/servicecom_1_1sun_1_1star_1_1text_1_1TextDocument.html
+' Basic language https://help.libreoffice.org/latest/en-US/text/sbasic/shared/03100000.html?DbPAR=BASIC
+
+
+Sub Main
+	'dim args1(0) as new com.sun.star.beans.PropertyValue
+	'args1(0).Name = "ToPoint"
+	'args1(0).Value = "$B$1"
+	
+	'b=args1()
+	
+	'dim A(0) as integer
+	'dim BB(1) as integer
+	'C = Array(1, 2)
+	
+	'A(0) = 1
+	'BB(1) = 1
+	
+	'z=BB()
+	'BB(1) = 3
+	'ccc=1
+	
+	'C =	ThisComponent.CurrentSelection
+	'Dim R as object
+	'Static B as Integer
+	
+	's=ThisComponent.Sheets.getByName("EcritureComptaGenerators")
+	
+
+	'MsgBox s.getCellByPosition(0, 3).Type
+	'MsgBox s.getCellByPosition(0, 3).Type = com.sun.star.table.CellContentType.EMPTY
+	'ccc=1
+End Sub
+
+
+
+Sub ExecuteDispatch(functionName as String, args)
+	Static document As object
+	Static dispatcher As object
+
+	If IsNull(dispatcher) Then
+		document   = ThisComponent.CurrentController.Frame
+		dispatcher = createUnoService("com.sun.star.frame.DispatchHelper")
+	EndIf
+
+	dispatcher.executeDispatch(document, ".uno:" + functionName, "", 0, args())
+End Sub
+
+
+
+Sub Go(direction as String, count as Integer)
+	dim args2(1) as new com.sun.star.beans.PropertyValue
+	
+	args2(0).Name = "By"
+	args2(0).Value = count
+	args2(1).Name = "Sel"
+	args2(1).Value = false
+	
+	If direction = "up" Then
+		ExecuteDispatch("GoDown", args2())
+	ElseIf direction = "down" Then
+		ExecuteDispatch("GoUp", args2())
+	EndIf
+End Sub
+
+Sub Offset(cell, column as Integer, row as Integer)
+	cursor = GetSheet().createCursorByRange(cell)
+	cursor.gotoOffset(column, row)
+End Sub
+
+
+
+Sub GoToCell(cell as String)
+	dim args1(0) as new com.sun.star.beans.PropertyValue
+
+	args1(0).Name = "ToPoint"
+	args1(0).Value = cell
+	
+	ExecuteDispatch("GoToCell", args1)
+End Sub
+
+sub Sort(address as String)
+
+	dim args1(0) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = "ToPoint"
+	args1(0).Value = address
+	
+	ExecuteDispatch("GoToCell", args1)
+	ExecuteDispatch("SortAscending", Array())
+
+end sub
+
+
+REM -------------------------------------------------
+
+
+Function GetSheet
+	GetSheet = ThisComponent.Sheets.getByName("EcritureComptaGenerators")
+End Function
+
+
+Function CellOffset(cell as Variant, column as Integer, row as Integer)
+	CellOffset = GetSheet().getCellByPosition(cell.CellAddress.Column + column, cell.CellAddress.Row + counter + row)
+End Function
+
+
+Function GetLastUsedCell(fromCell, direction as String)
+	cell = fromCell
+	
+	Do While true
+		nextCell = CellOffset(cell, IIf(direction = "column", 1, 0), IIf(direction = "column", 0, 1))
+
+		If nextCell.Type = com.sun.star.table.CellContentType.EMPTY Then
+			Exit Do
+		EndIf
+		
+		cell = nextCell
+	Loop
+	
+	GetLastUsedCell = cell
+End Function
+
+Function GetRange(fromCell, toCell)
+	GetRange = GetSheet().getCellRangeByPosition(fromCell.CellAddress.Column, fromCell.CellAddress.Row, toCell.CellAddress.Column, toCell.CellAddress.Row)
+End Function
+
+
+
+Function GetGeneratorNameFromFunctionName(functionName as String) as String
+	Name= ""
+
+	For counter=1 To Len(functionName)
+		Char = Mid(functionName, counter, 1)
+		
+		If Char = "(" Then
+			Exit For
+		EndIf
+		
+		Name = Name + Char
+	Next
+	
+	GetGeneratorNameFromFunctionName = Name
+End Function
+
+
+REM --------------------------------------------
+
+
+sub GenerateGeneratorNames
+
+	sheet = GetSheet()
+		
+	typeCell = sheet.getCellRangeByName("Type")
+	generatorNameCell = sheet.getCellRangeByName("GeneratorName")
+	functionNameCell = sheet.getCellRangeByName("FunctionName")
+	
+	lastTypeCell = GetLastUsedCell(typeCell, "row")
+		
+	rem ----------------------------------------------------------------------
+	' dim args1(0) as new com.sun.star.beans.PropertyValue
+
+	' GoToCell(typeCell.AbsoluteName)
+	' Go("down", 1)
+	
+	' args1(0).Name = "By"
+	' args1(0).Value = 1
+	' ExecuteDispatch("GoDownToEndOfDataSel", args1)
+	
+	' selection = ThisComponent.CurrentSelection
+	' nbOfRows = selection.Rows.Count
+	
+	' the first row (typeCell) is the column name
+	nbOfRows = lastTypeCell.CellAddress.Row - typeCell.CellAddress.Row
+	currentRow = 1
+	
+	For counter=1 To nbOfRows
+		functionNameCell_i = CellOffset(functionNameCell, 0, counter)
+		typeCell_i = CellOffset(typeCell, 0, counter)
+		
+		If functionNameCell_i.Type <> com.sun.star.table.CellContentType.EMPTY AND typeCell_i.String = "generator" Then
+			generatorNameCell_i = CellOffset(generatorNameCell, 0, currentRow)
+			generatorNameCell_i.String = GetGeneratorNameFromFunctionName(functionNameCell_i.String)
+
+			currentRow = currentRow + 1
+		EndIf
+	Next
+	
+	
+	' range = sheet.getCellRangeByPosition(generatorNameCell.CellAddress.Column, generatorNameCell.CellAddress.Row + 1, generatorNameCell.CellAddress.Column, generatorNameCell.CellAddress.Row + currentRow -1)
+	range = GetRange(CellOffset(generatorNameCell, 0, 1), CellOffset(generatorNameCell, 0, currentRow -1))
+	Sort(range.AbsoluteName)
+	
+end sub

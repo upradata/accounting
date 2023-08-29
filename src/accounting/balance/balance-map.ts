@@ -81,6 +81,7 @@ export class BalanceMap<Key> {
                 ), // ordered by date
                 total: new BalanceTotal()
             });
+
             this.balanceMap.set(keyMuted, data);
         }
 
